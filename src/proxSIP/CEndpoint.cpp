@@ -55,7 +55,7 @@ CEndpoint::CEndpoint(const CEndpoint& other)
 
 }
 
-CEndpoint& CEndpoint::operator=(const IEndpoint& other)
+IEndpoint& CEndpoint::operator=(const IEndpoint& other)
 {
     *m_pImpl = CEndpointImpl(other);
     return *this;

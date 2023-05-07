@@ -3,11 +3,26 @@
 
 #include "ISIPResponse.h"
 
+class CSIPResponseImpl;
+
 //! Representation of the data on a SIP response
 class PROXSIP_API CSIPResponse : public ISIPResponse
 {
-public:
+private:
+    CSIPResponseImpl* m_pImpl;
 
+public:
+    ~CSIPResponse();
+    CSIPResponse();
+
+    //! @name Overrides from ISIPMessage
+    //! @{
+    const ESIPMessageType Type() const override;
+    const IEndpoint& Source() const override;
+    IEndpoint& Source() override;
+    const IEndpoint& Destination() const override;
+    IEndpoint& Destination() override;
+    //! @}
 };
 
 #endif

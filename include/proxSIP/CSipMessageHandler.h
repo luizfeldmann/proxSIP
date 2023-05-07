@@ -29,7 +29,7 @@ public:
     ISipResponseHandler* GetResponseHandler();
 
     //! Forwards a UDP message to the appropriate SIP handler
-    virtual void OnMessage(const char* pData, size_t uSize, const char* szFromAddr, unsigned short usFromPort) override;
+    virtual void OnMessage(const char* pData, size_t uSize, const IEndpoint& Src, const IEndpoint& Dst) override;
 };
 
 #endif

@@ -1,4 +1,5 @@
 #include "CAsioUdpServer.h"
+#include "CEndpoint.h"
 #include <boost/asio.hpp>
 #include <boost/log/trivial.hpp>
 #define BOOST_BIND_GLOBAL_PLACEHOLDERS
@@ -24,8 +25,8 @@ private:
         {
             if (m_pHandler)
             {
-                auto szFromAddr = m_sender.address().to_string();
-                m_pHandler->OnMessage(m_buffer.data(), bytes_transferred, szFromAddr.c_str(), m_sender.port());
+                CEndpoint Sender(m_sender.address().to_string().c_str(), m_sender.port());
+                m_pHandler->OnMessage(m_buffer.data(), bytes_transferred, Sender, *this);
             }
         }
         else
@@ -102,6 +103,13 @@ public:
         Address(szAddr);
         Port(usPort);
     }
+
+    IEndpoint& operator=(const IEndpoint& other) override
+    {
+        Address(other.Address());
+        Port(other.Port());
+        return *this;
+    }
 };
 
 /* CAsioUdpServer */
@@ -154,7 +162,11 @@ bool CAsioUdpServer::Start()
         m_pImpl->Listen();
     }
 
-    if (ec)
+    if (!ec)
+    {
+        BOOST_LOG_TRIVIAL(info) << "Listening on " << m_pImpl->m_endpoint;
+    }
+    else
     {
         BOOST_LOG_TRIVIAL(error) << ec.message();
     }

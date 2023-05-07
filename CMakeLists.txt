@@ -1,10 +1,19 @@
 cmake_minimum_required(VERSION 3.0.0)
 
-project(proxSIP CXX)
+project(proxSIP
+    VERSION 1.0.0.0
+    DESCRIPTION "A lightweight SIP proxy"
+    LANGUAGES CXX)
 
 # Find dependency: Boost
 set(Boost_USE_STATIC_LIBS ON)
 find_package(Boost REQUIRED COMPONENTS log json)
+
+# Configure resources file
+if (WIN32)
+    SET(RESOURCES_FILE "resources.rc")
+    configure_file("resources/resources.in.rc" "${RESOURCES_FILE}")
+endif()
 
 # -------------------------------------
 # Library
@@ -12,21 +21,25 @@ find_package(Boost REQUIRED COMPONENTS log json)
 
 # List of SRCs
 set(${CMAKE_PROJECT_NAME}_LIB_SOURCES
+    "${RESOURCES_FILE}"
     "src/proxSIP/CAsioUdpServer.cpp"
     "src/proxSIP/ESipMethod.cpp"
     "src/proxSIP/CSipParser.cpp"
     "src/proxSIP/CSipMessageHandler.cpp"
     "src/proxSIP/CEndpoint.cpp"
     "src/proxSIP/CSIPRequest.cpp"
-    "src/proxSIP/CSipResponse.cpp")
+    "src/proxSIP/CSipResponse.cpp"
+    "src/proxSIP/CSipServer.cpp")
 
 # List of headers
 set(${CMAKE_PROJECT_NAME}_LIB_HEADERS
+    "include/proxSIP/proxSIPExports.h"
     "include/proxSIP/IUserAccount.h"
     "include/proxSIP/IUserAccountCollection.h"
     "include/proxSIP/IUdpServer.h"
     "include/proxSIP/CAsioUdpServer.h"
     "include/proxSIP/IUdpMessageHandler.h"
+    "include/proxSIP/ISIPMessage.h"
     "include/proxSIP/ISIPRequest.h"
     "include/proxSIP/CSIPRequest.h"
     "include/proxSIP/ISipRequestHandler.h"
@@ -37,7 +50,8 @@ set(${CMAKE_PROJECT_NAME}_LIB_HEADERS
     "include/proxSIP/CSipParser.h"
     "include/proxSIP/CSipMessageHandler.h"
     "include/proxSIP/IEndpoint.h"
-    "include/proxSIP/CEndpoint.h" "include/proxSIP/proxSIPExports.h")
+    "include/proxSIP/CEndpoint.h"
+    "include/proxSIP/CSipServer.h" )
 
 # Create and configure the library
 add_library(${CMAKE_PROJECT_NAME}_LIB SHARED
@@ -57,19 +71,26 @@ target_include_directories(${CMAKE_PROJECT_NAME}_LIB PRIVATE
 target_include_directories(${CMAKE_PROJECT_NAME}_LIB INTERFACE
     "include")
 
-target_link_libraries(${CMAKE_PROJECT_NAME}_LIB PRIVATE Boost::boost Boost::log Boost::json)
+target_link_libraries(${CMAKE_PROJECT_NAME}_LIB PRIVATE Boost::boost Boost::log)
 
 # -------------------------------------
 # Application
 # -------------------------------------
 
+# Configure pre-processed file containing version information
+SET(VERSION_FILE "version.h")
+configure_file("include/Application/version.in.h" "${VERSION_FILE}" @ONLY)
+
 # List of SRCs
 set(${CMAKE_PROJECT_NAME}_APP_SOURCES
-    "src/Application/main.cpp")
+    "${RESOURCES_FILE}"
+    "src/Application/main.cpp"
+    "src/Application/CAppConfig.cpp")
 
 # List of headers
 set(${CMAKE_PROJECT_NAME}_APP_HEADERS
-    )
+    "${VERSION_FILE}"
+    "include/Application/CAppConfig.h")
 
 # Create and configure the application
 add_executable(${CMAKE_PROJECT_NAME}_APP
@@ -81,9 +102,18 @@ set_target_properties(${CMAKE_PROJECT_NAME}_APP PROPERTIES
     OUTPUT_NAME "${CMAKE_PROJECT_NAME}")
 
 target_include_directories(${CMAKE_PROJECT_NAME}_APP PUBLIC
+    "${CMAKE_CURRENT_BINARY_DIR}"
     "include/Application")
 
-target_link_libraries(${CMAKE_PROJECT_NAME}_APP ${CMAKE_PROJECT_NAME}_LIB)
+target_link_libraries(${CMAKE_PROJECT_NAME}_APP PRIVATE 
+    ${CMAKE_PROJECT_NAME}_LIB
+    Boost::boost Boost::log Boost::json)
+
+# Copy configuration file to the output location
+set(APP_CFG_FILE "${CMAKE_CURRENT_LIST_DIR}/resources/${CMAKE_PROJECT_NAME}.json")
+
+add_custom_command(TARGET ${CMAKE_PROJECT_NAME}_APP POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${APP_CFG_FILE}" "$<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}_APP>")
 
 # -------------------------------------
 # Global

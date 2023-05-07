@@ -8,6 +8,9 @@ class PROXSIP_API IEndpoint
 public:
     virtual ~IEndpoint() = default;
 
+    //! Copies from another endpoint
+    virtual IEndpoint& operator=(const IEndpoint&) = 0;
+
     //! Sets the address
     virtual void Address(const char*) = 0;
 

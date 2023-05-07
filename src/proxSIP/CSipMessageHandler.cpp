@@ -37,7 +37,7 @@ ISipResponseHandler* CSipMessageHandler::GetResponseHandler()
     return m_pResponseHandler;
 }
 
-void CSipMessageHandler::OnMessage(const char* pData, size_t uSize, const char* szFromAddr, unsigned short usFromPort)
+void CSipMessageHandler::OnMessage(const char* pData, size_t uSize, const IEndpoint& Src, const IEndpoint& Dst)
 {
     bool bParsed = false;
 
@@ -49,6 +49,9 @@ void CSipMessageHandler::OnMessage(const char* pData, size_t uSize, const char* 
         if (CSipParser::ParseRequest(pData, uSize, Request))
         {
             bParsed = true;
+            Request.Source() = Src;
+            Request.Destination() = Dst;
+
             m_pRequestHandler->OnRequest(Request);
         }
     }
@@ -61,6 +64,9 @@ void CSipMessageHandler::OnMessage(const char* pData, size_t uSize, const char* 
         if (CSipParser::ParseResponse(pData, uSize, Response))
         {
             bParsed = true;
+            Response.Source() = Src;
+            Response.Destination() = Dst;
+
             m_pResponseHandler->OnResponse(Response);
         }
     }

@@ -1,10 +1,10 @@
 #ifndef _ISIPREQUEST_H_
 #define _ISIPREQUEST_H_
 
-#include "proxSIPExports.h"
+#include "ISIPMessage.h"
 
 //! Representation of the data of a SIP request
-class PROXSIP_API ISIPRequest
+class PROXSIP_API ISIPRequest : public ISIPMessage
 {
 public:
     virtual ~ISIPRequest() = default;
