@@ -23,6 +23,16 @@ public:
     const IEndpoint& Destination() const override;
     IEndpoint& Destination() override;
     //! @}
+     
+    //! @name Overrides from ISIPRequest
+    //! @{
+    ESipMethod Method() const override;
+    void Method(ESipMethod) override;
+    const char* URI() const override;
+    void URI(const char*) override;
+    const char* Version() const override;
+    void Version(const char*) override;
+    //! @}
 };
 
 #endif
