@@ -9,6 +9,10 @@ public:
     std::string m_sAddr;
     unsigned short m_usPort;
 
+    CEndpointImpl(const CEndpointImpl&) = default;
+
+    CEndpointImpl& operator=(const CEndpointImpl&) = default;
+
     CEndpointImpl(const char* szAddr = "", unsigned short usPort = 0)
         : m_sAddr(szAddr)
         , m_usPort(usPort)
@@ -23,60 +27,31 @@ public:
     }
 };
 
+IMPLEMENT_PIMPL(CEndpointImpl);
+
 /* CEndpoint */
 
-CEndpoint::~CEndpoint()
-{
-    delete m_pImpl;
-    m_pImpl = nullptr;
-}
-
 CEndpoint::CEndpoint()
-    : m_pImpl(new CEndpointImpl)
+    : TImplPtr(new CEndpointImpl)
 {
 
 }
 
 CEndpoint::CEndpoint(const char* szAddr, unsigned short uPort)
-    : m_pImpl(new CEndpointImpl(szAddr, uPort))
+    : TImplPtr(new CEndpointImpl(szAddr, uPort))
 {
 
 }
 
 CEndpoint::CEndpoint(const IEndpoint& other)
-    : m_pImpl(new CEndpointImpl(other))
+    : TImplPtr(new CEndpointImpl(other))
 {
 
 }
 
-CEndpoint::CEndpoint(const CEndpoint& other)
-    : m_pImpl(new CEndpointImpl(other))
-{
-
-}
-
-IEndpoint& CEndpoint::operator=(const IEndpoint& other)
+void CEndpoint::Assign(const IEndpoint& other)
 {
     *m_pImpl = CEndpointImpl(other);
-    return *this;
-}
-
-CEndpoint& CEndpoint::operator=(const CEndpoint& other)
-{
-    *m_pImpl = CEndpointImpl(other);
-    return *this;
-}
-
-CEndpoint::CEndpoint(CEndpoint&& other) noexcept
-    : m_pImpl(other.m_pImpl)
-{
-    other.m_pImpl = nullptr;
-}
-
-CEndpoint& CEndpoint::operator=(CEndpoint&& other) noexcept
-{
-    std::swap(m_pImpl, other.m_pImpl);
-    return *this;
 }
 
 void CEndpoint::Address(const char* szAddr)

@@ -104,11 +104,10 @@ public:
         Port(usPort);
     }
 
-    IEndpoint& operator=(const IEndpoint& other) override
+    void Assign(const IEndpoint& other) override
     {
         Address(other.Address());
         Port(other.Port());
-        return *this;
     }
 };
 

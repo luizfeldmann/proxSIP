@@ -29,7 +29,7 @@ int main(int argc, char** argv)
 
     // Listen for UDP messages
     CAsioUdpServer udpServer;
-    udpServer.LocalEndpoint() = config.ServerLocalEndpoint();
+    udpServer.LocalEndpoint().Assign(config.ServerLocalEndpoint());
     udpServer.SetHandler(&msgHandler);
     udpServer.Start();
 

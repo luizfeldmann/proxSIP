@@ -8,9 +8,6 @@ class PROXSIP_API IEndpoint
 public:
     virtual ~IEndpoint() = default;
 
-    //! Copies from another endpoint
-    virtual IEndpoint& operator=(const IEndpoint&) = 0;
-
     //! Sets the address
     virtual void Address(const char*) = 0;
 
@@ -19,6 +16,9 @@ public:
 
     //! Sets both the address and the port
     virtual void Assign(const char*, unsigned short) = 0;
+
+    //! Sets both the address and the port
+    virtual void Assign(const IEndpoint&) = 0;
 
     //! Sets the port
     virtual void Port(unsigned short) = 0;
