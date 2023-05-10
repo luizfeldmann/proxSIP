@@ -46,7 +46,7 @@ void CSipMessageHandler::OnMessage(const char* pData, size_t uSize, const IEndpo
     {
         CSIPRequest Request;
 
-        if (CSipParser::ParseRequest(pData, uSize, Request))
+        if (EParserResult::Success != CSipParser::ParseRequest(pData, uSize, Request))
         {
             bParsed = true;
             Request.Source() = Src;
@@ -61,7 +61,7 @@ void CSipMessageHandler::OnMessage(const char* pData, size_t uSize, const IEndpo
     {
         CSIPResponse Response;
 
-        if (CSipParser::ParseResponse(pData, uSize, Response))
+        if (EParserResult::Success != CSipParser::ParseResponse(pData, uSize, Response))
         {
             bParsed = true;
             Response.Source() = Src;

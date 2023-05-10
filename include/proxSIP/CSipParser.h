@@ -4,15 +4,27 @@
 #include "ISIPRequest.h"
 #include "ISIPResponse.h"
 
+//! Possible results for parser error
+enum class EParserResult
+{
+    Success,
+    UnexpectedEnd,
+    BadLineEnding,
+    BadMethod,
+    BadTarget,
+    BadVersion,
+    BadFieldName,
+};
+
 //! Parses SIP requests and responses
 class PROXSIP_API CSipParser
 {
 public:
     //! Parses a raw buffer into a SIP request
-    static bool ParseRequest(const char* szData, size_t uSize, ISIPRequest& Request);
+    static EParserResult ParseRequest(const char* szData, size_t uSize, ISIPRequest& Request);
 
     //! Parses a raw buffer into a SIP response
-    static bool ParseResponse(const char* szData, size_t uSize, ISIPResponse& Response);
+    static EParserResult ParseResponse(const char* szData, size_t uSize, ISIPResponse& Response);
 };
 
 #endif
