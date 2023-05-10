@@ -11,8 +11,8 @@ DECLARE_PIMPL(CEndpointImpl);
 class PROXSIP_API CEndpoint : public TImplPtr<CEndpoint, CEndpointImpl>, public IEndpoint
 {
 public:
-    CEndpoint();
-    CEndpoint(const char* szAddr, unsigned short uPort);
+    //! Construct endpoint from provided address and port
+    CEndpoint(const char* szAddr = "", unsigned short uPort = 0);
 
     //! Copies from an abstract #IEndpoint
     CEndpoint(const IEndpoint&);

@@ -22,6 +22,8 @@ public:
     IEndpoint& Source() override;
     const IEndpoint& Destination() const override;
     IEndpoint& Destination() override;
+    const IBuffer& Content() const override;
+    IBuffer& Content() override;
     //! @}
 };
 

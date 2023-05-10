@@ -21,9 +21,17 @@ endif()
 
 # List of SRCs
 set(${CMAKE_PROJECT_NAME}_LIB_SOURCES
+    # Internal
+    "src/proxSIP/Internal/CEndpointImpl.cpp"
+    "src/proxSIP/Internal/CSIPRequestImpl.cpp"
+    "src/proxSIP/Internal/CSIPResponseImpl.cpp"
+    "src/proxSIP/Internal/CKeyValuePairImpl.cpp"
+    "src/proxSIP/Internal/CKeyValueCollectionImpl.cpp"
+    # Public
     "${RESOURCES_FILE}"
     "src/proxSIP/CAsioUdpServer.cpp"
     "src/proxSIP/ESipMethod.cpp"
+    "src/proxSIP/ESipField.cpp"
     "src/proxSIP/CSipParser.cpp"
     "src/proxSIP/CSipMessageHandler.cpp"
     "src/proxSIP/CEndpoint.cpp"
@@ -31,15 +39,25 @@ set(${CMAKE_PROJECT_NAME}_LIB_SOURCES
     "src/proxSIP/CKeyValueCollection.cpp"
     "src/proxSIP/CSIPRequest.cpp"
     "src/proxSIP/CSipResponse.cpp"
-    "src/proxSIP/CSipServer.cpp")
+    "src/proxSIP/CSipServer.cpp" )
 
 # List of headers
 set(${CMAKE_PROJECT_NAME}_LIB_HEADERS
+    # Internal
+    "include/proxSIP/Internal/CEndpointImpl.h"
+    "include/proxSIP/Internal/TBuffer.h"
+    "include/proxSIP/Internal/TSIPMessageImpl.h"
+    "include/proxSIP/Internal/CSIPRequestImpl.h"
+    "include/proxSIP/Internal/CSIPResponseImpl.h"
+    "include/proxSIP/Internal/CKeyValuePairImpl.h"
+    "include/proxSIP/Internal/CKeyValueCollectionImpl.h"
+    # Public
     "include/proxSIP/proxSIPExports.h"
     "include/proxSIP/IUserAccount.h"
     "include/proxSIP/IUserAccountCollection.h"
     "include/proxSIP/IUdpServer.h"
     "include/proxSIP/CAsioUdpServer.h"
+    "include/proxSIP/IBuffer.h"
     "include/proxSIP/IKeyValuePair.h"
     "include/proxSIP/CKeyValuePair.h"
     "include/proxSIP/IKeyValueCollection.h"
@@ -53,6 +71,8 @@ set(${CMAKE_PROJECT_NAME}_LIB_HEADERS
     "include/proxSIP/CSIPResponse.h"
     "include/proxSIP/ISipResponseHandler.h" 
     "include/proxSIP/ESipMethods.h"
+    "include/proxSIP/ESipField.h"
+    "include/proxSIP/CSipSerializer.h"
     "include/proxSIP/CSipParser.h"
     "include/proxSIP/CSipMessageHandler.h"
     "include/proxSIP/IEndpoint.h"
@@ -91,7 +111,7 @@ configure_file("include/Application/version.in.h" "${VERSION_FILE}" @ONLY)
 set(${CMAKE_PROJECT_NAME}_APP_SOURCES
     "${RESOURCES_FILE}"
     "src/Application/main.cpp"
-    "src/Application/CAppConfig.cpp")
+    "src/Application/CAppConfig.cpp" )
 
 # List of headers
 set(${CMAKE_PROJECT_NAME}_APP_HEADERS

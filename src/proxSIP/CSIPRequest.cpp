@@ -1,25 +1,5 @@
 #include "CSIPRequest.h"
-#include "CEndpoint.h"
-#include <string>
-
-/* CSIPRequestImpl */
-
-class CSIPRequestImpl
-{
-public:
-    CEndpoint m_edpSrc;
-    CEndpoint m_edpDst;
-
-    ESipMethod m_eMethod;
-    std::string m_sURI;
-    std::string m_sVersion;
-
-    CSIPRequestImpl()
-        : m_eMethod(ESipMethod::Unknown)
-    {
-
-    }
-};
+#include "Internal/CSIPRequestImpl.h"
 
 /* CSIPRequest */
 
@@ -39,57 +19,67 @@ CSIPRequest::CSIPRequest()
 
 const ESIPMessageType CSIPRequest::Type() const
 {
-    return ESIPMessageType::Request;
+    return m_pImpl->Type();
 }
 
 const IEndpoint& CSIPRequest::Source() const
 {
-    return m_pImpl->m_edpSrc;
+    return m_pImpl->Source();
 }
 
 IEndpoint& CSIPRequest::Source()
 {
-    return m_pImpl->m_edpSrc;
+    return m_pImpl->Source();
 }
 
 const IEndpoint& CSIPRequest::Destination() const
 {
-    return m_pImpl->m_edpDst;
+    return m_pImpl->Destination();
 }
 
 IEndpoint& CSIPRequest::Destination()
 {
-    return m_pImpl->m_edpDst;
+    return m_pImpl->Destination();
+}
+
+const IBuffer& CSIPRequest::Content() const
+{
+    return m_pImpl->Content();
+}
+
+IBuffer& CSIPRequest::Content()
+{
+    return m_pImpl->Content();
 }
 
 /* Overrides from ISIPRequest */
 
 ESipMethod CSIPRequest::Method() const
 {
-    return m_pImpl->m_eMethod;
+    return m_pImpl->Method();
 }
 
 void CSIPRequest::Method(ESipMethod eMethod)
 {
-    m_pImpl->m_eMethod = eMethod;
+    m_pImpl->Method(eMethod);
 }
 
 const char* CSIPRequest::URI() const
 {
-    return m_pImpl->m_sURI.c_str();
+    return m_pImpl->URI();
 }
 
 void CSIPRequest::URI(const char* szURI)
 {
-    m_pImpl->m_sURI = szURI;
+    m_pImpl->URI(szURI);
 }
 
 const char* CSIPRequest::Version() const
 {
-    return m_pImpl->m_sVersion.c_str();
+    return m_pImpl->Version();
 }
 
 void CSIPRequest::Version(const char* szVersion)
 {
-    m_pImpl->m_sVersion = szVersion;
+    m_pImpl->Version(szVersion);
 }

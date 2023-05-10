@@ -11,17 +11,11 @@ DECLARE_PIMPL(CKeyValuePairImpl);
 class PROXSIP_API CKeyValuePair : public TImplPtr<CKeyValuePair, CKeyValuePairImpl>, public IKeyValuePair
 {
 public:
-    //! Constructs an empty pair
-    CKeyValuePair();
-
     //! Constructs a pair with the given name and value
-    CKeyValuePair(const char* sName, const char* sValue);
+    CKeyValuePair(const char* sName = "", const char* sValue = "");
 
     //! Copies from an abstract #IKeyValuePair
     CKeyValuePair(const IKeyValuePair&);
-
-    //! Sets the key
-    void Key(const char*);
 
     //! @name Overrides from #IKeyValuePair
     //! @{

@@ -1,19 +1,5 @@
 #include "CSIPResponse.h"
-#include "CEndpoint.h"
-
-/* CSIPResponseImpl */
-
-class CSIPResponseImpl
-{
-public:
-    CEndpoint m_edpSrc;
-    CEndpoint m_edpDst;
-
-    CSIPResponseImpl()
-    {
-
-    }
-};
+#include "Internal/CSIPResponseImpl.h"
 
 /* CSIPResponse */
 
@@ -33,25 +19,35 @@ CSIPResponse::CSIPResponse()
 
 const ESIPMessageType CSIPResponse::Type() const
 {
-    return ESIPMessageType::Response;
+    return m_pImpl->Type();
 }
 
 const IEndpoint& CSIPResponse::Source() const
 {
-    return m_pImpl->m_edpSrc;
+    return m_pImpl->Source();
 }
 
 IEndpoint& CSIPResponse::Source()
 {
-    return m_pImpl->m_edpSrc;
+    return m_pImpl->Source();
 }
 
 const IEndpoint& CSIPResponse::Destination() const
 {
-    return m_pImpl->m_edpDst;
+    return m_pImpl->Source();
 }
 
 IEndpoint& CSIPResponse::Destination()
 {
-    return m_pImpl->m_edpDst;
+    return m_pImpl->Source();
+}
+
+const IBuffer& CSIPResponse::Content() const
+{
+    return m_pImpl->Content();
+}
+
+IBuffer& CSIPResponse::Content()
+{
+    return m_pImpl->Content();
 }

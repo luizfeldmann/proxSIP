@@ -6,7 +6,7 @@
 //! Verbs for SIP requests
 enum class ESipMethod
 {
-    Unknown,
+    Unknown = 0,
     REGISTER,    //!< For registering contact information
     INVITE,
     ACK,

@@ -2,6 +2,7 @@
 #define _ISIPMESSAGE_H_
 
 #include "IEndpoint.h"
+#include "IBuffer.h"
 
 //! Types of SIP messages
 enum class ESIPMessageType
@@ -30,6 +31,12 @@ public:
 
     //! Mutator to the destination endpoint of the message
     virtual IEndpoint& Destination() = 0;
+
+    //! Accessor to the payload content
+    virtual const IBuffer& Content() const = 0;
+
+    //! Mutator to the payload content
+    virtual IBuffer& Content() = 0;
 };
 
 #endif
