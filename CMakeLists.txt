@@ -32,6 +32,8 @@ set(${CMAKE_PROJECT_NAME}_LIB_SOURCES
     "src/proxSIP/CAsioUdpServer.cpp"
     "src/proxSIP/ESipMethod.cpp"
     "src/proxSIP/ESipField.cpp"
+    "src/proxSIP/ESipStatusCode.cpp"
+    "src/proxSIP/CSipSerializer.cpp"
     "src/proxSIP/CSipParser.cpp"
     "src/proxSIP/CSipMessageHandler.cpp"
     "src/proxSIP/CEndpoint.cpp"
@@ -45,7 +47,7 @@ set(${CMAKE_PROJECT_NAME}_LIB_SOURCES
 set(${CMAKE_PROJECT_NAME}_LIB_HEADERS
     # Internal
     "include/proxSIP/Internal/CEndpointImpl.h"
-    "include/proxSIP/Internal/TBuffer.h"
+    "include/proxSIP/TBuffer.h"
     "include/proxSIP/Internal/TSIPMessageImpl.h"
     "include/proxSIP/Internal/CSIPRequestImpl.h"
     "include/proxSIP/Internal/CSIPResponseImpl.h"
@@ -72,6 +74,7 @@ set(${CMAKE_PROJECT_NAME}_LIB_HEADERS
     "include/proxSIP/ISipResponseHandler.h" 
     "include/proxSIP/ESipMethods.h"
     "include/proxSIP/ESipField.h"
+    "include/proxSIP/ESipStatusCode.h"
     "include/proxSIP/CSipSerializer.h"
     "include/proxSIP/CSipParser.h"
     "include/proxSIP/CSipMessageHandler.h"

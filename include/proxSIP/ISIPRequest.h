@@ -21,12 +21,6 @@ public:
 
     //! Sets the request URI
     virtual void URI(const char*) = 0;
-
-    //! Reads the protocol version
-    virtual const char* Version() const = 0;
-
-    //! Sets the protocol version
-    virtual void Version(const char*) = 0;
 };
 
 #endif

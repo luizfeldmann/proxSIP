@@ -16,6 +16,11 @@ public:
 
     }
 
+    void clear() override
+    {
+        m_container.clear();
+    }
+
     size_t size() const override
     {
         return m_container.size();
@@ -44,6 +49,11 @@ public:
     char* end()
     {
         return m_container.data() + m_container.size();
+    }
+
+    void write(const char* pData, size_t uCount) override
+    {
+        m_container.insert(m_container.end(), pData, pData + uCount);
     }
 };
 

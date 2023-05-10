@@ -8,6 +8,8 @@
 class CSIPResponseImpl : public TSIPMessageImpl<ISIPResponse>
 {
 protected:
+    //! The status code of the response
+    ESipStatusCode m_eStatus;
 
 public:
     //! Constructs empty response
@@ -28,6 +30,12 @@ public:
     //! @name Overrides from ISIPMessage
     //! @{
     const ESIPMessageType Type() const override;
+    //! @}
+    
+    //! @name Overrides from ISIPResponse
+    //! @{
+    ESipStatusCode Status() const override;
+    void Status(ESipStatusCode) override;
     //! @}
 };
 

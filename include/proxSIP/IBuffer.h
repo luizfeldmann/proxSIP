@@ -9,6 +9,9 @@ class PROXSIP_API IBuffer
 public:
     virtual ~IBuffer() = default;
 
+    //! Erases all the content
+    virtual void clear() = 0;
+
     //! Gets the size of the stored data
     virtual size_t size() const = 0;
 
@@ -26,6 +29,9 @@ public:
 
     //! Iterator to the end of the buffer
     virtual char* end() = 0;
+
+    //! Copies data to inside the buffer
+    virtual void write(const char*, size_t) = 0;
 };
 
 #endif

@@ -16,7 +16,7 @@
 using name_method_map_t = std::map<std::string, ESipMethod>;
 #define PAIR_NAME_METHOD(x) {#x, ESipMethod::x}
 
-const name_method_map_t& GetMapNameToMethod()
+static const name_method_map_t& GetMapNameToMethod()
 {
     static const name_method_map_t theMap {
         FILL_SIP_MAP(PAIR_NAME_METHOD)
@@ -43,7 +43,7 @@ ESipMethod GetSipMethodEnum(const char* szMethod)
 using method_name_map_t = std::map<ESipMethod, std::string>;
 #define PAIR_METHOD_NAME(x) {ESipMethod::x, #x}
 
-const method_name_map_t& GetMapMethodToName()
+static const method_name_map_t& GetMapMethodToName()
 {
     static const method_name_map_t theMap{
         FILL_SIP_MAP(PAIR_METHOD_NAME)

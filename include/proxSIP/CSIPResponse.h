@@ -15,14 +15,35 @@ public:
     ~CSIPResponse();
     CSIPResponse();
 
+    //! @name Overrides from ISIPResponse
+    //! @{
+    ESipStatusCode Status() const override;
+
+    void Status(ESipStatusCode) override;
+    //! @}
+
     //! @name Overrides from ISIPMessage
     //! @{
     const ESIPMessageType Type() const override;
+
+    const char* Version() const;
+
+    void Version(const char*);
+
     const IEndpoint& Source() const override;
+
     IEndpoint& Source() override;
+
     const IEndpoint& Destination() const override;
+
     IEndpoint& Destination() override;
+
+    const IKeyValueCollection& Fields() const override;
+
+    IKeyValueCollection& Fields() override;
+
     const IBuffer& Content() const override;
+
     IBuffer& Content() override;
     //! @}
 };

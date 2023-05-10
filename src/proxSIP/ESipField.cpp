@@ -6,7 +6,7 @@
 
 using field_name_map_t = std::map<ESipField, std::string>;
 
-const field_name_map_t& GetMapFieldToName()
+static const field_name_map_t& GetMapFieldToName()
 {
     static const field_name_map_t theMap
     {

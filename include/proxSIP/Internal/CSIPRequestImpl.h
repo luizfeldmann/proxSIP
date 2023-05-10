@@ -14,9 +14,6 @@ protected:
     //! Requested URI
     std::string m_sURI;
 
-    //! Protocol version
-    std::string m_sVersion;
-
 public:
     //! Constructs empty request
     CSIPRequestImpl();
@@ -44,8 +41,6 @@ public:
     void Method(ESipMethod) override;
     const char* URI() const override;
     void URI(const char*) override;
-    const char* Version() const override;
-    void Version(const char*) override;
     //! @}
 };
 

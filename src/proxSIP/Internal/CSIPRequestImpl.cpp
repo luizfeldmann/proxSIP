@@ -38,13 +38,3 @@ void CSIPRequestImpl::URI(const char* sReqUri)
 {
     m_sURI = sReqUri;
 }
-
-const char* CSIPRequestImpl::Version() const
-{
-    return m_sVersion.c_str();
-}
-
-void CSIPRequestImpl::Version(const char* sVersion)
-{
-    m_sVersion = sVersion;
-}
