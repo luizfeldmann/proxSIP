@@ -83,3 +83,16 @@ const char* GetSipStatusCodeStr(ESipStatusCode eCode)
 
     return szStatus;
 }
+
+ESipStatusCode SipValidadeStatusCode(unsigned short usCode)
+{
+    ESipStatusCode eCode = static_cast<ESipStatusCode>(usCode);
+
+    const auto& rMap = GetMapCodeToStatus();
+    auto itFind = rMap.find(eCode);
+
+    if (rMap.cend() == itFind)
+        eCode = ESipStatusCode::Unknown;
+
+    return eCode;
+}

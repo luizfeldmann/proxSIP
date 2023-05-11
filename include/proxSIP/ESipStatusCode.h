@@ -68,4 +68,7 @@ enum class ESipStatusCode
 //! Converts a status code to a string
 PROXSIP_API const char* GetSipStatusCodeStr(ESipStatusCode);
 
+//! Converts the number to a status code enumeration if it's valid, or #ESipStatusCode::Unknown otherwise
+PROXSIP_API ESipStatusCode SipValidadeStatusCode(unsigned short);
+
 #endif

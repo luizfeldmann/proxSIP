@@ -59,8 +59,39 @@ static inline boost::string_view make_string(char const* first, char const* last
 
 /* Common to both requests and responses */
 
+static EParserResult ParseToCRLF(const char*& p, const char* pEnd, const char*& pToken)
+{
+    for (;;)
+    {
+        if (p + 2 > pEnd)
+        {
+            return EParserResult::UnexpectedEnd;
+        }
+
+        if (p[0] == '\r')
+        {
+            // Missing LF...
+            if (p[1] != '\n')
+            {
+                return EParserResult::BadLineEnding;
+            }
+
+            // Save end of the token
+            pToken = p;
+
+            // Skip the CRLF
+            p += 2;
+            break;
+        }
+
+        ++p;
+    }
+
+    return EParserResult::Success;
+}
+
 //! Parse *one* field
-static EParserResult ParseField(const char*& p, const char* pEnd, ISIPRequest& Request)
+static EParserResult ParseField(const char*& p, const char* pEnd, ISIPMessage& Message)
 {
     const char* pFirst = p;
 
@@ -115,46 +146,30 @@ static EParserResult ParseField(const char*& p, const char* pEnd, ISIPRequest& R
         }
     }
 
-    // First character of the value
-    pFirst = p;
+    // Tokenize the value
     boost::string_view svValue;
-
-    // parse until CRLF
-    for (;;)
     {
-        if (p + 2 > pEnd)
-        {
-            return EParserResult::UnexpectedEnd;
-        }
+        pFirst = p; // First character of value
+        const char* pToken = p; // Last character of value
 
-        if (p[0] == '\r')
-        {
-            // Missing LF...
-            if (p[1] != '\n')
-            {
-                return EParserResult::BadLineEnding;
-            }
+        const EParserResult eStatus = ParseToCRLF(p, pEnd, pToken);
 
-            svValue = make_string(pFirst, p);
+        if (EParserResult::Success != eStatus)
+            return eStatus;
 
-            // Skip the CRLF - end of field parsing
-            p += 2;
-            break;
-        }
-
-        ++p;
+        svValue = make_string(pFirst, pToken);
     }
 
     // Push the field into the message struct
     const auto sKey = svName.to_string();
     const auto sValue = svValue.to_string();
-    Request.Fields().Insert(sKey.c_str(), sValue.c_str());
+    Message.Fields().Insert(sKey.c_str(), sValue.c_str());
 
     return EParserResult::Success;
 }
 
 //! Parses all the fields
-static EParserResult ParseFields(const char*& szData, const char* last, ISIPRequest& Request)
+static EParserResult ParseFields(const char*& szData, const char* last, ISIPMessage& Message)
 {
     EParserResult eResult = EParserResult::Success;
 
@@ -182,7 +197,7 @@ static EParserResult ParseFields(const char*& szData, const char* last, ISIPRequ
         }
 
         // Read each field
-        eResult = ParseField(szData, last, Request);
+        eResult = ParseField(szData, last, Message);
 
         if (EParserResult::Success != eResult)
             break;
@@ -192,12 +207,12 @@ static EParserResult ParseFields(const char*& szData, const char* last, ISIPRequ
 }
 
 //! Parse body content
-static EParserResult ParseContent(const char*& szData, const char* pEnd, ISIPRequest& Request)
+static EParserResult ParseContent(const char*& szData, const char* pEnd, ISIPMessage& Message)
 {
     if (pEnd > szData)
     {
         size_t uContentLength = pEnd - szData;
-        Request.Content().write(szData, uContentLength);
+        Message.Content().write(szData, uContentLength);
     }
     szData = pEnd;
 
@@ -205,12 +220,12 @@ static EParserResult ParseContent(const char*& szData, const char* pEnd, ISIPReq
 }
 
 //! Parse fields and body
-static EParserResult ParseMessage(const char*& szData, const char* pEnd, ISIPRequest& Request)
+static EParserResult ParseMessage(const char*& szData, const char* pEnd, ISIPMessage& Message)
 {
-    EParserResult eStatus = ParseFields(szData, pEnd, Request);
+    EParserResult eStatus = ParseFields(szData, pEnd, Message);
 
     if (EParserResult::Success == eStatus)
-        eStatus = ParseContent(szData, pEnd, Request);;
+        eStatus = ParseContent(szData, pEnd, Message);
 
     return eStatus;
 }
@@ -340,6 +355,8 @@ EParserResult CSipParser::ParseRequest(const char* szData, size_t uSize, ISIPReq
         return eStatus;
     }
 
+    Request.Method(eMethod);
+
     // Read the target URI
     boost::string_view svTarget;
     eStatus = ParseTarget(szData, pEnd, svTarget);
@@ -348,6 +365,8 @@ EParserResult CSipParser::ParseRequest(const char* szData, size_t uSize, ISIPReq
     {
         return eStatus;
     }
+
+    Request.URI(svTarget.to_string().c_str());
 
     // Read the version string
     boost::string_view svVersion;
@@ -358,7 +377,9 @@ EParserResult CSipParser::ParseRequest(const char* szData, size_t uSize, ISIPReq
         return eStatus;
     }
 
-    // Skip pFirst CRLF
+    Request.Version(svVersion.to_string().c_str());
+
+    // Skip first CRLF
     if (szData + 2 > pEnd)
     {
         eStatus = EParserResult::UnexpectedEnd;
@@ -372,18 +393,98 @@ EParserResult CSipParser::ParseRequest(const char* szData, size_t uSize, ISIPReq
     }
     szData += 2;
 
-    // Copy parsed data
-    Request.Method(eMethod);
-    Request.URI(svTarget.to_string().c_str());
-    Request.Version(svVersion.to_string().c_str());
-
     // Parse fields and content
-    return ParseMessage(szData, pEnd, Request);
+    eStatus = ParseMessage(szData, pEnd, Request);
+
+    return eStatus;
 }
 
 /* Response parsing */
 
+//! Parses the 3-digit status code + SP
+static EParserResult ParseStatusCode(const char*& it, const char* pEnd, unsigned short& usCode)
+{
+    // Assert length
+    if (it + 4 > pEnd)
+    {
+        return EParserResult::UnexpectedEnd;
+    }
+
+    // Verify digits + SP
+    if (!std::isdigit(it[0]) || !std::isdigit(it[1]) || !std::isdigit(it[2]) || (' ' != it[3]))
+    {
+        return EParserResult::BadStatus;
+    }
+
+    // Read digits chars and cast to number
+    usCode = 100 * (*it++ - '0');
+    usCode += 10 * (*it++ - '0');
+    usCode +=  1 * (*it++ - '0');
+    ++it; // skip SP
+
+    return EParserResult::Success;
+}
+
 EParserResult CSipParser::ParseResponse(const char* szData, size_t uSize, ISIPResponse& Response)
 {
-    return EParserResult::Success;
+    const char* pEnd = szData + uSize;
+
+    // Read the version string
+    boost::string_view svVersion;
+    EParserResult eStatus = ParseVersion(szData, pEnd, svVersion);
+
+    if (EParserResult::Success != eStatus)
+    {
+        return eStatus;
+    }
+
+    Response.Version(svVersion.to_string().c_str());
+
+    // Skip the space
+    if (szData + 1 > pEnd)
+    {
+        eStatus = EParserResult::UnexpectedEnd;
+        return eStatus;
+    }
+
+    if (*szData++ != ' ')
+    {
+        eStatus = EParserResult::BadVersion;
+        return eStatus;
+    }
+
+    // Read the status code
+    unsigned short usCode;
+    eStatus = ParseStatusCode(szData, pEnd, usCode);
+
+    if (EParserResult::Success != eStatus)
+    {
+        return eStatus;
+    }
+
+    // Validate the status code
+    ESipStatusCode eCode = SipValidadeStatusCode(usCode);
+
+    if (ESipStatusCode::Unknown == eCode)
+    {
+        eStatus = EParserResult::BadStatus;
+        return eStatus;
+    }
+
+    Response.Status(eCode);
+
+    // Read status reason
+    const char* pFirstReason = szData;
+    const char* pEndReason = szData;
+
+    eStatus = ParseToCRLF(szData, pEnd, pEndReason);
+    if (EParserResult::Success != eStatus)
+    {
+        return eStatus;
+    }
+
+    // Parse fields and content
+    eStatus = ParseMessage(szData, pEnd, Response);
+
+    return eStatus;
 }

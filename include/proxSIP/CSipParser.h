@@ -14,6 +14,7 @@ enum class EParserResult
     BadTarget,
     BadVersion,
     BadFieldName,
+    BadStatus,
 };
 
 //! Parses SIP requests and responses
