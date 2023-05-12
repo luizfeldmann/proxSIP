@@ -2,6 +2,7 @@
 #define _CAPPCONFIG_H_
 
 #include <proxSIP/IEndpoint.h>
+#include <proxSIP/IUserAccountCollection.h>
 
 class CAppConfigImpl;
 
@@ -22,6 +23,9 @@ public:
 
     //! Reads the local endpoint of the server
     const IEndpoint& ServerLocalEndpoint() const;
+
+    //! Retrieves the collection of user accounts
+    const IUserAccountCollection& GetUsers() const;
 };
 
 #endif

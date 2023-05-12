@@ -27,6 +27,7 @@ set(${CMAKE_PROJECT_NAME}_LIB_SOURCES
     "src/proxSIP/Internal/CSIPResponseImpl.cpp"
     "src/proxSIP/Internal/CKeyValuePairImpl.cpp"
     "src/proxSIP/Internal/CKeyValueCollectionImpl.cpp"
+    "src/proxSIP/Internal/CAuthValidatorImpl.cpp"
     "src/proxSIP/Internal/CSipServerImpl.cpp"
     # Public
     "${RESOURCES_FILE}"
@@ -48,20 +49,21 @@ set(${CMAKE_PROJECT_NAME}_LIB_SOURCES
 set(${CMAKE_PROJECT_NAME}_LIB_HEADERS
     # Internal
     "include/proxSIP/Internal/CEndpointImpl.h"
-    "include/proxSIP/TBuffer.h"
     "include/proxSIP/Internal/TSIPMessageImpl.h"
     "include/proxSIP/Internal/CSIPRequestImpl.h"
     "include/proxSIP/Internal/CSIPResponseImpl.h"
     "include/proxSIP/Internal/CKeyValuePairImpl.h"
     "include/proxSIP/Internal/CKeyValueCollectionImpl.h"
+    "include/proxSIP/Internal/CAuthValidatorImpl.h"
     "include/proxSIP/Internal/CSipServerImpl.h"
     # Public
     "include/proxSIP/proxSIPExports.h"
-    "include/proxSIP/IUserAccount.h"
+    "include/proxSIP/IAuthValidator.h"
     "include/proxSIP/IUserAccountCollection.h"
     "include/proxSIP/IUdpServer.h"
     "include/proxSIP/CAsioUdpServer.h"
     "include/proxSIP/IBuffer.h"
+    "include/proxSIP/TBuffer.h"
     "include/proxSIP/IKeyValuePair.h"
     "include/proxSIP/CKeyValuePair.h"
     "include/proxSIP/IKeyValueCollection.h"

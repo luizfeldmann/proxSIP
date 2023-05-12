@@ -37,11 +37,58 @@ public:
         }
     } m_stServer; //!< @copydoc SServerConfig
 
+    //! User data
+    struct SUserData : public IUserAccountCollection
+    {
+        std::map<std::string, std::string> m_mUserPass;
+
+        //! Reads user data
+        void Read(const boost::json::object& jObj)
+        {
+            // Iterate each user record
+            for (const auto& rUser : jObj)
+            {
+                const char* sUsername = rUser.key_c_str();
+                const char* sPassword = rUser.value().as_string().c_str();
+
+                // Add to list
+                auto insert = m_mUserPass.insert({ sUsername , sPassword });
+
+                // Check if add successful
+                if (!insert.second)
+                {
+                    BOOST_LOG_TRIVIAL(warning) << "Repeated user record: " << sUsername;
+                }
+            }
+        }
+
+        //! @name Overrides from IUserAccountCollection
+        //! @{
+        const char* GetUserPassword(const char*, const char* sUsername) const
+        {
+            const char* sPassword = nullptr;
+
+            auto itFind = m_mUserPass.find(sUsername);
+            if (m_mUserPass.cend() != itFind)
+                sPassword = itFind->second.c_str();
+
+            return sPassword;
+        }
+        //! @}
+    } m_stUsers; //!< @copydoc SUserData
+
 
     //! Parses the root level of the application configuration file
     void Read(const boost::json::object& jAppConfig)
     {
         m_stServer.Read(jAppConfig.at("Server").as_object());
+        m_stUsers.Read(jAppConfig.at("Users").as_object());
+    }
+
+    //! Gets the accessor to the user accounts
+    const IUserAccountCollection& GetUsers() const
+    {
+        return m_stUsers;
     }
 };
 
@@ -124,4 +171,9 @@ CAppConfig::CAppConfig(const char* szFile)
 const IEndpoint& CAppConfig::ServerLocalEndpoint() const
 {
     return m_pImpl->m_stServer;
+}
+
+const IUserAccountCollection& CAppConfig::GetUsers() const
+{
+    return m_pImpl->GetUsers();
 }
