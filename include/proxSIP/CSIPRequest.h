@@ -11,6 +11,9 @@ class PROXSIP_API CSIPRequest : public ISIPRequest
 private:
     CSIPRequestImpl* m_pImpl;
 
+    CSIPRequest(const CSIPRequest&) = delete;
+    CSIPRequest& operator=(const CSIPRequest&) = delete;
+
 public:
     ~CSIPRequest();
     CSIPRequest();

@@ -17,6 +17,9 @@ private:
     ISipResponseHandler* m_pResponseHandler;
     IUdpMessageSender* m_pMessageSender;
 
+    CSipMessageHandler(const CSipMessageHandler&) = delete;
+    CSipMessageHandler& operator=(const CSipMessageHandler&) = delete;
+
 public:
     CSipMessageHandler();
     CSipMessageHandler(ISipRequestHandler* pRequestHandler, ISipResponseHandler* pResponseHandler, IUdpMessageSender* pSender);

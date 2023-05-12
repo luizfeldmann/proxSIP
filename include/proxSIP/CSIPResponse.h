@@ -11,6 +11,9 @@ class PROXSIP_API CSIPResponse : public ISIPResponse
 private:
     CSIPResponseImpl* m_pImpl;
 
+    CSIPResponse(const CSIPResponse&) = delete;
+    CSIPResponse& operator=(const CSIPResponse&) = delete;
+
 public:
     ~CSIPResponse();
     CSIPResponse();

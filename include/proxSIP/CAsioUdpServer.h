@@ -9,6 +9,7 @@ class CAsioUdpServerImpl;
 class PROXSIP_API CAsioUdpServer : public IUdpServer
 {
 private:
+    //! Pointer to implementation
     CAsioUdpServerImpl* m_pImpl;
 
     CAsioUdpServer(const CAsioUdpServer&) = delete;
