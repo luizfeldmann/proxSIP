@@ -4,6 +4,7 @@
 #include "ISipRequestHandler.h"
 #include "ISipResponseHandler.h"
 #include "ISipMessageSender.h"
+#include "IAuthValidator.h"
 
 class CSipServerImpl;
 
@@ -21,6 +22,7 @@ public:
     CSipServer();
     ~CSipServer();
 
+    void SetAuth(IAuthValidator*);
     void SetSender(ISipMessageSender*);
     void OnRequest(const ISIPRequest&) override;
     void OnResponse(const ISIPResponse&) override;

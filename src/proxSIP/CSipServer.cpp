@@ -17,6 +17,11 @@ CSipServer::~CSipServer()
     m_pImpl = nullptr;
 }
 
+void CSipServer::SetAuth(IAuthValidator* pAuth)
+{
+    m_pImpl->SetAuth(pAuth);
+}
+
 void CSipServer::SetSender(ISipMessageSender* pSender)
 {
     m_pImpl->SetSender(pSender);

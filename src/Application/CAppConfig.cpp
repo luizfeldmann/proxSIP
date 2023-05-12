@@ -86,9 +86,9 @@ public:
     }
 
     //! Gets the accessor to the user accounts
-    const IUserAccountCollection& GetUsers() const
+    const IUserAccountCollection* GetUsers() const
     {
-        return m_stUsers;
+        return &m_stUsers;
     }
 };
 
@@ -173,7 +173,7 @@ const IEndpoint& CAppConfig::ServerLocalEndpoint() const
     return m_pImpl->m_stServer;
 }
 
-const IUserAccountCollection& CAppConfig::GetUsers() const
+const IUserAccountCollection* CAppConfig::GetUsers() const
 {
     return m_pImpl->GetUsers();
 }

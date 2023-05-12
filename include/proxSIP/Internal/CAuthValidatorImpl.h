@@ -15,6 +15,8 @@ public:
     //! @name Overrides from #IAuthValidator
     //! @{
     void SetAccounts(const IUserAccountCollection*) override;
+
+    ESipStatusCode ValidateAuth(IAuthDigest&) override;
     //! @}
 };
 

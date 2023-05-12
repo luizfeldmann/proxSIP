@@ -25,7 +25,7 @@ public:
     const IEndpoint& ServerLocalEndpoint() const;
 
     //! Retrieves the collection of user accounts
-    const IUserAccountCollection& GetUsers() const;
+    const IUserAccountCollection* GetUsers() const;
 };
 
 #endif

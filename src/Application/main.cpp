@@ -1,6 +1,7 @@
 #include <proxSIP/CAsioUdpServer.h>
 #include <proxSIP/CSipMessageHandler.h>
 #include <proxSIP/CSipServer.h>
+#include <proxSIP/CAuthValidator.h>
 #include "CAppConfig.h"
 #include <iostream>
 #include <conio.h>
@@ -21,6 +22,11 @@ int main(int argc, char** argv)
 
     // Create the server logic
     CSipServer sipServer;
+
+    // Create auth manager
+    CAuthValidator cAuth;
+    cAuth.SetAccounts(config.GetUsers());
+    sipServer.SetAuth(&cAuth);
 
     // Create a handler for converting UDP messages to SIP
     CSipMessageHandler msgHandler;
