@@ -26,11 +26,13 @@ int main(int argc, char** argv)
     CSipMessageHandler msgHandler;
     msgHandler.SetHandler((ISipRequestHandler*)&sipServer);
     msgHandler.SetHandler((ISipResponseHandler*)&sipServer);
+    sipServer.SetSender(&msgHandler);
 
     // Listen for UDP messages
     CAsioUdpServer udpServer;
     udpServer.LocalEndpoint().Assign(config.ServerLocalEndpoint());
     udpServer.SetHandler(&msgHandler);
+    msgHandler.SetSender(&udpServer);
     udpServer.Start();
 
     // Main loop

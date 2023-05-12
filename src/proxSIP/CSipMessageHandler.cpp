@@ -1,18 +1,22 @@
 #include "CSipMessageHandler.h"
 #include "CSipParser.h"
+#include "CSipSerializer.h"
 #include "CSIPRequest.h"
 #include "CSIPResponse.h"
+#include "TBuffer.h"
+#include <vector>
 #include <boost/log/trivial.hpp>
 
 CSipMessageHandler::CSipMessageHandler()
-    : CSipMessageHandler(nullptr, nullptr)
+    : CSipMessageHandler(nullptr, nullptr, nullptr)
 {
 
 }
 
-CSipMessageHandler::CSipMessageHandler(ISipRequestHandler* pRequestHandler, ISipResponseHandler* pResponseHandler)
+CSipMessageHandler::CSipMessageHandler(ISipRequestHandler* pRequestHandler, ISipResponseHandler* pResponseHandler, IUdpMessageSender* pSender)
     : m_pRequestHandler(pRequestHandler)
     , m_pResponseHandler(pResponseHandler)
+    , m_pMessageSender(pSender)
 {
 
 }
@@ -27,6 +31,11 @@ void CSipMessageHandler::SetHandler(ISipResponseHandler* pHandler)
     m_pResponseHandler = pHandler;
 }
 
+void CSipMessageHandler::SetSender(IUdpMessageSender* pSender)
+{
+    m_pMessageSender = pSender;
+}
+
 ISipRequestHandler* CSipMessageHandler::GetRequestHandler()
 {
     return m_pRequestHandler;
@@ -35,6 +44,11 @@ ISipRequestHandler* CSipMessageHandler::GetRequestHandler()
 ISipResponseHandler* CSipMessageHandler::GetResponseHandler()
 {
     return m_pResponseHandler;
+}
+
+IUdpMessageSender* CSipMessageHandler::GetSender()
+{
+    return m_pMessageSender;
 }
 
 void CSipMessageHandler::OnMessage(const char* pData, size_t uSize, const IEndpoint& Src, const IEndpoint& Dst)
@@ -46,11 +60,11 @@ void CSipMessageHandler::OnMessage(const char* pData, size_t uSize, const IEndpo
     {
         CSIPRequest Request;
 
-        if (EParserResult::Success != CSipParser::ParseRequest(pData, uSize, Request))
+        if (EParserResult::Success == CSipParser::ParseRequest(pData, uSize, Request))
         {
             bParsed = true;
-            Request.Source() = Src;
-            Request.Destination() = Dst;
+            Request.Source().Assign(Src);
+            Request.Destination().Assign(Dst);
 
             m_pRequestHandler->OnRequest(Request);
         }
@@ -61,11 +75,11 @@ void CSipMessageHandler::OnMessage(const char* pData, size_t uSize, const IEndpo
     {
         CSIPResponse Response;
 
-        if (EParserResult::Success != CSipParser::ParseResponse(pData, uSize, Response))
+        if (EParserResult::Success == CSipParser::ParseResponse(pData, uSize, Response))
         {
             bParsed = true;
-            Response.Source() = Src;
-            Response.Destination() = Dst;
+            Response.Source().Assign(Src);
+            Response.Destination().Assign(Dst);
 
             m_pResponseHandler->OnResponse(Response);
         }
@@ -75,5 +89,16 @@ void CSipMessageHandler::OnMessage(const char* pData, size_t uSize, const IEndpo
     if (!bParsed)
     {
         BOOST_LOG_TRIVIAL(error) << "UDP message is not compliant to SIP";
+    }
+}
+
+void CSipMessageHandler::SendMessage(const ISIPMessage& Message)
+{
+    if (m_pMessageSender)
+    {
+        TBuffer<std::vector<char>> Buffer;
+        CSipSerializer::SerializeMessage(Message, Buffer);
+
+        m_pMessageSender->SendMessage(Buffer.cbegin(), Buffer.size(), Message.Destination());
     }
 }

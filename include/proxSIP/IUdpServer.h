@@ -2,13 +2,13 @@
 #define _IUDPSERVER_H_
 
 #include "IUdpMessageHandler.h"
-#include "IEndpoint.h"
+#include "IUdpMessageSender.h"
 
 //! Handles HTTP messages via UDP
-class PROXSIP_API IUdpServer
+class PROXSIP_API IUdpServer : public IUdpMessageSender
 {
 public:
-    virtual ~IUdpServer() = default;;
+    virtual ~IUdpServer() = default;
 
     //! Mutator to the locally bound endpoint
     virtual IEndpoint& LocalEndpoint() = 0;

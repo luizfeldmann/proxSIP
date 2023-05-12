@@ -1,14 +1,7 @@
 #include "CSipServer.h"
+#include "Internal/CSipServerImpl.h"
 
 /* CSipServerImpl */
-class CSipServerImpl
-{
-public:
-    CSipServerImpl()
-    {
-
-    }
-};
 
 /* CSipServer */
 
@@ -24,12 +17,17 @@ CSipServer::~CSipServer()
     m_pImpl = nullptr;
 }
 
-void CSipServer::OnRequest(const ISIPRequest&)
+void CSipServer::SetSender(ISipMessageSender* pSender)
 {
-
+    m_pImpl->SetSender(pSender);
 }
 
-void CSipServer::OnResponse(const ISIPResponse&)
+void CSipServer::OnRequest(const ISIPRequest& Request)
 {
+    m_pImpl->OnRequest(Request);
+}
 
+void CSipServer::OnResponse(const ISIPResponse& Response)
+{
+    m_pImpl->OnResponse(Response);
 }

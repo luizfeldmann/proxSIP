@@ -18,6 +18,11 @@ public:
     CAsioUdpServer();
     ~CAsioUdpServer();
 
+    //! @name Overrides from IUdpMessageSender
+    //! @{
+    void SendMessage(const char* pData, size_t uSize, const IEndpoint& Dst) override;
+    //! @}
+    
     //! @name Overrides from IUdpHttpServer
     //! @{
     IEndpoint& LocalEndpoint();
