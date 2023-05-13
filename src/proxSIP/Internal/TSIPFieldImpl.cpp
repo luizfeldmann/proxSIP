@@ -19,7 +19,18 @@ static bool SipFieldParseOneParam(const char*& pData, const char* pEnd, IKeyValu
     for (;;)
     {
         if (pData >= pEnd)
-            return false; /* Unexpected end */
+        {
+            // EOF without value
+            pKeyEnd = pData;
+            break;
+        }
+
+        if (*pData == ';')
+        {
+            // Key without = and without value
+            pKeyEnd = pData;
+            break;
+        }
 
         if (*pData == '=')
         {
@@ -88,7 +99,10 @@ namespace detail
             const std::string sKey = p->Key();
             const std::string sVal = p->Value();
 
-            sText += ";" + sKey + "=" + sVal;
+            sText += ";" + sKey;
+            
+            if (!sVal.empty())
+                sText += "=" + sVal;
         }
 
         Buffer.write(sText.data(), sText.size());
