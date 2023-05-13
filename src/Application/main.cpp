@@ -2,6 +2,7 @@
 #include <proxSIP/CSipMessageHandler.h>
 #include <proxSIP/CSipServer.h>
 #include <proxSIP/CAuthValidator.h>
+#include <proxSIP/CSipRegistry.h>
 #include "CAppConfig.h"
 #include <iostream>
 #include <conio.h>
@@ -22,6 +23,10 @@ int main(int argc, char** argv)
 
     // Create the server logic
     CSipServer sipServer;
+
+    // Create registry for contacts
+    CSipRegistry cRegistry;
+    sipServer.SetRegistry(&cRegistry);
 
     // Create auth manager
     CAuthValidator cAuth;

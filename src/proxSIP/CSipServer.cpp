@@ -27,6 +27,11 @@ void CSipServer::SetSender(ISipMessageSender* pSender)
     m_pImpl->SetSender(pSender);
 }
 
+void CSipServer::SetRegistry(ISipRegistry* pReg)
+{
+    m_pImpl->SetRegistry(pReg);
+}
+
 void CSipServer::OnRequest(const ISIPRequest& Request)
 {
     m_pImpl->OnRequest(Request);

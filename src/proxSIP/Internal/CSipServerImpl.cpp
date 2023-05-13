@@ -38,6 +38,7 @@ static void ReturnToSender(const ISIPMessage& From, ISIPMessage& To)
 CSipServerImpl::CSipServerImpl()
     : m_pSender(nullptr)
     , m_pAuth(nullptr)
+    , m_pRegistry(nullptr)
 {
 
 }
@@ -50,6 +51,11 @@ void CSipServerImpl::SetAuth(IAuthValidator* pAuth)
 void CSipServerImpl::SetSender(ISipMessageSender* pSender)
 {
     m_pSender = pSender;
+}
+
+void CSipServerImpl::SetRegistry(ISipRegistry* pReg)
+{
+    m_pRegistry = pReg;
 }
 
 void CSipServerImpl::OnRequest(const ISIPRequest& Request)
