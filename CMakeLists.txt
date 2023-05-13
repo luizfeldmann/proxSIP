@@ -29,6 +29,7 @@ set(${CMAKE_PROJECT_NAME}_LIB_SOURCES
     "src/proxSIP/Internal/CKeyValueCollectionImpl.cpp"
     "src/proxSIP/Internal/CAuthValidatorImpl.cpp"
     "src/proxSIP/Internal/CAuthDigestImpl.cpp"
+    "src/proxSIP/Internal/CSipContactImpl.cpp"
     "src/proxSIP/Internal/CSipServerImpl.cpp"
     "src/proxSIP/Internal/CAsioUdpServerImpl.cpp"
     # Public
@@ -46,6 +47,7 @@ set(${CMAKE_PROJECT_NAME}_LIB_SOURCES
     "src/proxSIP/CSIPRequest.cpp"
     "src/proxSIP/CSipResponse.cpp"
     "src/proxSIP/CAuthValidator.cpp"
+    "src/proxSIP/CSipContact.cpp"
     "src/proxSIP/CSipServer.cpp" )
 
 # List of headers
@@ -56,6 +58,7 @@ set(${CMAKE_PROJECT_NAME}_LIB_HEADERS
     "include/proxSIP/Internal/TEndpoint.h"
     "include/proxSIP/Internal/CSIPRequestImpl.h"
     "include/proxSIP/Internal/CSIPResponseImpl.h"
+    "include/proxSIP/Internal/CSipContactImpl.h"
     "include/proxSIP/Internal/CKeyValuePairImpl.h"
     "include/proxSIP/Internal/CKeyValueCollectionImpl.h"
     "include/proxSIP/Internal/CAuthValidatorImpl.h"
@@ -67,6 +70,8 @@ set(${CMAKE_PROJECT_NAME}_LIB_HEADERS
     "include/proxSIP/IAuthValidator.h"
     "include/proxSIP/CAuthValidator.h"
     "include/proxSIP/IAuthDigest.h"
+    "include/proxSIP/ISipContact.h"
+    "include/proxSIP/CSipContact.h"
     "include/proxSIP/IUserAccountCollection.h"
     "include/proxSIP/IUdpServer.h"
     "include/proxSIP/CAsioUdpServer.h"
@@ -87,6 +92,7 @@ set(${CMAKE_PROJECT_NAME}_LIB_HEADERS
     "include/proxSIP/ISipMessageSender.h"
     "include/proxSIP/ISipResponseHandler.h" 
     "include/proxSIP/ESipMethods.h"
+    "include/proxSIP/ISipField.h"
     "include/proxSIP/ESipField.h"
     "include/proxSIP/ESipStatusCode.h"
     "include/proxSIP/CSipSerializer.h"
