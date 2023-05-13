@@ -10,7 +10,7 @@ public:
     virtual ~ISipRequestHandler() = default;
 
     //! Callback for when a request is received
-    virtual void OnRequest(const ISIPRequest&) = 0;
+    virtual void OnRequest(ISIPRequest&) = 0;
 };
 
 #endif

@@ -7,7 +7,7 @@
 template <typename Container>
 class TBuffer : public IBuffer
 {
-private:
+protected:
     Container m_container;
 
 public:
@@ -36,17 +36,7 @@ public:
         return m_container.data();
     }
 
-    char* begin()
-    {
-        return m_container.data();
-    }
-
     const char* cend() const
-    {
-        return m_container.data() + m_container.size();
-    }
-
-    char* end()
     {
         return m_container.data() + m_container.size();
     }
@@ -54,6 +44,17 @@ public:
     void write(const char* pData, size_t uCount) override
     {
         m_container.insert(m_container.end(), pData, pData + uCount);
+    }
+};
+
+//! Subtype of #TBuffer wrapping a container which can provide c_str()
+template<typename Container>
+class TStrBuffer : public TBuffer<Container>
+{
+public:
+    const char* c_str() const
+    {
+        return m_container.c_str();
     }
 };
 

@@ -26,8 +26,8 @@ public:
     void SetAuth(IAuthValidator*);
     void SetSender(ISipMessageSender*);
     void SetRegistry(ISipRegistry*);
-    void OnRequest(const ISIPRequest&) override;
-    void OnResponse(const ISIPResponse&) override;
+    void OnRequest(ISIPRequest&) override;
+    void OnResponse(ISIPResponse&) override;
 };
 
 #endif

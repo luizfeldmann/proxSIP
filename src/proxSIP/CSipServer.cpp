@@ -32,12 +32,12 @@ void CSipServer::SetRegistry(ISipRegistry* pReg)
     m_pImpl->SetRegistry(pReg);
 }
 
-void CSipServer::OnRequest(const ISIPRequest& Request)
+void CSipServer::OnRequest(ISIPRequest& Request)
 {
     m_pImpl->OnRequest(Request);
 }
 
-void CSipServer::OnResponse(const ISIPResponse& Response)
+void CSipServer::OnResponse(ISIPResponse& Response)
 {
     m_pImpl->OnResponse(Response);
 }
