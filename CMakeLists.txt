@@ -85,6 +85,7 @@ set(${CMAKE_PROJECT_NAME}_LIB_HEADERS
     "include/proxSIP/CSipContact.h"
     "include/proxSIP/ISipVia.h"
     "include/proxSIP/CSipVia.h"
+    "include/proxSIP/TFieldAccessor.h"
     "include/proxSIP/IUserAccountCollection.h"
     "include/proxSIP/IUdpServer.h"
     "include/proxSIP/CAsioUdpServer.h"

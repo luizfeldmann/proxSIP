@@ -21,14 +21,8 @@ public:
     //! Accessor to the first element of contained data
     virtual const char* cbegin() const = 0;
 
-    //! Mutator to the first element of contained data
-    virtual char* begin() = 0;
-
     //! Iterator to the end of the buffer
     virtual const char* cend() const = 0;
-
-    //! Iterator to the end of the buffer
-    virtual char* end() = 0;
 
     //! Copies data to inside the buffer
     virtual void write(const char*, size_t) = 0;
