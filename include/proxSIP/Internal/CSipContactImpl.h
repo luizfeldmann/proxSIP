@@ -2,13 +2,17 @@
 #define _CSIPCONTACTIMPL_H_
 
 #include "ISipContact.h"
+#include "TSIPFieldImpl.h"
 #include <string>
 
 //! @copydoc ISipContact
-class CSipContactImpl : public ISipContact
+class CSipContactImpl : public TSIPFieldImpl<ISipContact>
 {
 private:
+    //! Stores the display name
     std::string m_sName;
+
+    //! Stores the URI
     std::string m_sURI;
 
 public:

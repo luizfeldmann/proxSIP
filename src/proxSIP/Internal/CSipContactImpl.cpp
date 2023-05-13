@@ -126,9 +126,7 @@ bool CSipContactImpl::Parse(const char* pData, size_t uSize)
     // Parse the additional parameters
     ++pData; // consume the >
 
-    // TODO: parse parameters
-
-    return true;
+    return TSIPFieldImpl::Parse(pData, pEnd - pData);
 }
 
 void CSipContactImpl::Serialize(IBuffer& Buffer) const
@@ -143,4 +141,7 @@ void CSipContactImpl::Serialize(IBuffer& Buffer) const
     sText += "<" + m_sURI + ">";
 
     Buffer.write(sText.data(), sText.length());
+
+    // Write the additional parameters
+    TSIPFieldImpl::Serialize(Buffer);
 }

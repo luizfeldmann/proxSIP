@@ -30,6 +30,7 @@ set(${CMAKE_PROJECT_NAME}_LIB_SOURCES
     "src/proxSIP/Internal/CAuthValidatorImpl.cpp"
     "src/proxSIP/Internal/CAuthDigestImpl.cpp"
     "src/proxSIP/Internal/CSipContactImpl.cpp"
+    "src/proxSIP/Internal/TSIPFieldImpl.cpp"
     "src/proxSIP/Internal/CSipServerImpl.cpp"
     "src/proxSIP/Internal/CAsioUdpServerImpl.cpp"
     # Public
@@ -55,6 +56,7 @@ set(${CMAKE_PROJECT_NAME}_LIB_HEADERS
     # Internal
     "include/proxSIP/Internal/CEndpointImpl.h"
     "include/proxSIP/Internal/TSIPMessageImpl.h"
+    "include/proxSIP/Internal/TSIPFieldImpl.h"
     "include/proxSIP/Internal/TEndpoint.h"
     "include/proxSIP/Internal/CSIPRequestImpl.h"
     "include/proxSIP/Internal/CSIPResponseImpl.h"

@@ -31,6 +31,10 @@ public:
 
     //! @name Overrides from #ISipField
     //! @{
+    const IKeyValueCollection& Parameters() const override;
+
+    IKeyValueCollection& Parameters() override;
+
     bool Parse(const char*, size_t) override;
 
     void Serialize(IBuffer&) const override;

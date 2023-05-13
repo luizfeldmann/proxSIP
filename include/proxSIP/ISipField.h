@@ -2,12 +2,19 @@
 #define _ISIPFIELD_H_
 
 #include "IBuffer.h"
+#include "IKeyValueCollection.h"
 
 //! A structured representation of a known SIP field format
 class PROXSIP_API ISipField
 {
 public:
     virtual ~ISipField() = default;
+
+    //! Accessor to the aditional parameters
+    virtual const IKeyValueCollection& Parameters() const = 0;
+
+    //! Mutator to the aditional parameters
+    virtual IKeyValueCollection& Parameters() = 0;
 
     //! Parses the field
     virtual bool Parse(const char*, size_t) = 0;

@@ -39,6 +39,16 @@ void CSipContact::URI(const char* sUri)
 
 /* Overrides from #ISipField */
 
+const IKeyValueCollection& CSipContact::Parameters() const
+{
+    return m_pImpl->Parameters();
+}
+
+IKeyValueCollection& CSipContact::Parameters()
+{
+    return m_pImpl->Parameters();
+}
+
 bool CSipContact::Parse(const char* pData, size_t uSize)
 {
     return m_pImpl->Parse(pData, uSize);
