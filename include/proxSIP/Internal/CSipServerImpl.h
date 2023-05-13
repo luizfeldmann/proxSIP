@@ -15,6 +15,8 @@ private:
     IAuthValidator* m_pAuth;
     ISipRegistry* m_pRegistry;
 
+    void Proxy(ISIPMessage&, bool bFrom);
+
 public:
     CSipServerImpl();
 
