@@ -19,6 +19,8 @@ private:
     void Register(ISIPRequest& Request);
     void DoRegister(ISIPResponse& Response);
     void Invite(ISIPRequest& Request);
+    void Ack(ISIPRequest& Request);
+    void Bye(ISIPRequest& Request);
 
     void Proxy(ISIPMessage&, const char* sLocation);
 

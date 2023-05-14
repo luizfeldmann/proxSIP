@@ -37,6 +37,23 @@ static void ReturnToSender(const ISIPMessage& From, ISIPMessage& To)
     To.Source().Assign(From.Destination());
 }
 
+static void ChangeContact(ISIPMessage& Message, const IEndpoint& Server)
+{
+    auto Contact = CreateFieldAccessor<CSipContactImpl>(ESipField::Contact, Message.Fields());
+    if (Contact.Read())
+    {
+        std::string sURI = Contact->URI();
+        const auto p1 = sURI.find_first_of(":") + 1;
+        const auto p2 = sURI.find_first_of("@");
+
+        const std::string sUserName = sURI.substr(p1, p2 - p1);
+        sURI = "sip:" + sUserName + "@" + std::string(Server.Address()) + ":" + std::to_string(Server.Port()) + ";transport=udp";
+        Contact->URI(sURI.c_str());
+
+        Contact.Write();
+    }
+}
+
 /* CSipServerImpl */
 
 CSipServerImpl::CSipServerImpl()
@@ -113,8 +130,27 @@ void CSipServerImpl::Invite(ISIPRequest& Request)
         return;
     }
 
+    ChangeContact(Request, Request.Destination());
+
     // Retransmit
     Proxy(Request, sLocation);
+}
+
+void CSipServerImpl::Ack(ISIPRequest& Request)
+{
+    std::string sUri = Request.URI();
+    sUri = sUri.substr(0, sUri.find_last_of(':'));
+
+    const char* sLocation = m_pRegistry->Locate(sUri.c_str());
+    if (!sLocation)
+        return;
+
+    Proxy(Request, sLocation);
+}
+
+void CSipServerImpl::Bye(ISIPRequest& Request)
+{
+    Ack(Request);
 }
 
 bool CSipServerImpl::Authenticate(ISIPRequest& Request)
@@ -222,6 +258,14 @@ void CSipServerImpl::OnRequest(ISIPRequest& Request)
         Invite(Request);
         break;
 
+    case ESipMethod::ACK:
+        Ack(Request);
+        break;
+
+    case ESipMethod::BYE:
+        Bye(Request);
+        break;
+
     default:
         break;
     }
@@ -231,6 +275,12 @@ void CSipServerImpl::OnResponse(ISIPResponse& Response)
 {
     auto Via = CreateFieldAccessor<CSipViaImpl>(ESipField::Via, Response.Fields());
     Via.Read();
+
+    const auto eStatus = Response.Status();
+    if (eStatus == ESipStatusCode::Ok)
+    {
+        ChangeContact(Response, Response.Destination());
+    }
 
     Proxy(Response, Via->URI());
 }
