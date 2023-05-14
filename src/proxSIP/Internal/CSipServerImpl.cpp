@@ -54,6 +54,44 @@ static void ChangeContact(ISIPMessage& Message, const IEndpoint& Server)
     }
 }
 
+static std::map<std::string, std::string> m_changedVias;
+
+static void RestoreVia(ISIPMessage& Message)
+{
+    auto Via = CreateFieldAccessor<CSipViaImpl>(ESipField::Via, Message.Fields());
+    if (Via.Read())
+    {
+        const char* branch = Via->Parameters().Find(SipGetParamStr(ESipParameter::branch));
+        if (branch)
+        {
+            auto itFind = m_changedVias.find(branch);
+            if (itFind != m_changedVias.cend())
+            {
+                Via->URI(itFind->second.c_str());
+                Via.Write();
+            }
+        }
+    }
+}
+
+static void RewriteVia(ISIPMessage& Message, const IEndpoint& Server)
+{
+    auto Via = CreateFieldAccessor<CSipViaImpl>(ESipField::Via, Message.Fields());
+    if (Via.Read())
+    {
+        const char* branch = Via->Parameters().Find(SipGetParamStr(ESipParameter::branch));
+        if (branch)
+        {
+            m_changedVias[branch] = Via->URI();
+        }
+
+        std::string sURI = std::string(Server.Address()) + ":" + std::to_string(Server.Port());
+        Via->URI(sURI.c_str());
+
+        Via.Write();
+    }
+}
+
 /* CSipServerImpl */
 
 CSipServerImpl::CSipServerImpl()
@@ -131,6 +169,7 @@ void CSipServerImpl::Invite(ISIPRequest& Request)
     }
 
     ChangeContact(Request, Request.Destination());
+    RewriteVia(Request, Request.Destination());
 
     // Retransmit
     Proxy(Request, sLocation);
@@ -273,6 +312,8 @@ void CSipServerImpl::OnRequest(ISIPRequest& Request)
 
 void CSipServerImpl::OnResponse(ISIPResponse& Response)
 {
+    RestoreVia(Response);
+
     auto Via = CreateFieldAccessor<CSipViaImpl>(ESipField::Via, Response.Fields());
     Via.Read();
 
