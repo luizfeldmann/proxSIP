@@ -2,19 +2,38 @@
 #define _CKEYVALUECOLLECTIONIMPL_H_
 
 #include "IKeyValueCollection.h"
+#include <boost/multi_index_container.hpp>
+#include <boost/multi_index/sequenced_index.hpp>
+#include <boost/multi_index/hashed_index.hpp>
+#include <boost/multi_index/member.hpp>
 #include <string>
 #include <map>
 
 class CKeyValueCollectionImpl : public IKeyValueCollection, private IKeyValueEnumerator, private IKeyValuePair
 {
 private:
-    using map_t = std::map<std::string, std::string>;
+    //! Tag used to index the elements sequentially
+    struct tag_sequence;
+
+    //! Tage used to find the elements by key name
+    struct tag_key;
+
+    //! Key value pair type
+    using pair_t = std::pair<std::string, std::string>;
+
+    //! Type of multi indexed container with both ordered sequencing and hashed lookup
+    using multi_t = boost::multi_index_container<
+        pair_t,
+        boost::multi_index::indexed_by<
+            boost::multi_index::sequenced<boost::multi_index::tag<tag_sequence>>,
+            boost::multi_index::hashed_unique<boost::multi_index::tag<tag_key>,
+                boost::multi_index::member<pair_t, std::string, &pair_t::first>>>>;
 
     //! Stores the actual data
-    mutable map_t m_map;
+    mutable multi_t m_map;
 
     //! Points the the current item
-    mutable map_t::iterator m_iter;
+    mutable multi_t::index<tag_sequence>::type::iterator m_iter;
 
     //! @name Overrides from #IKeyValueEnumerator
     //! @{    

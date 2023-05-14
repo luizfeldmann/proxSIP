@@ -12,7 +12,7 @@ CKeyValueCollectionImpl::CKeyValueCollectionImpl(const IKeyValueCollection& copy
 {
     for (auto& it = copy.StartEnumerator(); it; ++it)
     {
-        m_map[it->Key()] = it->Value();
+        m_map.get<tag_sequence>().emplace_back(pair_t{ it->Key(), it->Value() });
     }
 }
 
@@ -28,7 +28,7 @@ CKeyValueCollectionImpl& CKeyValueCollectionImpl::operator=(CKeyValueCollectionI
 
 CKeyValueCollectionImpl::operator bool() const
 {
-    return (m_map.cend() != m_iter);
+    return (m_map.get<tag_sequence>().cend() != m_iter);
 }
 
 void CKeyValueCollectionImpl::operator++() const
@@ -70,7 +70,10 @@ const char* CKeyValueCollectionImpl::Value() const
 
 void CKeyValueCollectionImpl::Value(const char* szValue)
 {
-    m_iter->second = szValue;
+    m_map.get<tag_sequence>().modify(m_iter, [szValue](auto& item)
+    {
+        item.second = szValue;
+    });
 }
 
 /* Overrides from #IKeyValueCollection */
@@ -79,9 +82,9 @@ const char* CKeyValueCollectionImpl::Find(const char* szKey) const
 {
     const char* szValue = nullptr;
 
-    auto itFind = m_map.find(szKey);
+    auto itFind = m_map.get<tag_key>().find(szKey);
 
-    if (m_map.cend() != itFind)
+    if (m_map.get<tag_key>().cend() != itFind)
         szValue = itFind->second.c_str();
 
     return szValue;
@@ -89,7 +92,19 @@ const char* CKeyValueCollectionImpl::Find(const char* szKey) const
 
 void CKeyValueCollectionImpl::Insert(const char* szKey, const char* szValue)
 {
-    m_map[szKey] = szValue;
+    auto itFind = m_map.get<tag_key>().find(szKey);
+
+    if (m_map.get<tag_key>().cend() != itFind)
+    {
+        m_map.get<tag_key>().modify(itFind, [szValue](auto& item)
+            {
+                item.second = szValue;
+            });
+    }
+    else
+    {
+        m_map.get<tag_sequence>().emplace_back(pair_t{szKey, szValue});
+    }
 }
 
 size_t CKeyValueCollectionImpl::Size() const
@@ -99,12 +114,12 @@ size_t CKeyValueCollectionImpl::Size() const
 
 IKeyValueEnumerator& CKeyValueCollectionImpl::StartEnumerator()
 {
-    m_iter = m_map.begin();
+    m_iter = m_map.get<tag_sequence>().begin();
     return *this;
 }
 
 const IKeyValueEnumerator& CKeyValueCollectionImpl::StartEnumerator() const
 {
-    m_iter = m_map.begin();
+    m_iter = m_map.get<tag_sequence>().begin();
     return *this;
 }
