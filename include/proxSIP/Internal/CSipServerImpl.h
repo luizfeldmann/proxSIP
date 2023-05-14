@@ -15,7 +15,12 @@ private:
     IAuthValidator* m_pAuth;
     ISipRegistry* m_pRegistry;
 
-    void Proxy(ISIPMessage&, bool bFrom);
+    bool Authenticate(ISIPRequest& Request);
+    void Register(ISIPRequest& Request);
+    void DoRegister(ISIPResponse& Response);
+    void Invite(ISIPRequest& Request);
+
+    void Proxy(ISIPMessage&, const char* sLocation);
 
 public:
     CSipServerImpl();

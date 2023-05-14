@@ -20,9 +20,9 @@ public:
 
     //! @name Overrides from #ISipRegistry
     //! @{
-    void Register(const char* sDomain, const ISipContact& Contact, const ISipVia& Via) override;
+    void Register(const char* sUser, const char* sLocation, unsigned int uExpires) override;
 
-    bool Locate(const char* sDomain, const ISipContact& Contact, ISipVia& Via) const override;
+    const char* Locate(const char* sUser) const override;
     //! @}
 };
 

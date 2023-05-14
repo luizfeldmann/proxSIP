@@ -10,7 +10,7 @@
 struct SRegistryData
 {
     //! Record where the contact can be found
-    std::string m_sViaURI;
+    std::string m_sLocation;
 
     //! Absolute time when this registration expires
     std::chrono::system_clock::time_point m_expires;
@@ -28,9 +28,9 @@ public:
 
     //! @name Overrides from #ISipRegistry
     //! @{
-    void Register(const char* sDomain, const ISipContact& Contact, const ISipVia& Via) override;
+    void Register(const char* sUser, const char* sLocation, unsigned int uExpires) override;
 
-    bool Locate(const char* sDomain, const ISipContact& Contact, ISipVia& Via) const override;
+    const char* Locate(const char* sUser) const override;
     //! @}
 };
 

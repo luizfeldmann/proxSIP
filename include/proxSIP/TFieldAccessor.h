@@ -49,25 +49,36 @@ public:
         m_collection.Insert(FieldName(), buff.c_str());
     }
 
+    //! Mutator to underlying object
     FieldT& operator*()
     {
         return m_field;
     }
 
+    //! Accessor to underlying object
     const FieldT& operator*() const
     {
         return m_field;
     }
 
+    //! Mutator to underlying object
     FieldT* operator->()
     {
         return &m_field;
     }
 
+    //! Accessor to underlying object
     const FieldT& operator->() const
     {
         return &m_field;
     }
 };
+
+//! Constructs a #TFieldAccessor from the provided collection
+template<typename FieldT, typename CollectionT>
+auto CreateFieldAccessor(ESipField eField, CollectionT& Col)
+{
+    return TFieldAccessor<FieldT, CollectionT>(eField, Col);
+}
 
 #endif

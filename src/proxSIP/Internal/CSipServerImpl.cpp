@@ -62,44 +62,11 @@ void CSipServerImpl::SetRegistry(ISipRegistry* pReg)
     m_pRegistry = pReg;
 }
 
-void CSipServerImpl::Proxy(ISIPMessage& Message, bool bFrom)
+void CSipServerImpl::Proxy(ISIPMessage& Message, const char* sLocation)
 {
-    auto& ReqFields = Message.Fields();
-
-    // Figure out where to redirect
-    TFieldAccessor<CSipViaImpl, decltype(ReqFields)> RequestVia(ESipField::Via, ReqFields);
-
-    TFieldAccessor<CSipContactImpl, decltype(ReqFields)> RequestTo(bFrom ? ESipField::From : ESipField::To, ReqFields);
-
-    if (!RequestTo.Read() || !RequestVia.Read())
-    {
-        // Bad request
-        CSIPResponseImpl Response;
-
-        ReturnToSender(Message, Response);
-        Response.Status(ESipStatusCode::BadRequest);
-
-        m_pSender->SendMessage(Response);
-        return;
-    }
-
-    CSipViaImpl RedirectVia;
     CEndpointImpl RedirectEdp;
-    if (!m_pRegistry || !m_pRegistry->Locate("", *RequestTo, RedirectVia))
     {
-        // Cannot locate user
-        CSIPResponseImpl Response;
-
-        ReturnToSender(Message, Response);
-        Response.Status(ESipStatusCode::NotFound);
-
-        m_pSender->SendMessage(Response);
-        return;
-    }
-
-    // Find endpoint of redirect target
-    {
-        const std::string sUri = RedirectVia.URI();
+        const std::string sUri = sLocation;
         const size_t nSep = sUri.find(':');
 
         RedirectEdp.Address(sUri.substr(0, nSep).c_str());
@@ -115,12 +82,46 @@ void CSipServerImpl::Proxy(ISIPMessage& Message, bool bFrom)
 
     Message.Source().Assign(Message.Destination());
     Message.Destination().Assign(RedirectEdp);
-
     m_pSender->SendMessage(Message);
 }
 
-void CSipServerImpl::OnRequest(ISIPRequest& Request)
+void CSipServerImpl::Invite(ISIPRequest& Request)
 {
+    // Try to find the user where to send the request to
+    const char* sLocation = nullptr;
+    const char* const sCallee = Request.URI();
+
+    if (m_pRegistry)
+    {
+        sLocation = m_pRegistry->Locate(sCallee);
+    }
+
+    // Error if user does not exist
+    if (!sLocation)
+    {
+        // Cannot locate user
+        CSIPResponseImpl Response;
+
+        ReturnToSender(Request, Response);
+
+        if (m_pRegistry)
+            Response.Status(ESipStatusCode::NotFound);
+        else
+            Response.Status(ESipStatusCode::NotImplemented);
+
+        m_pSender->SendMessage(Response);
+        return;
+    }
+
+    // Retransmit
+    Proxy(Request, sLocation);
+}
+
+bool CSipServerImpl::Authenticate(ISIPRequest& Request)
+{
+    // If no validator is provided, skip the authentication
+    bool bStatus = true;
+
     // If a validator is provided, authenticate the message
     if (m_pAuth)
     {
@@ -128,6 +129,7 @@ void CSipServerImpl::OnRequest(ISIPRequest& Request)
 
         // TODO: Read digest from request
 
+        // Ask the validator to check/update the digest
         ESipStatusCode eStatus = m_pAuth->ValidateAuth(Digest);
 
         if (eStatus != ESipStatusCode::Ok)
@@ -141,70 +143,94 @@ void CSipServerImpl::OnRequest(ISIPRequest& Request)
             // TODO: Write updated digest into Response
 
             m_pSender->SendMessage(Response);
-            return;
+            bStatus = false;
         }
     }
 
-    // Handle the special registration request
-    auto const eMethod = Request.Method();
+    return bStatus;
+}
 
-    if (eMethod == ESipMethod::REGISTER)
+void CSipServerImpl::DoRegister(ISIPResponse& Response)
+{
+    // Check we are capable of registering
+    if (!m_pRegistry)
     {
-        ESipStatusCode eStatus = ESipStatusCode::Ok;
-
-        // The response has the same fields as the request and is sent back to the origin
-        CSIPResponseImpl Response;
-        ReturnToSender(Request, Response);
-
-        // Read Contact to be registered and the Via
-        auto& RespFields = Response.Fields();
-        TFieldAccessor<CSipContactImpl, decltype(RespFields)> Contact(ESipField::Contact, RespFields);
-        TFieldAccessor<CSipContactImpl, decltype(RespFields)> To(ESipField::To, RespFields);
-        TFieldAccessor<CSipViaImpl, decltype(RespFields)> Via(ESipField::Via, RespFields);
-
-        if (!Contact.Read() || !To.Read() || !Via.Read())
-        {
-            eStatus = ESipStatusCode::BadRequest;
-        }
-        else
-        {
-            // Update the received address in the VIA
-            Via->Parameters().Insert(SipGetParamStr(ESipParameter::received), Request.Source().Address());
-            Via.Write();
-
-            // The URI in the "To" field uses the server's hostname
-            // The URI in the "Contact" field uses the client's hostname
-            // When making a call, the Server's host is used, so well register using the To field data
-            Contact->URI(To->URI());
-            Contact.Write();
-
-            if (!m_pRegistry)
-            {
-                eStatus = ESipStatusCode::NotImplemented;
-            }
-            else
-            {
-                m_pRegistry->Register(Request.URI(), *Contact, *Via);
-            }
-        }
-
-        // Send back the filled response
-        Response.Status(eStatus);
-        m_pSender->SendMessage(Response);
+        Response.Status(ESipStatusCode::NotImplemented);
         return;
     }
 
-    // Proxy: forward the request to the correct UA
-    Proxy(Request, false);
+    // Read relevant fields
+    auto& Fields = Response.Fields();
+    auto Contact = CreateFieldAccessor<CSipContactImpl>(ESipField::Contact, Fields);
+    auto To = CreateFieldAccessor<CSipContactImpl>(ESipField::To, Fields);
+    auto Via = CreateFieldAccessor<CSipViaImpl>(ESipField::Via, Fields);
+
+    // Validate message
+    if (!Contact.Read() || !To.Read() || !Via.Read())
+    {
+        Response.Status(ESipStatusCode::BadRequest);
+        return;
+    }
+
+    // Update the received address in the VIA
+    Via->Parameters().Insert(SipGetParamStr(ESipParameter::received), Response.Destination().Address());
+    Via.Write();
+
+    // Get the expiration
+    unsigned int uExpires = 3600;
+    const char *sExpires = Contact->Parameters().Find(SipGetParamStr(ESipParameter::expires));
+    if (sExpires)
+    {
+        try {
+            uExpires = std::stoi(sExpires);
+        }
+        catch (...) {}
+    }
+
+    // Perform the registration
+    m_pRegistry->Register(To->URI(), Via->URI(), uExpires);
+
+    Response.Status(ESipStatusCode::Ok);
+    return;
+}
+
+void CSipServerImpl::Register(ISIPRequest& Request)
+{
+    CSIPResponseImpl Response;
+    ReturnToSender(Request, Response);
+
+    DoRegister(Response);
+
+    m_pSender->SendMessage(Response);
+}
+
+void CSipServerImpl::OnRequest(ISIPRequest& Request)
+{
+    // Try to authenticate the request
+    if (!Authenticate(Request))
+        return;
+
+    // Method-specific handling
+    auto const eMethod = Request.Method();
+    switch (eMethod)
+    {
+    case ESipMethod::REGISTER:
+        Register(Request);
+        break;
+
+    case ESipMethod::INVITE:
+        Invite(Request);
+        break;
+
+    default:
+        break;
+    }
 }
 
 void CSipServerImpl::OnResponse(ISIPResponse& Response)
 {
-    bool bFrom = false;
+    auto Via = CreateFieldAccessor<CSipViaImpl>(ESipField::Via, Response.Fields());
+    Via.Read();
 
-    const auto eStatus = Response.Status();
-    if (eStatus == ESipStatusCode::Trying || eStatus == ESipStatusCode::Ringing || eStatus == ESipStatusCode::Ok)
-        bFrom = true;
-
-    Proxy(Response, bFrom);
+    Proxy(Response, Via->URI());
 }

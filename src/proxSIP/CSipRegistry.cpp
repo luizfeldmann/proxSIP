@@ -15,12 +15,12 @@ CSipRegistry::~CSipRegistry()
 
 /* Overrides from #ISipRegistry */
 
-void CSipRegistry::Register(const char* sDomain, const ISipContact& Contact, const ISipVia& Via)
+void CSipRegistry::Register(const char* sUser, const char* sLocation, unsigned int uExpires)
 {
-    m_pImpl->Register(sDomain, Contact, Via);
+    m_pImpl->Register(sUser, sLocation, uExpires);
 }
 
-bool CSipRegistry::Locate(const char* sDomain, const ISipContact& Contact, ISipVia& Via) const
+const char* CSipRegistry::Locate(const char* sUser) const
 {
-    return m_pImpl->Locate(sDomain, Contact, Via);
+    return m_pImpl->Locate(sUser);
 }
