@@ -44,6 +44,8 @@ public:
     unsigned short Port() const override;
 
     void Port(unsigned short) override;
+
+    const char* c_str() const override;
     //! @}
      
     //! @name Overrides from #ISipField

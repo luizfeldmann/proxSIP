@@ -133,6 +133,37 @@ void CSipURIImpl::Port(unsigned short usPort)
     m_port.emplace(usPort);
 }
 
+const char* CSipURIImpl::c_str() const
+{
+    //! Utility to serialize into a string
+    class CStrBufAdapter : public IOutputBuffer
+    {
+    private:
+        std::string& m_rStr;
+
+    public:
+        CStrBufAdapter(std::string& s)
+            : m_rStr(s)
+        {
+
+        }
+
+        void write(const char* p, size_t uLen) override
+        {
+            m_rStr.append(p, uLen);
+        }
+    };
+
+    // Clear temporary
+    m_c_str.clear();
+
+    // Write into it
+    Serialize(CStrBufAdapter(m_c_str));
+
+    // return the c_str
+    return m_c_str.c_str();
+}
+
 /* Overrides from ISipField */
 
 bool CSipURIImpl::Parse(const char* pData, size_t uSize)

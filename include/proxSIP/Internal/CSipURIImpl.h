@@ -42,6 +42,8 @@ public:
     unsigned short Port() const override;
 
     void Port(unsigned short) override;
+
+    const char* c_str() const override;
     //! @}
      
     //! @name Overrides from #ISipField
@@ -52,6 +54,8 @@ public:
     //! @}
 
 private:
+    mutable std::string m_c_str;
+
     //! Stores the protocol
     opt_string m_proto;
 

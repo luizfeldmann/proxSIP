@@ -78,6 +78,11 @@ void CSipURI::Port(unsigned short usPort)
     m_pImpl->Port(usPort);
 }
 
+const char* CSipURI::c_str() const
+{
+    return m_pImpl->c_str();
+}
+
 const IKeyValueCollection& CSipURI::Parameters() const
 {
     return m_pImpl->Parameters();

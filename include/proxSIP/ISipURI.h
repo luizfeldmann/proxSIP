@@ -48,6 +48,9 @@ public:
 
     //! Sets the port number
     virtual void Port(unsigned short) = 0;
+
+    //! Returns a C-string from the URI
+    virtual const char* c_str() const = 0;
 };
 
 #endif
