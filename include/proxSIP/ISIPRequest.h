@@ -3,6 +3,7 @@
 
 #include "ISIPMessage.h"
 #include "ESipMethods.h"
+#include "ISipURI.h"
 
 //! Representation of the data of a SIP request
 class PROXSIP_API ISIPRequest : public ISIPMessage
@@ -17,10 +18,10 @@ public:
     virtual void Method(ESipMethod) = 0;
 
     //! Reads the request URI
-    virtual const char* URI() const = 0;
+    virtual const ISipURI& URI() const = 0;
 
     //! Sets the request URI
-    virtual void URI(const char*) = 0;
+    virtual ISipURI& URI() = 0;
 };
 
 #endif

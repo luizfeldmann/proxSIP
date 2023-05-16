@@ -29,12 +29,12 @@ void CSIPRequestImpl::Method(ESipMethod eMethod)
     m_eMethod = eMethod;
 }
 
-const char* CSIPRequestImpl::URI() const
+const ISipURI& CSIPRequestImpl::URI() const
 {
-    return m_sURI.c_str();
+    return m_cURI;
 }
 
-void CSIPRequestImpl::URI(const char* sReqUri)
+ISipURI& CSIPRequestImpl::URI()
 {
-    m_sURI = sReqUri;
+    return m_cURI;
 }

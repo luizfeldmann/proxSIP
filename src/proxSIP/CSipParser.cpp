@@ -366,7 +366,11 @@ EParserResult CSipParser::ParseRequest(const char* szData, size_t uSize, ISIPReq
         return eStatus;
     }
 
-    Request.URI(svTarget.to_string().c_str());
+    if (!Request.URI().Parse(svTarget.data(), svTarget.size()))
+    {
+        eStatus = EParserResult::BadTarget;
+        return eStatus;
+    }
 
     // Read the version string
     boost::string_view svVersion;

@@ -84,12 +84,12 @@ void CSIPRequest::Method(ESipMethod eMethod)
     m_pImpl->Method(eMethod);
 }
 
-const char* CSIPRequest::URI() const
+const ISipURI& CSIPRequest::URI() const
 {
     return m_pImpl->URI();
 }
 
-void CSIPRequest::URI(const char* szURI)
+ISipURI& CSIPRequest::URI()
 {
-    m_pImpl->URI(szURI);
+    return m_pImpl->URI();
 }

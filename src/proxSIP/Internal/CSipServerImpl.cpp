@@ -144,11 +144,11 @@ void CSipServerImpl::Invite(ISIPRequest& Request)
 {
     // Try to find the user where to send the request to
     const char* sLocation = nullptr;
-    const char* const sCallee = Request.URI();
 
     if (m_pRegistry)
     {
-        sLocation = m_pRegistry->Locate(sCallee);
+        Request.URI().KeepComponents(ESipURIComponents::PUH);
+        sLocation = m_pRegistry->Locate(Request.URI().c_str());
     }
 
     // Error if user does not exist
@@ -177,10 +177,9 @@ void CSipServerImpl::Invite(ISIPRequest& Request)
 
 void CSipServerImpl::Ack(ISIPRequest& Request)
 {
-    std::string sUri = Request.URI();
-    sUri = sUri.substr(0, sUri.find_last_of(':'));
+    Request.URI().KeepComponents(ESipURIComponents::PUH);
 
-    const char* sLocation = m_pRegistry->Locate(sUri.c_str());
+    const char* sLocation = m_pRegistry->Locate(Request.URI().c_str());
     if (!sLocation)
         return;
 

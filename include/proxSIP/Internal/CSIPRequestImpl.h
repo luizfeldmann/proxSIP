@@ -3,6 +3,7 @@
 
 #include "ISIPRequest.h"
 #include "TSIPMessageImpl.h"
+#include "CSipURIImpl.h"
 
 //! Internal implementation of #ISIPRequest
 class CSIPRequestImpl : public TSIPMessageImpl<ISIPRequest>
@@ -12,7 +13,7 @@ protected:
     ESipMethod m_eMethod;
 
     //! Requested URI
-    std::string m_sURI;
+    CSipURIImpl m_cURI;
 
 public:
     //! Constructs empty request
@@ -39,8 +40,8 @@ public:
     //! @{
     ESipMethod Method() const override;
     void Method(ESipMethod) override;
-    const char* URI() const override;
-    void URI(const char*) override;
+    const ISipURI& URI() const override;
+    ISipURI& URI() override;
     //! @}
 };
 

@@ -49,9 +49,9 @@ public:
 
     void Method(ESipMethod) override;
 
-    const char* URI() const override;
+    const ISipURI& URI() const override;
 
-    void URI(const char*) override;
+    ISipURI& URI() override;
     //! @}
 };
 
