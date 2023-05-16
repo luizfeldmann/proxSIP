@@ -44,6 +44,12 @@ public:
     //! @param[in] szValue The value
     virtual void Insert(const char* szKey, const char* szValue) = 0;
 
+    //! Erases all items in the collection
+    virtual void Clear() = 0;
+
+    //! Checks if the collection is empty
+    virtual bool Empty() const = 0;
+
     //! Reads the number of stored items
     virtual size_t Size() const = 0;
 

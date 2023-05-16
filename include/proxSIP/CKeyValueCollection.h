@@ -20,9 +20,17 @@ public:
     //! @name Overrides from IKeyValueCollection
     //! @{
     const char* Find(const char* szKey) const override;
+
     void Insert(const char* szKey, const char* szValue) override;
+
+    void Clear() override;
+
+    bool Empty() const override;
+
     size_t Size() const override;
+
     IKeyValueEnumerator& StartEnumerator() override;
+
     const IKeyValueEnumerator& StartEnumerator() const override;
     //! @}
 };

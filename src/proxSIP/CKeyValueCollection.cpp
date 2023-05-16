@@ -29,6 +29,16 @@ void CKeyValueCollection::Insert(const char* szKey, const char* szValue)
     return m_pImpl->Insert(szKey, szValue);
 }
 
+void CKeyValueCollection::Clear()
+{
+    m_pImpl->Clear();
+}
+
+bool CKeyValueCollection::Empty() const
+{
+    return m_pImpl->Empty();
+}
+
 size_t CKeyValueCollection::Size() const
 {
     return m_pImpl->Size();

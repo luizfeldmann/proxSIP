@@ -107,6 +107,16 @@ void CKeyValueCollectionImpl::Insert(const char* szKey, const char* szValue)
     }
 }
 
+void CKeyValueCollectionImpl::Clear()
+{
+    m_map.clear();
+}
+
+bool CKeyValueCollectionImpl::Empty() const
+{
+    return m_map.empty();
+}
+
 size_t CKeyValueCollectionImpl::Size() const
 {
     return m_map.size();

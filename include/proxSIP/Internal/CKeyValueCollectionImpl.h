@@ -85,6 +85,10 @@ public:
 
     void Insert(const char* szKey, const char* szValue) override;
 
+    void Clear() override;
+
+    bool Empty() const override;
+
     size_t Size() const override;
 
     IKeyValueEnumerator& StartEnumerator() override;
