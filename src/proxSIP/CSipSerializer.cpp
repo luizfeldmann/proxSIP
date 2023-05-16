@@ -68,7 +68,7 @@ void CSipSerializer::SerializeRequest(const ISIPRequest& Request, IBuffer& Buffe
     // Header
     {
         // Build the start-line 
-        std::string sHeader = GetSipMethodStr(Request.Method());
+        std::string sHeader = SipGetMethodStr(Request.Method());
         sHeader += c_szSpace;
         sHeader += Request.URI().c_str();
         sHeader += c_szSpace;

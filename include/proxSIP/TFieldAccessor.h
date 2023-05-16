@@ -14,7 +14,7 @@ private:
 
     auto FieldName() const
     {
-        return GetSipFieldStr(m_eField);
+        return SipGetFieldStr(m_eField);
     }
 
 public:

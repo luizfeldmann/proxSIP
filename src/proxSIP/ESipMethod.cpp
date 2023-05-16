@@ -2,6 +2,13 @@
 #include <map>
 #include <string>
 
+const char* c_szSipMethodREGISTER = "REGISTER";
+const char* c_szSipMethodINVITE   = "INVITE";
+const char* c_szSipMethodACK      = "ACK";
+const char* c_szSipMethodCANCEL   = "CANCEL";
+const char* c_szSipMethodBYE      = "BYE";
+const char* c_szSipMethodOPTIONS  = "OPTIONS";
+
 #define FILL_SIP_MAP(PAIR) \
     PAIR(REGISTER), \
     PAIR(INVITE), \
@@ -12,20 +19,24 @@
     // end
 
 /* Name to Enum */
-
-using name_method_map_t = std::map<std::string, ESipMethod>;
-#define PAIR_NAME_METHOD(x) {#x, ESipMethod::x}
-
-static const name_method_map_t& GetMapNameToMethod()
+static const auto& GetMapNameToMethod()
 {
-    static const name_method_map_t theMap {
+    struct strless {
+        bool operator()(const char* a, const char* b) const { 
+            return std::strcmp(a, b) < 0;
+        }
+    };
+
+    #define PAIR_NAME_METHOD(x) {c_szSipMethod##x, ESipMethod::x}
+
+    static const std::map<const char*, ESipMethod, strless> theMap {
         FILL_SIP_MAP(PAIR_NAME_METHOD)
     };
 
     return theMap;
 }
 
-ESipMethod GetSipMethodEnum(const char* szMethod)
+ESipMethod SipGetMethodEnum(const char* szMethod)
 {
     ESipMethod eMethod = ESipMethod::Unknown;
 
@@ -40,19 +51,18 @@ ESipMethod GetSipMethodEnum(const char* szMethod)
 
 /* Enum to Name */
 
-using method_name_map_t = std::map<ESipMethod, std::string>;
-#define PAIR_METHOD_NAME(x) {ESipMethod::x, #x}
-
-static const method_name_map_t& GetMapMethodToName()
+static const auto& GetMapMethodToName()
 {
-    static const method_name_map_t theMap{
+    #define PAIR_METHOD_NAME(x) {ESipMethod::x, c_szSipMethod##x}
+
+    static const std::map<ESipMethod, const char*> theMap{
         FILL_SIP_MAP(PAIR_METHOD_NAME)
     };
 
     return theMap;
 }
 
-const char* GetSipMethodStr(ESipMethod eMethod)
+const char* SipGetMethodStr(ESipMethod eMethod)
 {
     const char* szMethod = nullptr;
 
@@ -60,7 +70,7 @@ const char* GetSipMethodStr(ESipMethod eMethod)
     auto itFind = rMap.find(eMethod);
 
     if (rMap.cend() != itFind)
-        szMethod = itFind->second.c_str();
+        szMethod = itFind->second;
 
     return szMethod;
 }

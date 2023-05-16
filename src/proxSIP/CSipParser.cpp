@@ -347,7 +347,7 @@ EParserResult CSipParser::ParseRequest(const char* szData, size_t uSize, ISIPReq
     }
 
     // Attempt to convert the svMethod to enum
-    const auto eMethod = GetSipMethodEnum(svMethod.to_string().c_str());
+    const auto eMethod = SipGetMethodEnum(svMethod.to_string().c_str());
 
     if (ESipMethod::Unknown == eMethod)
     {
