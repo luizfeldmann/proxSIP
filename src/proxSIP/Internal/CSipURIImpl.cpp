@@ -192,7 +192,7 @@ bool CSipURIImpl::Parse(const char* pData, size_t uSize)
     return bStatus;
 }
 
-void CSipURIImpl::Serialize(IBuffer& Buffer) const
+void CSipURIImpl::Serialize(IOutputBuffer& Buffer) const
 {
     // Handle local parameters
     {

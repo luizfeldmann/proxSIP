@@ -90,7 +90,7 @@ namespace detail
         return bStatus;
     }
 
-    void SipFieldSerializeParams(const IKeyValueCollection& Params, IBuffer& Buffer)
+    void SipFieldSerializeParams(const IKeyValueCollection& Params, IOutputBuffer& Buffer)
     {
         std::string sText;
 

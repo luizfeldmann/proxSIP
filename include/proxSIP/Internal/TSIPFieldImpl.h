@@ -10,7 +10,7 @@ namespace detail
     bool SipFieldParseParams(const char*, size_t, IKeyValueCollection&);
 
     //! Serializes the parameters of a SIP header field
-    void SipFieldSerializeParams(const IKeyValueCollection&, IBuffer&);
+    void SipFieldSerializeParams(const IKeyValueCollection&, IOutputBuffer&);
 };
 
 //! Internal implementation of #ISIPFields
@@ -39,7 +39,7 @@ public:
         return detail::SipFieldParseParams(pData, uSize, m_params);
     }
 
-    void Serialize(IBuffer& Buffer) const
+    void Serialize(IOutputBuffer& Buffer) const
     {
         detail::SipFieldSerializeParams(m_params, Buffer);
     }

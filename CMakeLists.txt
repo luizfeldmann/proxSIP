@@ -95,6 +95,7 @@ set(${CMAKE_PROJECT_NAME}_LIB_HEADERS
     "include/proxSIP/IUserAccountCollection.h"
     "include/proxSIP/IUdpServer.h"
     "include/proxSIP/CAsioUdpServer.h"
+    "include/proxSIP/IOutputBuffer.h"
     "include/proxSIP/IBuffer.h"
     "include/proxSIP/TBuffer.h"
     "include/proxSIP/IKeyValuePair.h"

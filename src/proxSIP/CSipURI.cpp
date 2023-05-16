@@ -93,7 +93,7 @@ bool CSipURI::Parse(const char* pData, size_t uSize)
     return m_pImpl->Parse(pData, uSize);
 }
 
-void CSipURI::Serialize(IBuffer& Buffer) const
+void CSipURI::Serialize(IOutputBuffer& Buffer) const
 {
     m_pImpl->Serialize(Buffer);
 }

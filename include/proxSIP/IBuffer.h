@@ -1,10 +1,10 @@
 #ifndef _IBUFFER_H_
 #define _IBUFFER_H_
 
-#include "proxSIPExports.h"
+#include "IOutputBuffer.h"
 
 //! Stores arbitrary data
-class PROXSIP_API IBuffer
+class PROXSIP_API IBuffer : public IOutputBuffer
 {
 public:
     virtual ~IBuffer() = default;
@@ -23,9 +23,6 @@ public:
 
     //! Iterator to the end of the buffer
     virtual const char* cend() const = 0;
-
-    //! Copies data to inside the buffer
-    virtual void write(const char*, size_t) = 0;
 };
 
 #endif

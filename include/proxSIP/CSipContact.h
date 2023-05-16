@@ -37,7 +37,7 @@ public:
 
     bool Parse(const char*, size_t) override;
 
-    void Serialize(IBuffer&) const override;
+    void Serialize(IOutputBuffer&) const override;
     //! @}
 };
 

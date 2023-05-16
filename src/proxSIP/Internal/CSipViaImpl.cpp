@@ -108,7 +108,7 @@ bool CSipViaImpl::Parse(const char* pData, size_t uSize)
     return TSIPFieldImpl::Parse(pData, pEnd - pData);
 }
 
-void CSipViaImpl::Serialize(IBuffer& Buffer) const
+void CSipViaImpl::Serialize(IOutputBuffer& Buffer) const
 {
     const std::string sText
         = m_sVersion + "/" + m_sTransport + " " + m_sURI;

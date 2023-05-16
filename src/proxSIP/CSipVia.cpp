@@ -62,7 +62,7 @@ bool CSipVia::Parse(const char* pData, size_t uSize)
     return m_pImpl->Parse(pData, uSize);
 }
 
-void CSipVia::Serialize(IBuffer& Buffer) const
+void CSipVia::Serialize(IOutputBuffer& Buffer) const
 {
     m_pImpl->Serialize(Buffer);
 }

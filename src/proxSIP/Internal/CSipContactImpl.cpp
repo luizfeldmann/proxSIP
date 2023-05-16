@@ -129,7 +129,7 @@ bool CSipContactImpl::Parse(const char* pData, size_t uSize)
     return TSIPFieldImpl::Parse(pData, pEnd - pData);
 }
 
-void CSipContactImpl::Serialize(IBuffer& Buffer) const
+void CSipContactImpl::Serialize(IOutputBuffer& Buffer) const
 {
     std::string sText;
 
