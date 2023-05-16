@@ -2,6 +2,7 @@
 #define _ISIPCONTACT_H_
 
 #include "ISipField.h"
+#include "ISipURI.h"
 
 //! Parses or serializes the "Contact", "To", "From" fields of a SIP message
 class PROXSIP_API ISipContact : public ISipField
@@ -15,10 +16,10 @@ public:
     virtual void Name(const char*) = 0;
 
     //! Reads the URI
-    virtual const char* URI() const = 0;
+    virtual const ISipURI& URI() const = 0;
 
     //! Sets the URI
-    virtual void URI(const char*) = 0;
+    virtual ISipURI& URI() = 0;
 };
 
 #endif

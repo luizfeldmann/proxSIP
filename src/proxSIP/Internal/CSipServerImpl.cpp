@@ -42,13 +42,9 @@ static void ChangeContact(ISIPMessage& Message, const IEndpoint& Server)
     auto Contact = CreateFieldAccessor<CSipContactImpl>(ESipField::Contact, Message.Fields());
     if (Contact.Read())
     {
-        std::string sURI = Contact->URI();
-        const auto p1 = sURI.find_first_of(":") + 1;
-        const auto p2 = sURI.find_first_of("@");
-
-        const std::string sUserName = sURI.substr(p1, p2 - p1);
-        sURI = "sip:" + sUserName + "@" + std::string(Server.Address()) + ":" + std::to_string(Server.Port()) + ";transport=udp";
-        Contact->URI(sURI.c_str());
+        auto& URI = Contact->URI();
+        URI.Host(Server.Address());
+        URI.Port(Server.Port());
 
         Contact.Write();
     }
@@ -262,7 +258,8 @@ void CSipServerImpl::DoRegister(ISIPResponse& Response)
     }
 
     // Perform the registration
-    m_pRegistry->Register(To->URI(), Via->URI(), uExpires);
+    To->URI().KeepComponents(ESipURIComponents::PUH);
+    m_pRegistry->Register(To->URI().c_str(), Via->URI(), uExpires);
 
     Response.Status(ESipStatusCode::Ok);
     return;

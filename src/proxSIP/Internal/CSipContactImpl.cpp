@@ -17,14 +17,14 @@ void CSipContactImpl::Name(const char* sName)
     m_sName = sName;
 }
 
-const char* CSipContactImpl::URI() const
+const ISipURI& CSipContactImpl::URI() const
 {
-    return m_sURI.c_str();
+    return m_cURI;
 }
 
-void CSipContactImpl::URI(const char* sURI)
+ISipURI& CSipContactImpl::URI()
 {
-    m_sURI = sURI;
+    return m_cURI;
 }
 
 /* Overrides from #ISipField */
@@ -121,7 +121,8 @@ bool CSipContactImpl::Parse(const char* pData, size_t uSize)
     }
 
     // Save the URI
-    m_sURI = std::string(pUriStart, pUriEnd - pUriStart);
+    if (!m_cURI.Parse(pUriStart, pUriEnd - pUriStart))
+        return false; /* Bad URI */
 
     // Parse the additional parameters
     ++pData; // consume the >
@@ -133,14 +134,21 @@ void CSipContactImpl::Serialize(IOutputBuffer& Buffer) const
 {
     std::string sText;
 
+    // Write everything before the URI
     if (!m_sName.empty())
     {
         sText = "\"" + m_sName + "\" ";
     }
 
-    sText += "<" + m_sURI + ">";
-
+    sText += "<"; // mark the URI will start
+    
     Buffer.write(sText.data(), sText.length());
+
+    // Write the URI itself
+    m_cURI.Serialize(Buffer);
+
+    // Write what goes after the URI
+    Buffer.write(">", 1);
 
     // Write the additional parameters
     TSIPFieldImpl::Serialize(Buffer);

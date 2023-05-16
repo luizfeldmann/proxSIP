@@ -24,9 +24,9 @@ public:
 
     void Name(const char*) override;
 
-    const char* URI() const override;
+    const ISipURI& URI() const override;
 
-    void URI(const char*) override;
+    ISipURI& URI() override;
     //! @}
 
     //! @name Overrides from #ISipField

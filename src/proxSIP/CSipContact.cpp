@@ -25,14 +25,14 @@ void CSipContact::Name(const char* sName)
     m_pImpl->Name(sName);
 }
 
-const char* CSipContact::URI() const
+const ISipURI& CSipContact::URI() const
 {
     return m_pImpl->URI();
 }
 
-void CSipContact::URI(const char* sUri)
+ISipURI& CSipContact::URI()
 {
-    m_pImpl->URI(sUri);
+    return m_pImpl->URI();
 }
 
 //! @}

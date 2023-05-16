@@ -3,6 +3,7 @@
 
 #include "ISipContact.h"
 #include "TSIPFieldImpl.h"
+#include "CSipURIImpl.h"
 #include <string>
 
 //! @copydoc ISipContact
@@ -13,7 +14,7 @@ private:
     std::string m_sName;
 
     //! Stores the URI
-    std::string m_sURI;
+    CSipURIImpl m_cURI;
 
 public:
     CSipContactImpl();
@@ -24,9 +25,9 @@ public:
 
     void Name(const char*) override;
 
-    const char* URI() const override;
+    const ISipURI& URI() const override;
 
-    void URI(const char*) override;
+    ISipURI& URI() override;
     //! @}
 
     //! @name Overrides from #ISipField
