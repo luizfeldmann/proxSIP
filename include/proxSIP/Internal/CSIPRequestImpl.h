@@ -38,9 +38,14 @@ public:
 
     //! @name Overrides from ISIPRequest
     //! @{
+    void Assign(const ISIPRequest&) override;
+
     ESipMethod Method() const override;
+
     void Method(ESipMethod) override;
+
     const ISipURI& URI() const override;
+
     ISipURI& URI() override;
     //! @}
 };

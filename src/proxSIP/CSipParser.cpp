@@ -1,4 +1,5 @@
 #include "CSipParser.h"
+#include "ESipField.h"
 #include <boost/utility/string_view.hpp>
 
 /* Util */
@@ -90,6 +91,32 @@ static EParserResult ParseToCRLF(const char*& p, const char* pEnd, const char*& 
     return EParserResult::Success;
 }
 
+//! Handles header fields with special storage or adds the generic ones to the collection
+static EParserResult HandleField(const boost::string_view& svName, const boost::string_view& svValue, ISIPMessage& Message)
+{
+    bool bStatus = true;
+    auto eField = SipGetFieldEnum(svName.to_string().c_str());
+
+    switch (eField)
+    {
+    case ESipField::From:
+        bStatus = Message.From().Parse(svValue.data(), svValue.size());
+        break;
+
+    case ESipField::To:
+        bStatus = Message.To().Parse(svValue.data(), svValue.size());
+        break;
+
+    default:
+        const auto sKey = svName.to_string();
+        const auto sValue = svValue.to_string();
+        Message.Fields().Insert(sKey.c_str(), sValue.c_str());
+        break;
+    }
+
+    return bStatus ? EParserResult::Success : EParserResult::BadFieldData;
+}
+
 //! Parse *one* field
 static EParserResult ParseField(const char*& p, const char* pEnd, ISIPMessage& Message)
 {
@@ -160,12 +187,8 @@ static EParserResult ParseField(const char*& p, const char* pEnd, ISIPMessage& M
         svValue = make_string(pFirst, pToken);
     }
 
-    // Push the field into the message struct
-    const auto sKey = svName.to_string();
-    const auto sValue = svValue.to_string();
-    Message.Fields().Insert(sKey.c_str(), sValue.c_str());
-
-    return EParserResult::Success;
+    // Push the field into the message struct or add to special field
+    return HandleField(svName, svValue, Message);
 }
 
 //! Parses all the fields

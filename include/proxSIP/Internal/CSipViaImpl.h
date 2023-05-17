@@ -17,6 +17,8 @@ public:
 
     //! @name Overrides from #ISipVia
     //! @{
+    void Assign(const ISipVia& Copy) override;
+    
     const char* Version() const override;
 
     void Version(const char*) override;

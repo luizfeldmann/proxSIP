@@ -24,6 +24,12 @@ const ESIPMessageType CSIPResponseImpl::Type() const
 
 /* ISIPRequest */
 
+void CSIPResponseImpl::Assign(const ISIPResponse& Copy)
+{
+    Status(Copy.Status());
+    TSIPMessageImpl::Assign(Copy);
+}
+
 ESipStatusCode CSIPResponseImpl::Status() const
 {
     return m_eStatus;

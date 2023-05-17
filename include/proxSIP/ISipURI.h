@@ -10,6 +10,9 @@ class PROXSIP_API ISipURI : public ISipField
 public:
     virtual ~ISipURI() = default;
 
+    //! Copies from another object
+    virtual void Assign(const ISipURI&) = 0;
+
     //! Returns a bitwise enumeration of the components present in the URI
     virtual ESipURIComponents QueryComponents() const = 0;
 

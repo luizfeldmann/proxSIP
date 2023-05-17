@@ -20,6 +20,8 @@ public:
 
     //! @name Overrides from #ISipContact
     //! @{
+    void Assign(const ISipContact&) override;
+
     const char* Name() const override;
 
     void Name(const char*) override;
@@ -31,6 +33,8 @@ public:
 
     //! @name Overrides from #ISipField
     //! @{
+    void Assign(const ISipField&) override;
+
     const IKeyValueCollection& Parameters() const override;
 
     IKeyValueCollection& Parameters() override;

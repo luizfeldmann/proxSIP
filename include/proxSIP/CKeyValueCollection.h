@@ -19,6 +19,8 @@ public:
 
     //! @name Overrides from IKeyValueCollection
     //! @{
+    void Assign(const IKeyValueCollection&) override;
+
     const char* Find(const char* szKey) const override;
 
     void Insert(const char* szKey, const char* szValue) override;

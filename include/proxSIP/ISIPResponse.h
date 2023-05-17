@@ -10,6 +10,9 @@ class PROXSIP_API ISIPResponse : public ISIPMessage
 public:
     virtual ~ISIPResponse() = default;
 
+    //! Copies from another response
+    virtual void Assign(const ISIPResponse&) = 0;
+
     //! Reads the status code of the response
     virtual ESipStatusCode Status() const = 0;
 

@@ -3,7 +3,7 @@
 
 #include "IEndpoint.h"
 #include "IBuffer.h"
-#include "IKeyValueCollection.h"
+#include "ISipContact.h"
 
 //! Types of SIP messages
 enum class ESIPMessageType
@@ -17,6 +17,9 @@ class PROXSIP_API ISIPMessage
 {
 public:
     virtual ~ISIPMessage() = default;
+
+    // Assigns data (copies) from another abstract message
+    virtual void Assign(const ISIPMessage&) = 0;
 
     //! Reads the type of this message
     virtual const ESIPMessageType Type() const = 0;
@@ -38,6 +41,18 @@ public:
 
     //! Mutator to the destination endpoint of the message
     virtual IEndpoint& Destination() = 0;
+
+    //! Acessor to the "From" header field
+    virtual const ISipContact& From() const = 0;
+
+    //! Mutator to the "From" header field
+    virtual ISipContact& From() = 0;
+
+    //! Acessor to the "To" header field
+    virtual const ISipContact& To() const = 0;
+
+    //! Mutator to the "To" header field
+    virtual ISipContact& To() = 0;
 
     //! Accessor to the headers
     virtual const IKeyValueCollection& Fields() const = 0;

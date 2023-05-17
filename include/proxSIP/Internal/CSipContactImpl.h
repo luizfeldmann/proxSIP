@@ -21,6 +21,8 @@ public:
 
     //! @name Overrides from #ISipContact
     //! @{
+    void Assign(const ISipContact&) override;
+
     const char* Name() const override;
 
     void Name(const char*) override;

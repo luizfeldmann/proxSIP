@@ -20,6 +20,8 @@ public:
 
     //! @name Overrides from ISIPResponse
     //! @{
+    void Assign(const ISIPResponse&) override;
+    
     ESipStatusCode Status() const override;
 
     void Status(ESipStatusCode) override;
@@ -27,6 +29,8 @@ public:
 
     //! @name Overrides from ISIPMessage
     //! @{
+    void Assign(const ISIPMessage&) override;
+
     const ESIPMessageType Type() const override;
 
     const char* Version() const;
@@ -40,6 +44,14 @@ public:
     const IEndpoint& Destination() const override;
 
     IEndpoint& Destination() override;
+
+    const ISipContact& From() const override;
+
+    ISipContact& From() override;
+
+    const ISipContact& To() const override;
+
+    ISipContact& To() override;
 
     const IKeyValueCollection& Fields() const override;
 

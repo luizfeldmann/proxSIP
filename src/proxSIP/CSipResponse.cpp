@@ -17,6 +17,11 @@ CSIPResponse::CSIPResponse()
 
 /* Overrides from ISIPResponse */
 
+void CSIPResponse::Assign(const ISIPResponse& Copy)
+{
+    return m_pImpl->Assign(Copy);
+}
+
 ESipStatusCode CSIPResponse::Status() const
 {
     return m_pImpl->Status();
@@ -28,6 +33,11 @@ void CSIPResponse::Status(ESipStatusCode eStatus)
 }
 
 /* Overrides from ISIPMessage */
+
+void CSIPResponse::Assign(const ISIPMessage& Src)
+{
+    static_cast<ISIPMessage*>(m_pImpl)->Assign(Src);
+}
 
 const ESIPMessageType CSIPResponse::Type() const
 {
@@ -62,6 +72,26 @@ const IEndpoint& CSIPResponse::Destination() const
 IEndpoint& CSIPResponse::Destination()
 {
     return m_pImpl->Source();
+}
+
+const ISipContact& CSIPResponse::From() const
+{
+    return m_pImpl->From();
+}
+
+ISipContact& CSIPResponse::From()
+{
+    return m_pImpl->From();
+}
+
+const ISipContact& CSIPResponse::To() const
+{
+    return m_pImpl->To();
+}
+
+ISipContact& CSIPResponse::To()
+{
+    return m_pImpl->To();
 }
 
 const IKeyValueCollection& CSIPResponse::Fields() const

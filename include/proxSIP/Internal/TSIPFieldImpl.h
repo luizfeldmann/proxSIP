@@ -24,6 +24,11 @@ public:
 
     //! @name Overrides from #ISIPFields
     //! @{
+    void Assign(const ISipField& Copy) override
+    {
+        Parameters().Assign(Copy.Parameters());
+    }
+
     const IKeyValueCollection& Parameters() const
     {
         return m_params;

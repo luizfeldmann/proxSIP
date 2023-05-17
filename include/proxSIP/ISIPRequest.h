@@ -11,6 +11,9 @@ class PROXSIP_API ISIPRequest : public ISIPMessage
 public:
     virtual ~ISIPRequest() = default;
 
+    //! Copies from another request
+    virtual void Assign(const ISIPRequest&) = 0;
+
     //! Reads the method
     virtual ESipMethod Method() const = 0;
 

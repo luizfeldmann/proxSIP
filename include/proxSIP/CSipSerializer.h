@@ -9,13 +9,13 @@ class PROXSIP_API CSipSerializer
 {
 public:
     //! Serializes a SIP message
-    static void SerializeMessage(const ISIPMessage& Message, IBuffer& Buffer);
+    static void SerializeMessage(const ISIPMessage& Message, IOutputBuffer& Buffer);
 
     //! Serializes a SIP request
-    static void SerializeRequest(const ISIPRequest& Request, IBuffer& Buffer);
+    static void SerializeRequest(const ISIPRequest& Request, IOutputBuffer& Buffer);
 
     //! Serializes a SIP response
-    static void SerializeResponse(const ISIPResponse& Response, IBuffer& Buffer);
+    static void SerializeResponse(const ISIPResponse& Response, IOutputBuffer& Buffer);
 };
 
 #endif

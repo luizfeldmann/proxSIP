@@ -19,6 +19,14 @@ const ESIPMessageType CSIPRequestImpl::Type() const
     return ESIPMessageType::Request;
 }
 
+void CSIPRequestImpl::Assign(const ISIPRequest& Copy)
+{
+    Method(Copy.Method());
+    URI().Assign(Copy.URI());
+
+    TSIPMessageImpl::Assign(Copy);
+}
+
 ESipMethod CSIPRequestImpl::Method() const
 {
     return m_eMethod;

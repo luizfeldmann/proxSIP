@@ -8,7 +8,9 @@
 class PROXSIP_API ISipContact : public ISipField
 {
 public:
-    
+    //! Copies from another contact
+    virtual void Assign(const ISipContact&) = 0;
+
     //! Reads the display name
     virtual const char* Name() const = 0;
 

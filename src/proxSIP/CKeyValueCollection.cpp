@@ -19,6 +19,11 @@ CKeyValueCollection::CKeyValueCollection(const IKeyValueCollection& copy)
 
 }
 
+void CKeyValueCollection::Assign(const IKeyValueCollection& Copy)
+{
+    m_pImpl->Assign(Copy);
+}
+
 const char* CKeyValueCollection::Find(const char* szKey) const
 {
     return m_pImpl->Find(szKey);

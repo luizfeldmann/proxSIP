@@ -7,6 +7,9 @@
 class PROXSIP_API ISipVia : public ISipField
 {
 public:
+    //! Copies from another via
+    virtual void Assign(const ISipVia&) = 0;
+
     //! Read the protocol version
     virtual const char* Version() const = 0;
 

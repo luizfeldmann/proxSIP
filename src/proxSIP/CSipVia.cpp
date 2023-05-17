@@ -15,6 +15,11 @@ CSipVia::~CSipVia()
 
 /* Overrides from #ISipVia */
 
+void CSipVia::Assign(const ISipVia& Copy)
+{
+    return m_pImpl->Assign(Copy);
+}
+
 const char* CSipVia::Version() const
 {
     return m_pImpl->Version();
@@ -46,6 +51,11 @@ void CSipVia::URI(const char* sUri)
 }
 
 /* Overrides from #ISipField */
+
+void CSipVia::Assign(const ISipField& Copy)
+{
+    static_cast<ISipField*>(m_pImpl)->Assign(Copy);
+}
 
 const IKeyValueCollection& CSipVia::Parameters() const
 {

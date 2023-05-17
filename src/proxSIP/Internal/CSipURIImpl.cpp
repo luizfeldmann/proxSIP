@@ -3,7 +3,7 @@
 
 /* Util */
 
-const char* get_or_null(const CSipURIImpl::opt_string& opt)
+static inline const char* get_or_null(const CSipURIImpl::opt_string& opt)
 {
     const char* szValue = nullptr;
 
@@ -13,11 +13,29 @@ const char* get_or_null(const CSipURIImpl::opt_string& opt)
     return szValue;
 }
 
+static inline void emplace_or_reset(CSipURIImpl::opt_string& opt, const char* sValue)
+{
+    if (sValue)
+        opt.emplace(sValue);
+    else
+        opt.reset();
+}
+
 /* CSipURIImpl */
 
 CSipURIImpl::CSipURIImpl()
 {
 
+}
+
+void CSipURIImpl::Assign(const ISipURI& Copy)
+{
+    Protocol(Copy.Protocol());
+    User(Copy.User());
+    Password(Copy.Password());
+    Host(Copy.Host());
+    Port(Copy.Port());
+    TSIPFieldImpl::Assign(Copy);
 }
 
 ESipURIComponents CSipURIImpl::QueryComponents() const
@@ -85,7 +103,7 @@ const char* CSipURIImpl::Protocol() const
 
 void CSipURIImpl::Protocol(const char* sProto)
 {
-    m_proto.emplace(sProto);
+    emplace_or_reset(m_proto, sProto);
 }
 
 const char* CSipURIImpl::User() const
@@ -95,7 +113,7 @@ const char* CSipURIImpl::User() const
 
 void CSipURIImpl::User(const char* sUser)
 {
-    m_user.emplace(sUser);
+    emplace_or_reset(m_user, sUser);
 }
 
 const char* CSipURIImpl::Password() const
@@ -105,7 +123,7 @@ const char* CSipURIImpl::Password() const
 
 void CSipURIImpl::Password(const char* sPassword)
 {
-    m_password.emplace(sPassword);
+    emplace_or_reset(m_password, sPassword);
 }
 
 const char* CSipURIImpl::Host() const
@@ -115,7 +133,7 @@ const char* CSipURIImpl::Host() const
 
 void CSipURIImpl::Host(const char* sHost)
 {
-    m_host.emplace(sHost);
+    emplace_or_reset(m_host, sHost);
 }
 
 unsigned short CSipURIImpl::Port() const

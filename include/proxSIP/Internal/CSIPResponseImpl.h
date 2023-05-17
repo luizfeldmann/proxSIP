@@ -34,7 +34,10 @@ public:
     
     //! @name Overrides from ISIPResponse
     //! @{
+    void Assign(const ISIPResponse&) override;
+
     ESipStatusCode Status() const override;
+
     void Status(ESipStatusCode) override;
     //! @}
 };

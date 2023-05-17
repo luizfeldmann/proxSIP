@@ -1,4 +1,5 @@
 #include "CSipSerializer.h"
+#include "ESipField.h"
 #include <string>
 
 const static char* c_szSpace = " ";
@@ -7,7 +8,31 @@ const static char* c_szFieldSep = ": ";
 
 /* Util */
 
-static void SerializeFields(const ISIPMessage& Message, IBuffer& Buffer)
+static void SerializeCommonField(ESipField eType, const ISipField& Field, IOutputBuffer& Buffer)
+{
+    // Write the name of the field
+    const char* sKey = SipGetFieldStr(eType);
+    Buffer.write(sKey, strlen(sKey));
+
+    // Write the delimiter
+    static const char szDelim[] = { ':', ' ' };
+    Buffer.write(szDelim, sizeof(szDelim));
+
+    // Write the value
+    Field.Serialize(Buffer);
+
+    // Write the end of line
+    static const char szCRLF[] = { '\r', '\n' };
+    Buffer.write(szCRLF, sizeof(szCRLF));
+}
+
+static void SerializeCommonFields(const ISIPMessage& Request, IOutputBuffer& Buffer)
+{
+    SerializeCommonField(ESipField::From, Request.From(), Buffer);
+    SerializeCommonField(ESipField::To, Request.To(), Buffer);
+}
+
+static void SerializeFields(const ISIPMessage& Message, IOutputBuffer& Buffer)
 {
     std::string sFields;
 
@@ -37,7 +62,7 @@ static void SerializeFields(const ISIPMessage& Message, IBuffer& Buffer)
     Buffer.write(sFields.data(), sFields.size());
 }
 
-static void SerializeContent(const ISIPMessage& Message, IBuffer& Buffer)
+static void SerializeContent(const ISIPMessage& Message, IOutputBuffer& Buffer)
 {
     const auto& rContent = Message.Content();
     const char* pData = rContent.cbegin();
@@ -51,7 +76,7 @@ static void SerializeContent(const ISIPMessage& Message, IBuffer& Buffer)
 
 /* CSipSerializer */
 
-void CSipSerializer::SerializeMessage(const ISIPMessage& Message, IBuffer& Buffer)
+void CSipSerializer::SerializeMessage(const ISIPMessage& Message, IOutputBuffer& Buffer)
 {
     const auto eType = Message.Type();
 
@@ -63,7 +88,7 @@ void CSipSerializer::SerializeMessage(const ISIPMessage& Message, IBuffer& Buffe
         throw;
 }
 
-void CSipSerializer::SerializeRequest(const ISIPRequest& Request, IBuffer& Buffer)
+void CSipSerializer::SerializeRequest(const ISIPRequest& Request, IOutputBuffer& Buffer)
 {
     // Header
     {
@@ -80,11 +105,12 @@ void CSipSerializer::SerializeRequest(const ISIPRequest& Request, IBuffer& Buffe
     }
 
     // Fields and content
+    SerializeCommonFields(Request, Buffer);
     SerializeFields(Request, Buffer);
     SerializeContent(Request, Buffer);
 }
 
-void CSipSerializer::SerializeResponse(const ISIPResponse& Response, IBuffer& Buffer)
+void CSipSerializer::SerializeResponse(const ISIPResponse& Response, IOutputBuffer& Buffer)
 {
     // Header
     {
@@ -109,6 +135,7 @@ void CSipSerializer::SerializeResponse(const ISIPResponse& Response, IBuffer& Bu
     }
 
     // Fields and content
+    SerializeCommonFields(Response, Buffer);
     SerializeFields(Response, Buffer);
     SerializeContent(Response, Buffer);
 }

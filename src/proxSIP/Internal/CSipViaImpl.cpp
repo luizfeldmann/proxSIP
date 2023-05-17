@@ -6,6 +6,15 @@ CSipViaImpl::CSipViaImpl()
 }
 
 /* Overrides from #ISipVia */
+
+void CSipViaImpl::Assign(const ISipVia& Copy)
+{
+    Version(Copy.Version());
+    Transport(Copy.Transport());
+    URI(Copy.URI());
+    TSIPFieldImpl::Assign(Copy);
+}
+
 const char* CSipViaImpl::Version() const
 {
     return m_sVersion.c_str();

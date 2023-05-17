@@ -17,6 +17,8 @@ public:
 
     //! @name Overrides from #ISipURI
     //! @{
+    void Assign(const ISipURI&) override;
+
     ESipURIComponents QueryComponents() const override;
 
     void DropComponents(ESipURIComponents) override;

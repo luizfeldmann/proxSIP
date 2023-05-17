@@ -20,6 +20,8 @@ public:
 
     //! @name Overrides from #ISipVia
     //! @{
+    void Assign(const ISipVia&) override;
+
     const char* Version() const override;
 
     void Version(const char*) override;
@@ -35,6 +37,8 @@ public:
 
     //! @name Overrides from #ISipField
     //! @{
+    void Assign(const ISipField&) override;
+
     const IKeyValueCollection& Parameters() const override;
 
     IKeyValueCollection& Parameters() override;

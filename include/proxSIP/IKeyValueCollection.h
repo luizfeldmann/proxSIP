@@ -34,6 +34,9 @@ class PROXSIP_API IKeyValueCollection
 public:
     virtual ~IKeyValueCollection() = default;
 
+    //! Copies contents from another collection
+    virtual void Assign(const IKeyValueCollection&) = 0;
+
     //! Finds the value corresponding to the requested key, if it exists
     //! @param[in] szKey The name of the key to find
     //! @return The found value, or nullptr if it does not exist

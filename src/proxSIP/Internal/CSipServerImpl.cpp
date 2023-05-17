@@ -2,35 +2,14 @@
 #include "Internal/CSIPResponseImpl.h"
 #include "Internal/CAuthDigestImpl.h"
 #include "Internal/CSipViaImpl.h"
-#include "Internal/CSipContactImpl.h"
 #include "ESipParameter.h"
 #include "TFieldAccessor.h"
 
 /* Util */
 
-static void CopyMessage(const ISIPMessage& From, ISIPMessage& To)
-{
-    // Copy version
-    To.Version(From.Version());
-
-    // Copy fields
-    auto& toFields = To.Fields();
-
-    for (auto& it = From.Fields().StartEnumerator(); it; ++it)
-        toFields.Insert(it->Key(), it->Value());
-
-    // Copy body content
-    const auto& fromBody = From.Content();
-
-    if (fromBody.size())
-    {
-        To.Content().write(fromBody.cbegin(), fromBody.size());
-    }
-}
-
 static void ReturnToSender(const ISIPMessage& From, ISIPMessage& To)
 {
-    CopyMessage(From, To);
+    To.Assign(From);
 
     // Invert source and destination
     To.Destination().Assign(From.Source());
@@ -232,11 +211,10 @@ void CSipServerImpl::DoRegister(ISIPResponse& Response)
     // Read relevant fields
     auto& Fields = Response.Fields();
     auto Contact = CreateFieldAccessor<CSipContactImpl>(ESipField::Contact, Fields);
-    auto To = CreateFieldAccessor<CSipContactImpl>(ESipField::To, Fields);
     auto Via = CreateFieldAccessor<CSipViaImpl>(ESipField::Via, Fields);
 
     // Validate message
-    if (!Contact.Read() || !To.Read() || !Via.Read())
+    if (!Contact.Read() || !Via.Read())
     {
         Response.Status(ESipStatusCode::BadRequest);
         return;
@@ -258,8 +236,8 @@ void CSipServerImpl::DoRegister(ISIPResponse& Response)
     }
 
     // Perform the registration
-    To->URI().KeepComponents(ESipURIComponents::PUH);
-    m_pRegistry->Register(To->URI().c_str(), Via->URI(), uExpires);
+    Response.To().URI().KeepComponents(ESipURIComponents::PUH);
+    m_pRegistry->Register(Response.To().URI().c_str(), Via->URI(), uExpires);
 
     Response.Status(ESipStatusCode::Ok);
     return;

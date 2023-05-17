@@ -17,6 +17,11 @@ CSIPRequest::CSIPRequest()
 
 /* Overrides from ISIPMessage */
 
+void CSIPRequest::Assign(const ISIPMessage& Src)
+{
+    static_cast<ISIPMessage*>(m_pImpl)->Assign(Src);
+}
+
 const ESIPMessageType CSIPRequest::Type() const
 {
     return m_pImpl->Type();
@@ -52,6 +57,26 @@ IEndpoint& CSIPRequest::Destination()
     return m_pImpl->Destination();
 }
 
+const ISipContact& CSIPRequest::From() const
+{
+    return m_pImpl->From();
+}
+
+ISipContact& CSIPRequest::From()
+{
+    return m_pImpl->From();
+}
+
+const ISipContact& CSIPRequest::To() const
+{
+    return m_pImpl->To();
+}
+
+ISipContact& CSIPRequest::To()
+{
+    return m_pImpl->To();
+}
+
 const IKeyValueCollection& CSIPRequest::Fields() const
 {
     return m_pImpl->Fields();
@@ -73,6 +98,11 @@ IBuffer& CSIPRequest::Content()
 }
 
 /* Overrides from ISIPRequest */
+
+void CSIPRequest::Assign(const ISIPRequest& Copy)
+{
+    return m_pImpl->Assign(Copy);
+}
 
 ESipMethod CSIPRequest::Method() const
 {

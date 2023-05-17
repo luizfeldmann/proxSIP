@@ -7,6 +7,13 @@ CSipContactImpl::CSipContactImpl()
 
 /* Overrides from #ISipContact */
 
+void CSipContactImpl::Assign(const ISipContact& Copy)
+{
+    Name(Copy.Name());
+    URI().Assign(Copy.URI());
+    TSIPFieldImpl::Assign(Copy);
+}
+
 const char* CSipContactImpl::Name() const
 {
     return m_sName.c_str();

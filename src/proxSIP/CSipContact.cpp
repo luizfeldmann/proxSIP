@@ -15,6 +15,11 @@ CSipContact::~CSipContact()
 
 /* Overrides from #ISipContact */
 
+void CSipContact::Assign(const ISipContact& Copy)
+{
+    m_pImpl->Assign(Copy);
+}
+
 const char* CSipContact::Name() const
 {
     return m_pImpl->Name();
@@ -38,6 +43,11 @@ ISipURI& CSipContact::URI()
 //! @}
 
 /* Overrides from #ISipField */
+
+void CSipContact::Assign(const ISipField& Copy)
+{
+    static_cast<ISipField*>(m_pImpl)->Assign(Copy);
+}
 
 const IKeyValueCollection& CSipContact::Parameters() const
 {

@@ -13,6 +13,11 @@ CSipURI::~CSipURI()
     m_pImpl = nullptr;
 }
 
+void CSipURI::Assign(const ISipURI& Copy)
+{
+    return m_pImpl->Assign(Copy);
+}
+
 ESipURIComponents CSipURI::QueryComponents() const
 {
     return m_pImpl->QueryComponents();
@@ -81,6 +86,13 @@ void CSipURI::Port(unsigned short usPort)
 const char* CSipURI::c_str() const
 {
     return m_pImpl->c_str();
+}
+
+/* Overrides from #ISipField */
+
+void CSipURI::Assign(const ISipField& Copy)
+{
+    static_cast<ISipField*>(m_pImpl)->Assign(Copy);
 }
 
 const IKeyValueCollection& CSipURI::Parameters() const

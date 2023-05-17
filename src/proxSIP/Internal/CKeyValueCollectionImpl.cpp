@@ -78,6 +78,13 @@ void CKeyValueCollectionImpl::Value(const char* szValue)
 
 /* Overrides from #IKeyValueCollection */
 
+void CKeyValueCollectionImpl::Assign(const IKeyValueCollection& Copy)
+{
+    Clear();
+    for (auto& it = Copy.StartEnumerator(); it; ++it)
+        m_map.get<tag_sequence>().emplace_back(pair_t{ it->Key(), it->Value() });
+}
+
 const char* CKeyValueCollectionImpl::Find(const char* szKey) const
 {
     const char* szValue = nullptr;

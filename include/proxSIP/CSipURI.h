@@ -19,6 +19,8 @@ public:
 
     //! @name Overrides from #ISipURI
     //! @{
+    void Assign(const ISipURI&) override;
+
     ESipURIComponents QueryComponents() const override;
 
     void DropComponents(ESipURIComponents) override;
@@ -50,6 +52,8 @@ public:
      
     //! @name Overrides from #ISipField
     //! @{
+    void Assign(const ISipField&) override;
+
     const IKeyValueCollection& Parameters() const override;
 
     IKeyValueCollection& Parameters() override;
