@@ -63,6 +63,7 @@ set(${CMAKE_PROJECT_NAME}_LIB_SOURCES
 set(${CMAKE_PROJECT_NAME}_LIB_HEADERS
     # Internal
     "include/proxSIP/Internal/CEndpointImpl.h"
+    "include/proxSIP/Internal/TContainer.h"
     "include/proxSIP/Internal/TSIPMessageImpl.h"
     "include/proxSIP/Internal/TSIPFieldImpl.h"
     "include/proxSIP/Internal/TEndpoint.h"
@@ -91,7 +92,7 @@ set(${CMAKE_PROJECT_NAME}_LIB_HEADERS
     "include/proxSIP/CSipContact.h"
     "include/proxSIP/ISipVia.h"
     "include/proxSIP/CSipVia.h"
-    "include/proxSIP/TFieldAccessor.h"
+    "include/proxSIP/IContainer.h"
     "include/proxSIP/IUserAccountCollection.h"
     "include/proxSIP/IUdpServer.h"
     "include/proxSIP/CAsioUdpServer.h"

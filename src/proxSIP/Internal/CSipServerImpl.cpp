@@ -3,7 +3,6 @@
 #include "Internal/CAuthDigestImpl.h"
 #include "Internal/CSipViaImpl.h"
 #include "ESipParameter.h"
-#include "TFieldAccessor.h"
 
 /* Util */
 
@@ -18,14 +17,11 @@ static void ReturnToSender(const ISIPMessage& From, ISIPMessage& To)
 
 static void ChangeContact(ISIPMessage& Message, const IEndpoint& Server)
 {
-    auto Contact = CreateFieldAccessor<CSipContactImpl>(ESipField::Contact, Message.Fields());
-    if (Contact.Read())
+    for (auto& Contact = Message.Contact().iterate(); Contact; ++Contact)
     {
         auto& URI = Contact->URI();
         URI.Host(Server.Address());
         URI.Port(Server.Port());
-
-        Contact.Write();
     }
 }
 
@@ -33,8 +29,7 @@ static std::map<std::string, std::string> m_changedVias;
 
 static void RestoreVia(ISIPMessage& Message)
 {
-    auto Via = CreateFieldAccessor<CSipViaImpl>(ESipField::Via, Message.Fields());
-    if (Via.Read())
+    for (auto& Via = Message.Via().iterate(); Via; ++Via)
     {
         const char* branch = Via->Parameters().Find(SipGetParamStr(ESipParameter::branch));
         if (branch)
@@ -43,7 +38,6 @@ static void RestoreVia(ISIPMessage& Message)
             if (itFind != m_changedVias.cend())
             {
                 Via->URI(itFind->second.c_str());
-                Via.Write();
             }
         }
     }
@@ -51,8 +45,7 @@ static void RestoreVia(ISIPMessage& Message)
 
 static void RewriteVia(ISIPMessage& Message, const IEndpoint& Server)
 {
-    auto Via = CreateFieldAccessor<CSipViaImpl>(ESipField::Via, Message.Fields());
-    if (Via.Read())
+    for (auto& Via = Message.Via().iterate(); Via; ++Via)
     {
         const char* branch = Via->Parameters().Find(SipGetParamStr(ESipParameter::branch));
         if (branch)
@@ -62,8 +55,6 @@ static void RewriteVia(ISIPMessage& Message, const IEndpoint& Server)
 
         std::string sURI = std::string(Server.Address()) + ":" + std::to_string(Server.Port());
         Via->URI(sURI.c_str());
-
-        Via.Write();
     }
 }
 
@@ -208,25 +199,22 @@ void CSipServerImpl::DoRegister(ISIPResponse& Response)
         return;
     }
 
-    // Read relevant fields
-    auto& Fields = Response.Fields();
-    auto Contact = CreateFieldAccessor<CSipContactImpl>(ESipField::Contact, Fields);
-    auto Via = CreateFieldAccessor<CSipViaImpl>(ESipField::Via, Fields);
-
     // Validate message
-    if (!Contact.Read() || !Via.Read())
+    if (Response.Contact().empty() || Response.Via().empty())
     {
         Response.Status(ESipStatusCode::BadRequest);
         return;
     }
 
+    auto& Contact = Response.Contact().front();
+    auto& Via = Response.Via().front();
+
     // Update the received address in the VIA
-    Via->Parameters().Insert(SipGetParamStr(ESipParameter::received), Response.Destination().Address());
-    Via.Write();
+    Via.Parameters().Insert(SipGetParamStr(ESipParameter::received), Response.Destination().Address());
 
     // Get the expiration
     unsigned int uExpires = 3600;
-    const char *sExpires = Contact->Parameters().Find(SipGetParamStr(ESipParameter::expires));
+    const char *sExpires = Contact.Parameters().Find(SipGetParamStr(ESipParameter::expires));
     if (sExpires)
     {
         try {
@@ -237,7 +225,7 @@ void CSipServerImpl::DoRegister(ISIPResponse& Response)
 
     // Perform the registration
     Response.To().URI().KeepComponents(ESipURIComponents::PUH);
-    m_pRegistry->Register(Response.To().URI().c_str(), Via->URI(), uExpires);
+    m_pRegistry->Register(Response.To().URI().c_str(), Via.URI(), uExpires);
 
     Response.Status(ESipStatusCode::Ok);
     return;
@@ -288,8 +276,7 @@ void CSipServerImpl::OnResponse(ISIPResponse& Response)
 {
     RestoreVia(Response);
 
-    auto Via = CreateFieldAccessor<CSipViaImpl>(ESipField::Via, Response.Fields());
-    Via.Read();
+    auto& Via = Response.Via().front();
 
     const auto eStatus = Response.Status();
     if (eStatus == ESipStatusCode::Ok)
@@ -297,5 +284,5 @@ void CSipServerImpl::OnResponse(ISIPResponse& Response)
         ChangeContact(Response, Response.Destination());
     }
 
-    Proxy(Response, Via->URI());
+    Proxy(Response, Via.URI());
 }

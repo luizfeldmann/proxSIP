@@ -28,8 +28,14 @@ static void SerializeCommonField(ESipField eType, const ISipField& Field, IOutpu
 
 static void SerializeCommonFields(const ISIPMessage& Request, IOutputBuffer& Buffer)
 {
+    for (auto& it = Request.Via().iterate(); it; ++it)
+        SerializeCommonField(ESipField::Via, *it, Buffer);
+
     SerializeCommonField(ESipField::From, Request.From(), Buffer);
     SerializeCommonField(ESipField::To, Request.To(), Buffer);
+
+    for (auto& it = Request.Contact().iterate(); it; ++it)
+        SerializeCommonField(ESipField::Contact, *it, Buffer);
 }
 
 static void SerializeFields(const ISIPMessage& Message, IOutputBuffer& Buffer)

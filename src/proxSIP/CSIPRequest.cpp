@@ -57,6 +57,16 @@ IEndpoint& CSIPRequest::Destination()
     return m_pImpl->Destination();
 }
 
+const IContainer<ISipVia>& CSIPRequest::Via() const
+{
+    return m_pImpl->Via();
+}
+
+IContainer<ISipVia>& CSIPRequest::Via()
+{
+    return m_pImpl->Via();
+}
+
 const ISipContact& CSIPRequest::From() const
 {
     return m_pImpl->From();
@@ -75,6 +85,16 @@ const ISipContact& CSIPRequest::To() const
 ISipContact& CSIPRequest::To()
 {
     return m_pImpl->To();
+}
+
+const IContainer<ISipContact>& CSIPRequest::Contact() const
+{
+    return m_pImpl->Contact();
+}
+
+IContainer<ISipContact>& CSIPRequest::Contact()
+{
+    return m_pImpl->Contact();
 }
 
 const IKeyValueCollection& CSIPRequest::Fields() const

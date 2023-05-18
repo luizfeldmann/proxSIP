@@ -45,6 +45,10 @@ public:
 
     IEndpoint& Destination() override;
 
+    const IContainer<ISipVia>& Via() const override;
+
+    IContainer<ISipVia>& Via() override;
+
     const ISipContact& From() const override;
 
     ISipContact& From() override;
@@ -52,6 +56,10 @@ public:
     const ISipContact& To() const override;
 
     ISipContact& To() override;
+
+    const IContainer<ISipContact>& Contact() const override;
+
+    IContainer<ISipContact>& Contact() override;
 
     const IKeyValueCollection& Fields() const override;
 

@@ -5,7 +5,9 @@
 #include "CEndpointImpl.h"
 #include "CKeyValueCollectionImpl.h"
 #include "CSipContactImpl.h"
+#include "CSipViaImpl.h"
 #include "TBuffer.h"
+#include "TContainer.h"
 #include <vector>
 #include <string>
 
@@ -23,11 +25,17 @@ protected:
     //! The destination endpoint of the message
     CEndpointImpl m_edpDst;
 
+    //! The "Via" fields
+    TContainer<ISipVia, CSipViaImpl> m_vias;
+
     //! The "To" field
     CSipContactImpl m_to;
 
     //! The "From" field
     CSipContactImpl m_from;
+
+    //! The "Contact" fields
+    TContainer<ISipContact, CSipContactImpl> m_contacts;
 
     //! Collection of fields
     CKeyValueCollectionImpl m_fields;
@@ -48,8 +56,10 @@ public:
         Version(Copy.Version());
 
         // Copy own storage fields
+        CopyContainer(Copy.Via(), Via(), TMemberAssigner<ISipVia>(&ISipVia::Assign));
         From().Assign(Copy.From());
         To().Assign(Copy.To());
+        CopyContainer(Copy.Contact(), Contact(), TMemberAssigner<ISipContact>(&ISipContact::Assign));
 
         // Copy other fields
         Fields().Assign(Copy.Fields());
@@ -93,6 +103,16 @@ public:
         return m_edpDst;
     }
 
+    const IContainer<ISipVia>& Via() const override
+    {
+        return m_vias;
+    }
+
+    IContainer<ISipVia>& Via()
+    {
+        return m_vias;
+    }
+
     const ISipContact& From() const override
     {
         return m_from;
@@ -111,6 +131,16 @@ public:
     ISipContact& To() override
     {
         return m_to;
+    }
+
+    const IContainer<ISipContact>& Contact() const
+    {
+        return m_contacts;
+    }
+
+    IContainer<ISipContact>& Contact()
+    {
+        return m_contacts;
     }
 
     const IKeyValueCollection& Fields() const override

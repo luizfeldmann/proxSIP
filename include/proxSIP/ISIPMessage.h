@@ -3,7 +3,9 @@
 
 #include "IEndpoint.h"
 #include "IBuffer.h"
+#include "ISipVia.h"
 #include "ISipContact.h"
+#include "IContainer.h"
 
 //! Types of SIP messages
 enum class ESIPMessageType
@@ -42,6 +44,12 @@ public:
     //! Mutator to the destination endpoint of the message
     virtual IEndpoint& Destination() = 0;
 
+    //! Accessor to the "Via" header fields
+    virtual const IContainer<ISipVia>& Via() const = 0;
+
+    //! Mutator to the "Via" header fields
+    virtual IContainer<ISipVia>& Via() = 0;
+
     //! Acessor to the "From" header field
     virtual const ISipContact& From() const = 0;
 
@@ -53,6 +61,12 @@ public:
 
     //! Mutator to the "To" header field
     virtual ISipContact& To() = 0;
+
+    //! Acessor to the "Contact" header field
+    virtual const IContainer<ISipContact>& Contact() const = 0;
+
+    //! Mutator to the "Contact" header field
+    virtual IContainer<ISipContact>& Contact() = 0;
 
     //! Accessor to the headers
     virtual const IKeyValueCollection& Fields() const = 0;
