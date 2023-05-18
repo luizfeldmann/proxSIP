@@ -34,27 +34,27 @@ void CKeyValueCollection::Insert(const char* szKey, const char* szValue)
     return m_pImpl->Insert(szKey, szValue);
 }
 
-void CKeyValueCollection::Clear()
+void CKeyValueCollection::clear()
 {
-    m_pImpl->Clear();
+    m_pImpl->clear();
 }
 
-bool CKeyValueCollection::Empty() const
+bool CKeyValueCollection::empty() const
 {
-    return m_pImpl->Empty();
+    return m_pImpl->empty();
 }
 
-size_t CKeyValueCollection::Size() const
+size_t CKeyValueCollection::size() const
 {
-    return m_pImpl->Size();
+    return m_pImpl->size();
 }
 
-IKeyValueEnumerator& CKeyValueCollection::StartEnumerator()
+IContainerIterator<IKeyValuePair>& CKeyValueCollection::iterate()
 {
-    return m_pImpl->StartEnumerator();
+    return m_pImpl->iterate();
 }
 
-const IKeyValueEnumerator& CKeyValueCollection::StartEnumerator() const
+const IContainerIterator<IKeyValuePair>& CKeyValueCollection::iterate() const
 {
-    return m_pImpl->StartEnumerator();
+    return m_pImpl->iterate();
 }

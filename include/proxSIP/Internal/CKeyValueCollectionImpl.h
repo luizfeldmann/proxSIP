@@ -9,7 +9,7 @@
 #include <string>
 #include <map>
 
-class CKeyValueCollectionImpl : public IKeyValueCollection, private IKeyValueEnumerator, private IKeyValuePair
+class CKeyValueCollectionImpl : public IKeyValueCollection, private IContainerIterator<IKeyValuePair>, private IKeyValuePair
 {
 private:
     //! Tag used to index the elements sequentially
@@ -35,8 +35,10 @@ private:
     //! Points the the current item
     mutable multi_t::index<tag_sequence>::type::iterator m_iter;
 
-    //! @name Overrides from #IKeyValueEnumerator
-    //! @{    
+    //! @name Overrides from #IContainerIterator
+    //! @{
+    size_t index() const override;
+
     operator bool() const override;
 
     void operator++() const override;
@@ -87,15 +89,15 @@ public:
 
     void Insert(const char* szKey, const char* szValue) override;
 
-    void Clear() override;
+    void clear() override;
 
-    bool Empty() const override;
+    bool empty() const override;
 
-    size_t Size() const override;
+    size_t size() const override;
 
-    IKeyValueEnumerator& StartEnumerator() override;
+    IContainerIterator<IKeyValuePair>& iterate() override;
 
-    const IKeyValueEnumerator& StartEnumerator() const override;
+    const IContainerIterator<IKeyValuePair>& iterate() const override;
     //! @}
 };
 

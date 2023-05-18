@@ -57,7 +57,7 @@ ESipURIComponents CSipURIImpl::QueryComponents() const
     if (m_port.has_value())
         eComps = eComps | ESipURIComponents::Port;
 
-    if (!Parameters().Empty())
+    if (!Parameters().empty())
         eComps = eComps | ESipURIComponents::Parameters;
 
     //if ()
@@ -84,7 +84,7 @@ void CSipURIImpl::DropComponents(ESipURIComponents eDrop)
         m_port.reset();
 
     if (ESipURIComponents::None != (eDrop & ESipURIComponents::Parameters))
-        Parameters().Clear();
+        Parameters().clear();
 
     //if (ESipURIComponents::None != (eDrop & ESipURIComponents::Headers))
     //    .clear();

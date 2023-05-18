@@ -94,7 +94,7 @@ namespace detail
     {
         std::string sText;
 
-        for (const auto& p = Params.StartEnumerator(); p; ++p)
+        for (const auto& p = Params.iterate(); p; ++p)
         {
             const std::string sKey = p->Key();
             const std::string sVal = p->Value();

@@ -10,7 +10,7 @@ CKeyValueCollectionImpl::CKeyValueCollectionImpl()
 // Construct copy from abstract
 CKeyValueCollectionImpl::CKeyValueCollectionImpl(const IKeyValueCollection& copy)
 {
-    for (auto& it = copy.StartEnumerator(); it; ++it)
+    for (auto& it = copy.iterate(); it; ++it)
     {
         m_map.get<tag_sequence>().emplace_back(pair_t{ it->Key(), it->Value() });
     }
@@ -25,6 +25,11 @@ CKeyValueCollectionImpl::CKeyValueCollectionImpl(CKeyValueCollectionImpl&&) noex
 CKeyValueCollectionImpl& CKeyValueCollectionImpl::operator=(CKeyValueCollectionImpl&&) noexcept = default;
 
 /* Overrides from #IKeyValueEnumerator */
+
+size_t CKeyValueCollectionImpl::index() const
+{
+    return std::distance(m_map.get<tag_sequence>().cbegin(), m_iter);
+}
 
 CKeyValueCollectionImpl::operator bool() const
 {
@@ -80,8 +85,8 @@ void CKeyValueCollectionImpl::Value(const char* szValue)
 
 void CKeyValueCollectionImpl::Assign(const IKeyValueCollection& Copy)
 {
-    Clear();
-    for (auto& it = Copy.StartEnumerator(); it; ++it)
+    clear();
+    for (auto& it = Copy.iterate(); it; ++it)
         m_map.get<tag_sequence>().emplace_back(pair_t{ it->Key(), it->Value() });
 }
 
@@ -114,28 +119,28 @@ void CKeyValueCollectionImpl::Insert(const char* szKey, const char* szValue)
     }
 }
 
-void CKeyValueCollectionImpl::Clear()
+void CKeyValueCollectionImpl::clear()
 {
     m_map.clear();
 }
 
-bool CKeyValueCollectionImpl::Empty() const
+bool CKeyValueCollectionImpl::empty() const
 {
     return m_map.empty();
 }
 
-size_t CKeyValueCollectionImpl::Size() const
+size_t CKeyValueCollectionImpl::size() const
 {
     return m_map.size();
 }
 
-IKeyValueEnumerator& CKeyValueCollectionImpl::StartEnumerator()
+IContainerIterator<IKeyValuePair>& CKeyValueCollectionImpl::iterate()
 {
     m_iter = m_map.get<tag_sequence>().begin();
     return *this;
 }
 
-const IKeyValueEnumerator& CKeyValueCollectionImpl::StartEnumerator() const
+const IContainerIterator<IKeyValuePair>& CKeyValueCollectionImpl::iterate() const
 {
     m_iter = m_map.get<tag_sequence>().begin();
     return *this;

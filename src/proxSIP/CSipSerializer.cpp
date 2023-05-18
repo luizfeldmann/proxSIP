@@ -42,7 +42,7 @@ static void SerializeFields(const ISIPMessage& Message, IOutputBuffer& Buffer)
 {
     std::string sFields;
 
-    for (const auto& it = Message.Fields().StartEnumerator(); it; ++it)
+    for (const auto& it = Message.Fields().iterate(); it; ++it)
     {
         // Write the key
         const char* sKey = it->Key();

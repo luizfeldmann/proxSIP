@@ -25,15 +25,15 @@ public:
 
     void Insert(const char* szKey, const char* szValue) override;
 
-    void Clear() override;
+    void clear() override;
 
-    bool Empty() const override;
+    bool empty() const override;
 
-    size_t Size() const override;
+    size_t size() const override;
 
-    IKeyValueEnumerator& StartEnumerator() override;
+    IContainerIterator<IKeyValuePair>& iterate() override;
 
-    const IKeyValueEnumerator& StartEnumerator() const override;
+    const IContainerIterator<IKeyValuePair>& iterate() const override;
     //! @}
 };
 
