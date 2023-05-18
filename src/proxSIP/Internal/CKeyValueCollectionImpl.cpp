@@ -65,19 +65,19 @@ const IKeyValuePair* CKeyValueCollectionImpl::operator->() const
 
 const char* CKeyValueCollectionImpl::Key() const
 {
-    return m_iter->first.c_str();
+    return m_iter->Key();
 }
 
 const char* CKeyValueCollectionImpl::Value() const
 {
-    return m_iter->second.c_str();
+    return m_iter->Value();
 }
 
 void CKeyValueCollectionImpl::Value(const char* szValue)
 {
     m_map.get<tag_sequence>().modify(m_iter, [szValue](auto& item)
     {
-        item.second = szValue;
+        item.Value(szValue);
     });
 }
 
@@ -97,7 +97,7 @@ const char* CKeyValueCollectionImpl::Find(const char* szKey) const
     auto itFind = m_map.get<tag_key>().find(szKey);
 
     if (m_map.get<tag_key>().cend() != itFind)
-        szValue = itFind->second.c_str();
+        szValue = itFind->Value();
 
     return szValue;
 }
@@ -110,7 +110,7 @@ void CKeyValueCollectionImpl::Insert(const char* szKey, const char* szValue)
     {
         m_map.get<tag_key>().modify(itFind, [szValue](auto& item)
             {
-                item.second = szValue;
+                item.Value(szValue);
             });
     }
     else

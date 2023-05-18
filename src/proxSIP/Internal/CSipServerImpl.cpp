@@ -3,6 +3,7 @@
 #include "Internal/CAuthDigestImpl.h"
 #include "Internal/CSipViaImpl.h"
 #include "ESipParameter.h"
+#include <map>
 
 /* Util */
 

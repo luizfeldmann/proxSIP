@@ -2,12 +2,11 @@
 #define _CKEYVALUECOLLECTIONIMPL_H_
 
 #include "IKeyValueCollection.h"
+#include "CKeyValuePairImpl.h"
 #include <boost/multi_index_container.hpp>
 #include <boost/multi_index/sequenced_index.hpp>
 #include <boost/multi_index/hashed_index.hpp>
 #include <boost/multi_index/member.hpp>
-#include <string>
-#include <map>
 
 class CKeyValueCollectionImpl : public IKeyValueCollection, private IContainerIterator<IKeyValuePair>, private IKeyValuePair
 {
@@ -19,7 +18,14 @@ private:
     struct tag_key;
 
     //! Key value pair type
-    using pair_t = std::pair<std::string, std::string>;
+    class pair_t : public CKeyValuePairImpl
+    {
+    public:
+        using CKeyValuePairImpl::CKeyValuePairImpl;
+
+        // Make the key public so it can be used in the multi_index
+        using CKeyValuePairImpl::m_sKey;
+    };
 
     //! Type of multi indexed container with both ordered sequencing and hashed lookup
     using multi_t = boost::multi_index_container<
@@ -27,7 +33,7 @@ private:
         boost::multi_index::indexed_by<
             boost::multi_index::sequenced<boost::multi_index::tag<tag_sequence>>,
             boost::multi_index::hashed_unique<boost::multi_index::tag<tag_key>,
-                boost::multi_index::member<pair_t, std::string, &pair_t::first>>>>;
+                boost::multi_index::member<CKeyValuePairImpl, std::string, &pair_t::m_sKey>>>>;
 
     //! Stores the actual data
     mutable multi_t m_map;
