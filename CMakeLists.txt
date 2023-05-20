@@ -36,6 +36,12 @@ set(${CMAKE_PROJECT_NAME}_LIB_SOURCES
     "src/proxSIP/Internal/CSipRegistryImpl.cpp"
     "src/proxSIP/Internal/CSipServerImpl.cpp"
     "src/proxSIP/Internal/CAsioUdpServerImpl.cpp"
+    "src/proxSIP/Internal/CSdpMessageImpl.cpp"
+    "src/proxSIP/Internal/CSdpTimeImpl.cpp"
+    "src/proxSIP/Internal/CSdpOriginatorImpl.cpp"
+    "src/proxSIP/Internal/CSdpMediaImpl.cpp"
+    "src/proxSIP/Internal/CSdpConnectionImpl.cpp"
+    "src/proxSIP/Internal/CSdpAttributeImpl.cpp"
     # Public
     "${RESOURCES_FILE}"
     "src/proxSIP/CAsioUdpServer.cpp"
@@ -57,7 +63,8 @@ set(${CMAKE_PROJECT_NAME}_LIB_SOURCES
     "src/proxSIP/CSipContact.cpp"
     "src/proxSIP/CSipVia.cpp"
     "src/proxSIP/CSipRegistry.cpp"
-    "src/proxSIP/CSipServer.cpp" )
+    "src/proxSIP/CSipServer.cpp"
+    "src/proxSIP/CSdpMessage.cpp" )
 
 # List of headers
 set(${CMAKE_PROJECT_NAME}_LIB_HEADERS
@@ -79,6 +86,12 @@ set(${CMAKE_PROJECT_NAME}_LIB_HEADERS
     "include/proxSIP/Internal/CSipRegistryImpl.h"
     "include/proxSIP/Internal/CAsioUdpServerImpl.h"
     "include/proxSIP/Internal/CSipServerImpl.h"
+    "include/proxSIP/Internal/CSdpMessageImpl.h"
+    "include/proxSIP/Internal/CSdpOriginatorImpl.h"
+    "include/proxSIP/Internal/CSdpConnectionImpl.h"
+    "include/proxSIP/Internal/CSdpMediaImpl.h"
+    "include/proxSIP/Internal/CSdpAttributeImpl.h"
+    "include/proxSIP/Internal/CSdpTimeImpl.h"
     # Public
     "include/proxSIP/proxSIPExports.h"
     "include/proxSIP/IAuthValidator.h"
@@ -105,6 +118,8 @@ set(${CMAKE_PROJECT_NAME}_LIB_HEADERS
     "include/proxSIP/CKeyValueCollection.h"
     "include/proxSIP/IUdpMessageHandler.h"
     "include/proxSIP/IUdpMessageSender.h"
+    "include/proxSIP/IField.h"
+    "include/proxSIP/IMessage.h"
     "include/proxSIP/ISIPMessage.h"
     "include/proxSIP/ISIPRequest.h"
     "include/proxSIP/CSIPRequest.h"
@@ -124,7 +139,16 @@ set(${CMAKE_PROJECT_NAME}_LIB_HEADERS
     "include/proxSIP/CSipMessageHandler.h"
     "include/proxSIP/IEndpoint.h"
     "include/proxSIP/CEndpoint.h"
-    "include/proxSIP/CSipServer.h" )
+    "include/proxSIP/CSipServer.h"
+    "include/proxSIP/ISdpField.h"
+    "include/proxSIP/ISdpMessage.h"
+    "include/proxSIP/CSdpMessage.h"
+    "include/proxSIP/ESdpType.h"
+    "include/proxSIP/ISdpMedia.h"
+    "include/proxSIP/ISdpAttribute.h"
+    "include/proxSIP/ISdpConnection.h"
+    "include/proxSIP/ISdpOriginator.h"
+    "include/proxSIP/ISdpTime.h" )
 
 # Create and configure the library
 add_library(${CMAKE_PROJECT_NAME}_LIB SHARED
