@@ -2,6 +2,7 @@
 #define _CSDPMEDIAIMPL_H_
 
 #include "ISdpMedia.h"
+#include "CSdpAttributeImpl.h"
 
 //! @copydoc ISdpMedia
 class CSdpMediaImpl : public ISdpMedia

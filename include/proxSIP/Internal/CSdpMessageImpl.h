@@ -14,21 +14,53 @@
 class CSdpMessageImpl : public ISdpMessage
 {
 private:
+    //! Stores the version number
     unsigned char m_uVersion;
+
+    //! Stores the originator of the session
     CSdpOriginatorImpl m_originator;
+
+    //! The textual session name
     std::string m_sSessionName;
-    //boost::optional<std::string> m_sSessionInfo;
-    //boost::optional<std::string> m_sSessionURI;
-    //boost::optional<std::string> m_sEmail;
-    //boost::optional<std::string> m_sPhone;
+
+    //! Free-form human-readable description of the session or the purpose
+    boost::optional<std::string> m_sSessionInfo;
+
+    //! Pointer to additional information about the session
+    boost::optional<std::string> m_sSessionURI;
+
+    //! Email contact information for the person responsible for the conference
+    boost::optional<std::string> m_sEmail;
+
+    //! Phone contact information for the person responsible for the conference
+    boost::optional<std::string> m_sPhone;
+
+    //! Connection information for the session's streams
     CSdpConnectionImpl m_connection;
-    //boost::optional<CSdpBandwidth> m_sBandwidth;
-    //boost::optional<CSdpTimezone> m_sZone;
-    //boost::optional<CSdpCryptoKey> m_sKey;
-    //TContainer<ISdpAttribute, CSdpAttributeImpl> m_attribs;
-    CSdpTimeImpl m_sTime;
+
+    //! The proposed bandwidth to be used by the session or media
+    //boost::optional<CSdpBandwidth> m_bandwidth;
+    
+    //! Specify offsets from the base time
+    //boost::optional<CSdpTimezone> m_timezone;
+    
+    //! A simple mechanism for key exchange is provided by the key field
+    //boost::optional<CSdpCryptoKey> m_cryptokey;
+    
+    //! Collection of session-level attributes
+    TContainer<ISdpAttribute, CSdpAttributeImpl> m_attribs;
+
+    //! Specify the start and stop times for a session
+    CSdpTimeImpl m_time;
+
+    //! Repeat times for a session
     //boost::optional<CSdpRepeatTimeImpl> m_sRepeat;
+
+    //! Collection of media streams
     TContainer<ISdpMedia, CSdpMediaImpl> m_medias;
+
+    //! Parses one line of the message
+    bool ParseField(ESdpType, const char*, size_t);
 
 public:
     CSdpMessageImpl();
