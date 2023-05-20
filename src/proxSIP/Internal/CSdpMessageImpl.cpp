@@ -22,7 +22,7 @@ bool CSdpMessageImpl::ParseField(ESdpType eType, const char* pData, size_t uSize
         break;
 
     case ESdpType::SessionName:
-        m_sSessionName = std::string(pData, uSize);
+        m_sSessionName.assign(pData, uSize);
         break;
 
     case ESdpType::Information:
@@ -60,6 +60,8 @@ bool CSdpMessageImpl::ParseField(ESdpType eType, const char* pData, size_t uSize
     case ESdpType::Attribute:
         if (m_medias.empty())
             bStatus = m_attribs.emplace_back().Parse(pData, uSize);
+        else
+            bStatus = m_medias.back().Attributes().emplace_back().Parse(pData, uSize);
         break;
 
     case ESdpType::Time:
@@ -80,7 +82,135 @@ bool CSdpMessageImpl::ParseField(ESdpType eType, const char* pData, size_t uSize
     return bStatus;
 }
 
+static inline const char* get_or_null(const boost::optional<std::string>& opt)
+{
+    const char* szValue = nullptr;
+
+    if (opt.has_value())
+        szValue = opt.get().c_str();
+
+    return szValue;
+}
+
+static inline void emplace_or_reset(boost::optional<std::string>& opt, const char* sValue)
+{
+    if (sValue)
+        opt.emplace(sValue);
+    else
+        opt.reset();
+}
+
 /* Overrides from ISdpMessage */
+
+unsigned char CSdpMessageImpl::Version() const
+{
+    return m_uVersion;
+}
+
+void CSdpMessageImpl::Version(unsigned char uVersion)
+{
+    m_uVersion = uVersion;
+}
+
+const ISdpOriginator& CSdpMessageImpl::Origin() const
+{
+    return m_originator;
+}
+
+ISdpOriginator& CSdpMessageImpl::Origin()
+{
+    return m_originator;
+}
+
+const char* CSdpMessageImpl::Name() const
+{
+    return m_sSessionName.c_str();
+}
+
+void CSdpMessageImpl::Name(const char* sName)
+{
+    m_sSessionName.assign(sName);
+}
+
+const char* CSdpMessageImpl::Info() const
+{
+    return get_or_null(m_sSessionInfo);
+}
+
+void CSdpMessageImpl::Info(const char* sInfo)
+{
+    emplace_or_reset(m_sSessionInfo, sInfo);
+}
+
+const char* CSdpMessageImpl::URI() const
+{
+    return get_or_null(m_sSessionURI);
+}
+
+void CSdpMessageImpl::URI(const char* sUri)
+{
+    emplace_or_reset(m_sSessionURI, sUri);
+}
+
+const char* CSdpMessageImpl::Email() const
+{
+    return get_or_null(m_sEmail);
+}
+
+void CSdpMessageImpl::Email(const char* sMail)
+{
+    emplace_or_reset(m_sEmail, sMail);
+}
+
+const char* CSdpMessageImpl::Phone() const
+{
+    return get_or_null(m_sPhone);
+}
+
+void CSdpMessageImpl::Phone(const char* sPhone)
+{
+    emplace_or_reset(m_sPhone, sPhone);
+}
+
+const ISdpConnection& CSdpMessageImpl::Connection() const
+{
+    return m_connection;
+}
+
+ISdpConnection& CSdpMessageImpl::Connection()
+{
+    return m_connection;
+}
+
+const IContainer<ISdpAttribute>& CSdpMessageImpl::Attributes() const
+{
+    return m_attribs;
+}
+
+IContainer<ISdpAttribute>& CSdpMessageImpl::Attributes()
+{
+    return m_attribs;
+}
+
+const ISdpTime& CSdpMessageImpl::Time() const
+{
+    return m_time;
+}
+
+ISdpTime& CSdpMessageImpl::Time()
+{
+    return m_time;
+}
+
+const IContainer<ISdpMedia>& CSdpMessageImpl::Media() const
+{
+    return m_medias;
+}
+
+IContainer<ISdpMedia>& CSdpMessageImpl::Media()
+{
+    return m_medias;
+}
 
 /* Overrides from IMessage */
 

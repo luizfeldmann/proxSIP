@@ -5,6 +5,18 @@ CSdpMediaImpl::CSdpMediaImpl()
 
 }
 
+/* Overrides from #ISdpMedia */
+
+const IContainer<ISdpAttribute>& CSdpMediaImpl::Attributes() const
+{
+    return m_attribs;
+}
+
+IContainer<ISdpAttribute>& CSdpMediaImpl::Attributes()
+{
+    return m_attribs;
+}
+
 /* Overrides from #ISdpField */
 ESdpType CSdpMediaImpl::Type() const
 {
