@@ -50,6 +50,7 @@ set(${CMAKE_PROJECT_NAME}_LIB_SOURCES
     "src/proxSIP/ESipParameter.cpp"
     "src/proxSIP/ESipStatusCode.cpp"
     "src/proxSIP/ESipURIComponents.cpp"
+    "src/proxSIP/ESdpType.cpp"
     "src/proxSIP/CSipSerializer.cpp"
     "src/proxSIP/CSipParser.cpp"
     "src/proxSIP/CSipMessageHandler.cpp"
