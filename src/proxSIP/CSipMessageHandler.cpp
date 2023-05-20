@@ -1,9 +1,7 @@
 #include "CSipMessageHandler.h"
-#include "CSipParser.h"
-#include "CSipSerializer.h"
+#include "TBuffer.h"
 #include "CSIPRequest.h"
 #include "CSIPResponse.h"
-#include "TBuffer.h"
 #include <vector>
 #include <boost/log/trivial.hpp>
 
@@ -60,7 +58,7 @@ void CSipMessageHandler::OnMessage(const char* pData, size_t uSize, const IEndpo
     {
         CSIPRequest Request;
 
-        if (EParserResult::Success == CSipParser::ParseRequest(pData, uSize, Request))
+        if (Request.Parse(pData, uSize))
         {
             bParsed = true;
             Request.Source().Assign(Src);
@@ -75,7 +73,7 @@ void CSipMessageHandler::OnMessage(const char* pData, size_t uSize, const IEndpo
     {
         CSIPResponse Response;
 
-        if (EParserResult::Success == CSipParser::ParseResponse(pData, uSize, Response))
+        if (Response.Parse(pData, uSize))
         {
             bParsed = true;
             Response.Source().Assign(Src);
@@ -97,7 +95,7 @@ void CSipMessageHandler::SendMessage(const ISIPMessage& Message)
     if (m_pMessageSender)
     {
         TBuffer<std::vector<char>> Buffer;
-        CSipSerializer::SerializeMessage(Message, Buffer);
+        Message.Serialize(Buffer);
 
         m_pMessageSender->SendMessage(Buffer.cbegin(), Buffer.size(), Message.Destination());
     }

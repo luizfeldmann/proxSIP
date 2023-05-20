@@ -15,6 +15,17 @@ CSIPRequest::CSIPRequest()
 
 }
 
+/* Overrides from IMessage */
+bool CSIPRequest::Parse(const char* pData, size_t uSize)
+{
+    return m_pImpl->Parse(pData, uSize);
+}
+
+void CSIPRequest::Serialize(IOutputBuffer& Buffer) const
+{
+    m_pImpl->Serialize(Buffer);
+}
+
 /* Overrides from ISIPMessage */
 
 void CSIPRequest::Assign(const ISIPMessage& Src)

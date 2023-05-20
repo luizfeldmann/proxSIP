@@ -27,6 +27,13 @@ public:
     //! Move-assignable
     CSIPResponseImpl& operator=(CSIPResponseImpl&&) noexcept;
 
+    //! @name Overrides from IMessage
+    //! @{
+    bool Parse(const char*, size_t) override;
+
+    void Serialize(IOutputBuffer&) const override;
+    //! @}
+
     //! @name Overrides from ISIPMessage
     //! @{
     const ESIPMessageType Type() const override;

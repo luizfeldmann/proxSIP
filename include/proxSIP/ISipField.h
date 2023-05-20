@@ -1,11 +1,11 @@
 #ifndef _ISIPFIELD_H_
 #define _ISIPFIELD_H_
 
-#include "IOutputBuffer.h"
+#include "IField.h"
 #include "IKeyValueCollection.h"
 
 //! A structured representation of a known SIP field format
-class PROXSIP_API ISipField
+class PROXSIP_API ISipField : public IField
 {
 public:
     virtual ~ISipField() = default;
@@ -18,12 +18,6 @@ public:
 
     //! Mutator to the aditional parameters
     virtual IKeyValueCollection& Parameters() = 0;
-
-    //! Parses the field
-    virtual bool Parse(const char*, size_t) = 0;
-
-    //! Serializes the field to a string
-    virtual void Serialize(IOutputBuffer&) const = 0;
 };
 
 #endif

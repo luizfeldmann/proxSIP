@@ -18,6 +18,13 @@ public:
     ~CSIPResponse();
     CSIPResponse();
 
+    //! @name Overrides from IMessage
+    //! @{
+    bool Parse(const char*, size_t) override;
+
+    void Serialize(IOutputBuffer&) const override;
+    //! @}
+
     //! @name Overrides from ISIPResponse
     //! @{
     void Assign(const ISIPResponse&) override;

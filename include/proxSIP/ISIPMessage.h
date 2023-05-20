@@ -1,6 +1,7 @@
 #ifndef _ISIPMESSAGE_H_
 #define _ISIPMESSAGE_H_
 
+#include "IMessage.h"
 #include "IEndpoint.h"
 #include "IBuffer.h"
 #include "ISipVia.h"
@@ -15,7 +16,7 @@ enum class ESIPMessageType
 };
 
 //! Represents a generic message
-class PROXSIP_API ISIPMessage
+class PROXSIP_API ISIPMessage : public IMessage
 {
 public:
     virtual ~ISIPMessage() = default;

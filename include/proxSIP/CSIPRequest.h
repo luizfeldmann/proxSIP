@@ -18,6 +18,13 @@ public:
     ~CSIPRequest();
     CSIPRequest();
 
+    //! @name Overrides from IMessage
+    //! @{
+    bool Parse(const char*, size_t) override;
+
+    void Serialize(IOutputBuffer&) const override;
+    //! @}
+
     //! @name Overrides from ISIPMessage
     //! @{
     void Assign(const ISIPMessage&) override;

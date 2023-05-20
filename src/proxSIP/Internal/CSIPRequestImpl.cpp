@@ -1,4 +1,6 @@
 #include "Internal/CSIPRequestImpl.h"
+#include "CSipParser.h"
+#include "CSipSerializer.h"
 
 CSIPRequestImpl::CSIPRequestImpl()
     : m_eMethod(ESipMethod::Unknown)
@@ -45,4 +47,14 @@ const ISipURI& CSIPRequestImpl::URI() const
 ISipURI& CSIPRequestImpl::URI()
 {
     return m_cURI;
+}
+
+bool CSIPRequestImpl::Parse(const char* pData, size_t uSize)
+{
+    return EParserResult::Success == CSipParser::ParseRequest(pData, uSize, *this);
+}
+
+void CSIPRequestImpl::Serialize(IOutputBuffer& Buffer) const
+{
+    CSipSerializer::SerializeRequest(*this, Buffer);
 }

@@ -1,8 +1,11 @@
 #include "Internal/CSIPResponseImpl.h"
+#include "CSipParser.h"
+#include "CSipSerializer.h"
 
 /* CSIPResponseImpl */
 
 CSIPResponseImpl::CSIPResponseImpl()
+    : m_eStatus(ESipStatusCode::Unknown)
 {
 
 }
@@ -38,4 +41,14 @@ ESipStatusCode CSIPResponseImpl::Status() const
 void CSIPResponseImpl::Status(ESipStatusCode eStatus)
 {
     m_eStatus = eStatus;
+}
+
+bool CSIPResponseImpl::Parse(const char* pData, size_t uSize)
+{
+    return EParserResult::Success == CSipParser::ParseResponse(pData, uSize, *this);
+}
+
+void CSIPResponseImpl::Serialize(IOutputBuffer& Buffer) const
+{
+    CSipSerializer::SerializeResponse(*this, Buffer);
 }
