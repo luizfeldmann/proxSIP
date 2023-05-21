@@ -192,12 +192,19 @@ configure_file("include/Application/version.in.h" "${VERSION_FILE}" @ONLY)
 set(${CMAKE_PROJECT_NAME}_APP_SOURCES
     "${RESOURCES_FILE}"
     "src/Application/main.cpp"
-    "src/Application/CAppConfig.cpp" )
+    "src/Application/CCallSniffer.cpp"
+    "src/Application/CAppConfig.cpp"
+    "src/Application/CUdpProxy.cpp"
+    "src/Application/CCallSession.cpp" )
 
 # List of headers
 set(${CMAKE_PROJECT_NAME}_APP_HEADERS
     "${VERSION_FILE}"
-    "include/Application/CAppConfig.h")
+    "include/Application/CCallSniffer.h" 
+    "include/Application/CAppConfig.h"
+    "include/Application/CUdpProxy.h"
+    "include/Application/IUdpProxyMsgHandler.h"
+    "include/Application/CCallSession.h" )
 
 # Create and configure the application
 add_executable(${CMAKE_PROJECT_NAME}_APP
@@ -206,7 +213,7 @@ add_executable(${CMAKE_PROJECT_NAME}_APP
  )
 
 set_target_properties(${CMAKE_PROJECT_NAME}_APP PROPERTIES
-    OUTPUT_NAME "${CMAKE_PROJECT_NAME}")
+    OUTPUT_NAME "${CMAKE_PROJECT_NAME}Sniffer")
 
 target_include_directories(${CMAKE_PROJECT_NAME}_APP PUBLIC
     "${CMAKE_CURRENT_BINARY_DIR}"

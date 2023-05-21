@@ -3,6 +3,7 @@
 #include <proxSIP/CSipServer.h>
 #include <proxSIP/CAuthValidator.h>
 #include <proxSIP/CSipRegistry.h>
+#include "CCallSniffer.h"
 #include "CAppConfig.h"
 #include <iostream>
 #include <conio.h>
@@ -33,10 +34,15 @@ int main(int argc, char** argv)
     cAuth.SetAccounts(config.GetUsers());
     sipServer.SetAuth(&cAuth);
 
+    // Create a sniffer to intercept the call
+    CCallSniffer cSniffer;
+    cSniffer.SetHandler((ISipRequestHandler*)&sipServer);
+    cSniffer.SetHandler((ISipResponseHandler*)&sipServer);
+
     // Create a handler for converting UDP messages to SIP
     CSipMessageHandler msgHandler;
-    msgHandler.SetHandler((ISipRequestHandler*)&sipServer);
-    msgHandler.SetHandler((ISipResponseHandler*)&sipServer);
+    msgHandler.SetHandler((ISipRequestHandler*)&cSniffer);
+    msgHandler.SetHandler((ISipResponseHandler*)&cSniffer);
     sipServer.SetSender(&msgHandler);
 
     // Listen for UDP messages
@@ -49,6 +55,7 @@ int main(int argc, char** argv)
     // Main loop
     while (!_kbhit())
     {
+        cSniffer.Poll();
         udpServer.Poll();
     }
 
