@@ -85,12 +85,12 @@ void CSdpMessage::Phone(const char* sPhone)
     m_pImpl->Phone(sPhone);
 }
 
-const ISdpConnection& CSdpMessage::Connection() const
+const IContainer<ISdpConnection>& CSdpMessage::Connection() const
 {
     return m_pImpl->Connection();
 }
 
-ISdpConnection& CSdpMessage::Connection()
+IContainer<ISdpConnection>& CSdpMessage::Connection()
 {
     return m_pImpl->Connection();
 }

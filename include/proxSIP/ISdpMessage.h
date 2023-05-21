@@ -56,10 +56,10 @@ public:
     virtual void Phone(const char*) = 0;
 
     //! Accessor to connection information
-    virtual const ISdpConnection& Connection() const = 0;
+    virtual const IContainer<ISdpConnection>& Connection() const = 0;
 
     //! Mutator to connection information
-    virtual ISdpConnection& Connection() = 0;
+    virtual IContainer<ISdpConnection>& Connection() = 0;
 
     //! Accessor to the collection of session-level attributes
     virtual const IContainer<ISdpAttribute>& Attributes() const = 0;

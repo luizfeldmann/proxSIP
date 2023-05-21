@@ -36,7 +36,7 @@ private:
     boost::optional<std::string> m_sPhone;
 
     //! Connection information for the session's streams
-    CSdpConnectionImpl m_connection;
+    TContainer<ISdpConnection, CSdpConnectionImpl> m_connections;
 
     //! The proposed bandwidth to be used by the session or media
     //boost::optional<CSdpBandwidth> m_bandwidth;
@@ -95,9 +95,9 @@ public:
 
     void Phone(const char*) override;
 
-    const ISdpConnection& Connection() const override;
+    const IContainer<ISdpConnection>& Connection() const override;
 
-    ISdpConnection& Connection() override;
+    IContainer<ISdpConnection>& Connection() override;
 
     const IContainer<ISdpAttribute>& Attributes() const override;
 

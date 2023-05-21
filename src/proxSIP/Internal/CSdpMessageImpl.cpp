@@ -42,7 +42,7 @@ bool CSdpMessageImpl::ParseField(ESdpType eType, const char* pData, size_t uSize
         break;
 
     case ESdpType::Connection:
-        bStatus = m_connection.Parse(pData, uSize);
+        bStatus = m_connections.emplace_back().Parse(pData, uSize);
         break;
 
     //case ESdpType::Bandwidth:
@@ -80,6 +80,24 @@ bool CSdpMessageImpl::ParseField(ESdpType eType, const char* pData, size_t uSize
     }
 
     return bStatus;
+}
+
+static const char c_arrCRLF[] = {'\r', '\n'};
+
+static void SerializeField(ESdpType eType, const std::string& sData, IOutputBuffer& Buffer)
+{
+    const char arrHeader[] = { static_cast<char>(eType), '=' };
+    Buffer.write(arrHeader, sizeof(arrHeader));
+    Buffer.write(sData.data(), sData.size());
+    Buffer.write(c_arrCRLF, sizeof(c_arrCRLF));
+}
+
+static void SerializeField(const ISdpField& Field, IOutputBuffer& Buffer)
+{
+    const char arrHeader[] = { static_cast<char>(Field.Type()), '=' };
+    Buffer.write(arrHeader, sizeof(arrHeader));
+    Field.Serialize(Buffer);
+    Buffer.write(c_arrCRLF, sizeof(c_arrCRLF));
 }
 
 static inline const char* get_or_null(const boost::optional<std::string>& opt)
@@ -172,14 +190,14 @@ void CSdpMessageImpl::Phone(const char* sPhone)
     emplace_or_reset(m_sPhone, sPhone);
 }
 
-const ISdpConnection& CSdpMessageImpl::Connection() const
+const IContainer<ISdpConnection>& CSdpMessageImpl::Connection() const
 {
-    return m_connection;
+    return m_connections;
 }
 
-ISdpConnection& CSdpMessageImpl::Connection()
+IContainer<ISdpConnection>& CSdpMessageImpl::Connection()
 {
-    return m_connection;
+    return m_connections;
 }
 
 const IContainer<ISdpAttribute>& CSdpMessageImpl::Attributes() const
@@ -262,7 +280,50 @@ bool CSdpMessageImpl::Parse(const char* pData, size_t uSize)
     /* Unrechable */
 }
 
-void CSdpMessageImpl::Serialize(IOutputBuffer&) const
+void CSdpMessageImpl::Serialize(IOutputBuffer& Buffer) const
 {
+    SerializeField(ESdpType::Version, std::to_string(m_uVersion), Buffer);
 
+    SerializeField(m_originator, Buffer);
+
+    SerializeField(ESdpType::SessionName, m_sSessionName, Buffer);
+
+    if (m_sSessionInfo.has_value())
+        SerializeField(ESdpType::Information, m_sSessionInfo.get(), Buffer);
+
+    if (m_sSessionURI.has_value())
+        SerializeField(ESdpType::URI, m_sSessionURI.get(), Buffer);
+
+    if (m_sEmail.has_value())
+        SerializeField(ESdpType::Email, m_sEmail.get(), Buffer);
+
+    if (m_sPhone.has_value())
+        SerializeField(ESdpType::Phone, m_sPhone.get(), Buffer);
+
+    for (auto& Connection = m_connections.iterate(); Connection; ++Connection)
+        SerializeField(*Connection, Buffer);
+
+    // SerializeField(m_bandwidth, Buffer);
+
+    // SerializeField(m_timezone, Buffer);
+
+    // SerializeField(m_cryptokey, Buffer);
+
+    SerializeField(m_time, Buffer);
+
+    // SerializeField(m_sRepeat, Buffer);
+    
+    for (auto& Attrib = m_attribs.iterate(); Attrib; ++Attrib)
+        SerializeField(*Attrib, Buffer);
+
+    for (auto& Media = m_medias.iterate(); Media; ++Media)
+    {
+        SerializeField(*Media, Buffer);
+
+        for (auto& Attrib = Media->Attributes().iterate(); Attrib; ++Attrib)
+            SerializeField(*Attrib, Buffer);
+    }
+
+    // Terminating CRLF
+    Buffer.write(c_arrCRLF, sizeof(c_arrCRLF));
 }

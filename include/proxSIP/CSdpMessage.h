@@ -49,9 +49,9 @@ public:
 
     void Phone(const char*) override;
 
-    const ISdpConnection& Connection() const override;
+    const IContainer<ISdpConnection>& Connection() const override;
 
-    ISdpConnection& Connection() override;
+    IContainer<ISdpConnection>& Connection() override;
 
     const IContainer<ISdpAttribute>& Attributes() const override;
 
