@@ -6,11 +6,13 @@
 #include "ISipMessageSender.h"
 #include "IAuthValidator.h"
 #include "ISipRegistry.h"
+#include <string>
 
 //! Internal implementation of a basic SIP server
 class CSipServerImpl : public ISipRequestHandler, public ISipResponseHandler
 {
 private:
+    std::string m_sBranch;
     ISipMessageSender* m_pSender;
     IAuthValidator* m_pAuth;
     ISipRegistry* m_pRegistry;

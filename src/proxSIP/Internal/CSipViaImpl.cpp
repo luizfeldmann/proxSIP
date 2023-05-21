@@ -1,6 +1,8 @@
 #include "Internal/CSipViaImpl.h"
 
 CSipViaImpl::CSipViaImpl()
+    : m_sVersion("SIP/2.0")
+    , m_sTransport("UDP")
 {
 
 }

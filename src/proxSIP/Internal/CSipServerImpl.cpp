@@ -3,9 +3,26 @@
 #include "Internal/CAuthDigestImpl.h"
 #include "Internal/CSipViaImpl.h"
 #include "ESipParameter.h"
-#include <map>
 
 /* Util */
+
+static std::string GenerateBranch()
+{
+    static constexpr char alphanum[] =
+        "0123456789"
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        "abcdefghijklmnopqrstuvwxyz";
+
+    std::string sBranch("z9hG4bK");
+
+    for (size_t i = 0; i < 7; ++i)
+    {
+        const char c = alphanum[rand() % (sizeof(alphanum) - 1)];
+        sBranch.append(1, c);
+    }
+
+    return sBranch;
+}
 
 static void ReturnToSender(const ISIPMessage& From, ISIPMessage& To)
 {
@@ -26,43 +43,33 @@ static void ChangeContact(ISIPMessage& Message, const IEndpoint& Server)
     }
 }
 
-static std::map<std::string, std::string> m_changedVias;
-
-static void RestoreVia(ISIPMessage& Message)
+static void RestoreVia(ISIPMessage& Message, const char* sBranch)
 {
     for (auto& Via = Message.Via().iterate(); Via; ++Via)
     {
         const char* branch = Via->Parameters().Find(SipGetParamStr(ESipParameter::branch));
-        if (branch)
+        if (branch && 0 == strcmp(branch, sBranch))
         {
-            auto itFind = m_changedVias.find(branch);
-            if (itFind != m_changedVias.cend())
-            {
-                Via->URI(itFind->second.c_str());
-            }
+            Message.Via().erase(Via.index());
+            break;
         }
     }
 }
 
-static void RewriteVia(ISIPMessage& Message, const IEndpoint& Server)
+static void RewriteVia(ISIPMessage& Message, const IEndpoint& Server, const char* sBranch)
 {
-    for (auto& Via = Message.Via().iterate(); Via; ++Via)
-    {
-        const char* branch = Via->Parameters().Find(SipGetParamStr(ESipParameter::branch));
-        if (branch)
-        {
-            m_changedVias[branch] = Via->URI();
-        }
+    std::string sURI = std::string(Server.Address()) + ":" + std::to_string(Server.Port());
 
-        std::string sURI = std::string(Server.Address()) + ":" + std::to_string(Server.Port());
-        Via->URI(sURI.c_str());
-    }
+    auto& Via = Message.Via().emplace_front();
+    Via.URI(sURI.c_str());
+    Via.Parameters().Insert(SipGetParamStr(ESipParameter::branch), sBranch);
 }
 
 /* CSipServerImpl */
 
 CSipServerImpl::CSipServerImpl()
-    : m_pSender(nullptr)
+    : m_sBranch(GenerateBranch())
+    , m_pSender(nullptr)
     , m_pAuth(nullptr)
     , m_pRegistry(nullptr)
 {
@@ -136,7 +143,7 @@ void CSipServerImpl::Invite(ISIPRequest& Request)
     }
 
     ChangeContact(Request, Request.Destination());
-    RewriteVia(Request, Request.Destination());
+    RewriteVia(Request, Request.Destination(), m_sBranch.c_str());
 
     // Retransmit
     Proxy(Request, sLocation);
@@ -275,7 +282,7 @@ void CSipServerImpl::OnRequest(ISIPRequest& Request)
 
 void CSipServerImpl::OnResponse(ISIPResponse& Response)
 {
-    RestoreVia(Response);
+    RestoreVia(Response, m_sBranch.c_str());
 
     auto& Via = Response.Via().front();
 

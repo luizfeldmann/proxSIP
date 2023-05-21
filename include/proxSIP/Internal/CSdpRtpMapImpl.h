@@ -8,12 +8,16 @@
 class CSdpRtpMapImpl : public ISdpRtpMap
 {
 private:
+    // Type listed in the media field
     unsigned char m_uPayloadType;
 
+    //! Name of payload encoding
     std::string m_sEncodingName;
 
+    //! Frequency in Hz
     unsigned short m_uClockRate;
 
+    //! Additional parameters
     std::string m_sParameters;
 
 public:
