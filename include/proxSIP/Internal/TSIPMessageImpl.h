@@ -34,6 +34,9 @@ protected:
     //! The "From" field
     CSipContactImpl m_from;
 
+    //! Unique ID of the session
+    std::string m_sCallID;
+
     //! The "Contact" fields
     TContainer<ISipContact, CSipContactImpl> m_contacts;
 
@@ -72,6 +75,7 @@ public:
         From().Assign(Copy.From());
         To().Assign(Copy.To());
         CopyContainer(Copy.Contact(), Contact(), TMemberAssigner<ISipContact>(&ISipContact::Assign));
+        CallID(Copy.CallID());
 
         // Copy other fields
         Fields().Assign(Copy.Fields());
@@ -146,6 +150,16 @@ public:
     ISipContact& To() override
     {
         return m_to;
+    }
+
+    const char* CallID() const
+    {
+        return m_sCallID.c_str();
+    }
+
+    void CallID(const char* sCallID)
+    {
+        m_sCallID.assign(sCallID);
     }
 
     const IContainer<ISipContact>& Contact() const

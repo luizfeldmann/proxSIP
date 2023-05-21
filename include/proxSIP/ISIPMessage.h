@@ -63,6 +63,12 @@ public:
     //! Mutator to the "To" header field
     virtual ISipContact& To() = 0;
 
+    //! Reads the ID of the call
+    virtual const char* CallID() const = 0;
+
+    //! Sets the ID of the call
+    virtual void CallID(const char*) = 0;
+
     //! Acessor to the "Contact" header field
     virtual const IContainer<ISipContact>& Contact() const = 0;
 
