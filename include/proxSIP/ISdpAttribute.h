@@ -2,11 +2,13 @@
 #define _ISDPATTRIBUTE_H_
 
 #include "ISdpField.h"
+#include "IKeyValuePair.h"
 
-class PROXSIP_API ISdpAttribute : public ISdpField
+//! Attributes convey additional information
+class PROXSIP_API ISdpAttribute : public ISdpField, public IKeyValuePair
 {
 public:
-
+    virtual ~ISdpAttribute() = default;
 };
 
 #endif
