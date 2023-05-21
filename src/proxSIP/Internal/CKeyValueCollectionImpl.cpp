@@ -68,6 +68,16 @@ const char* CKeyValueCollectionImpl::Key() const
     return m_iter->Key();
 }
 
+void CKeyValueCollectionImpl::Key(const char* szKey)
+{
+    auto it = m_map.get<tag_key>().iterator_to(*m_iter);
+
+    m_map.get<tag_key>().modify(it, [szKey](auto& item)
+        {
+            item.Key(szKey);
+        });
+}
+
 const char* CKeyValueCollectionImpl::Value() const
 {
     return m_iter->Value();

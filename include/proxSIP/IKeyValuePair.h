@@ -12,6 +12,9 @@ public:
     //! Reads the key
     virtual const char* Key() const = 0;
 
+    //! Sets the key
+    virtual void Key(const char*) = 0;
+
     //! Reads the value
     virtual const char* Value() const = 0;
 

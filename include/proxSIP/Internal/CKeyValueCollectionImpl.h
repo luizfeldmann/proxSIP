@@ -63,6 +63,8 @@ private:
     //! @{
     const char* Key() const override;
 
+    void Key(const char*) override;
+
     const char* Value() const override;
 
     void Value(const char* szValue) override;

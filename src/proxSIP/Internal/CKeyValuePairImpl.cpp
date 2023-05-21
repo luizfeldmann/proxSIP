@@ -26,6 +26,11 @@ const char* CKeyValuePairImpl::Key() const
     return m_sKey.c_str();
 }
 
+void CKeyValuePairImpl::Key(const char* sKey)
+{
+    m_sKey.assign(sKey);
+}
+
 const char* CKeyValuePairImpl::Value() const
 {
     return m_sValue.c_str();

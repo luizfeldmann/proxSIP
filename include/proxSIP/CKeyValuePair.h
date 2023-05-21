@@ -20,7 +20,11 @@ public:
     //! @name Overrides from #IKeyValuePair
     //! @{
     const char* Key() const override;
+
+    void Key(const char*) override;
+
     const char* Value() const override;
+
     void Value(const char*) override;
     //! @}
 };
