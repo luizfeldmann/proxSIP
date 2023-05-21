@@ -135,6 +135,26 @@ IKeyValueCollection& CSIPResponse::Fields()
     return m_pImpl->Fields();
 }
 
+const char* CSIPResponse::ContentType() const
+{
+    return m_pImpl->ContentType();
+}
+
+void CSIPResponse::ContentType(const char* sType)
+{
+    m_pImpl->ContentType(sType);
+}
+
+size_t CSIPResponse::ContentLength() const
+{
+    return m_pImpl->ContentLength();
+}
+
+void CSIPResponse::ContentLength(size_t uLen)
+{
+    m_pImpl->ContentLength(uLen);
+}
+
 const IBuffer& CSIPResponse::Content() const
 {
     return m_pImpl->Content();

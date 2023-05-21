@@ -40,10 +40,22 @@ protected:
     //! Collection of fields
     CKeyValueCollectionImpl m_fields;
 
+    //! Content type of the body
+    std::string m_sContentType;
+
+    //! Size of the body
+    size_t m_uContentLength;
+
     //! The buffer of message data
     TBuffer<std::vector<char>> m_buffer;
 
 public:
+    TSIPMessageImpl()
+        : m_uContentLength(0)
+    {
+
+    }
+
     //! @name Overrides from #ISIPMessage
     //! @{
     void Assign(const ISIPMessage& Copy) override
@@ -65,6 +77,9 @@ public:
         Fields().Assign(Copy.Fields());
 
         // Copy body content
+        ContentType(Copy.ContentType());
+        ContentLength(Copy.ContentLength());
+
         const auto& copyBody = Copy.Content();
 
         if (copyBody.size())
@@ -151,6 +166,26 @@ public:
     IKeyValueCollection& Fields() override
     {
         return m_fields;
+    }
+
+    const char* ContentType() const override
+    {
+        return m_sContentType.c_str();
+    }
+
+    void ContentType(const char* sContentType) override
+    {
+        m_sContentType.assign(sContentType);
+    }
+
+    size_t ContentLength() const override
+    {
+        return m_uContentLength;
+    }
+
+    void ContentLength(size_t uLen) override
+    {
+        m_uContentLength = uLen;
     }
 
     const IBuffer& Content() const override

@@ -2,11 +2,27 @@
 #include "ESipField.h"
 #include <string>
 
-const static char* c_szSpace = " ";
-const static char* c_szCRLF = "\r\n";
-const static char* c_szFieldSep = ": ";
+static const char c_cSpace = ' ';
+static const char arrCRLF[] = { '\r', '\n' };
+static const char arrDelim[] = { ':', ' ' };
 
 /* Util */
+
+static void SerializeCommonField(ESipField eType, const char* sValue, size_t uValSize, IOutputBuffer& Buffer)
+{
+    // Write the name of the field
+    const char* sKey = SipGetFieldStr(eType);
+    Buffer.write(sKey, strlen(sKey));
+
+    // Write the delimiter
+    Buffer.write(arrDelim, sizeof(arrDelim));
+
+    // Write the value
+    Buffer.write(sValue, uValSize);
+
+    // Write the end of line
+    Buffer.write(arrCRLF, sizeof(arrCRLF));
+}
 
 static void SerializeCommonField(ESipField eType, const ISipField& Field, IOutputBuffer& Buffer)
 {
@@ -15,27 +31,37 @@ static void SerializeCommonField(ESipField eType, const ISipField& Field, IOutpu
     Buffer.write(sKey, strlen(sKey));
 
     // Write the delimiter
-    static const char szDelim[] = { ':', ' ' };
-    Buffer.write(szDelim, sizeof(szDelim));
+    Buffer.write(arrDelim, sizeof(arrDelim));
 
     // Write the value
     Field.Serialize(Buffer);
 
     // Write the end of line
-    static const char szCRLF[] = { '\r', '\n' };
-    Buffer.write(szCRLF, sizeof(szCRLF));
+    Buffer.write(arrCRLF, sizeof(arrCRLF));
 }
 
-static void SerializeCommonFields(const ISIPMessage& Request, IOutputBuffer& Buffer)
+static void SerializeCommonFields(const ISIPMessage& Message, IOutputBuffer& Buffer)
 {
-    for (auto& it = Request.Via().iterate(); it; ++it)
+    // Vias
+    for (auto& it = Message.Via().iterate(); it; ++it)
         SerializeCommonField(ESipField::Via, *it, Buffer);
 
-    SerializeCommonField(ESipField::From, Request.From(), Buffer);
-    SerializeCommonField(ESipField::To, Request.To(), Buffer);
+    // From / To
+    SerializeCommonField(ESipField::From, Message.From(), Buffer);
+    SerializeCommonField(ESipField::To, Message.To(), Buffer);
 
-    for (auto& it = Request.Contact().iterate(); it; ++it)
+    // Contacts
+    for (auto& it = Message.Contact().iterate(); it; ++it)
         SerializeCommonField(ESipField::Contact, *it, Buffer);
+
+    // Content-Length
+    std::string sContentLength = std::to_string(Message.ContentLength());
+    SerializeCommonField(ESipField::ContentLength, sContentLength.data(), sContentLength.size(), Buffer);
+
+    // Content-Type
+    const char* sContentType = Message.ContentType();
+    if (sContentType && sContentType[0] != '\0')
+        SerializeCommonField(ESipField::ContentType, sContentType, strlen(sContentType), Buffer);
 }
 
 static void SerializeFields(const ISIPMessage& Message, IOutputBuffer& Buffer)
@@ -50,21 +76,22 @@ static void SerializeFields(const ISIPMessage& Message, IOutputBuffer& Buffer)
         if (!sKey)
             continue;
 
-        sFields += sKey;
-        sFields += c_szFieldSep;
+        sFields.append(sKey);
+        sFields.append(arrDelim, sizeof(arrDelim));
 
         // Write the value
         const char* sValue = it->Value();
         if (sValue)
-            sFields += sValue;
+            sFields.append(sValue);
 
         // New line
-        sFields += c_szCRLF;
+        sFields.append(arrCRLF, sizeof(arrCRLF));
     }
 
     // Final CRLF before the body
-    sFields += c_szCRLF;
+    sFields.append(arrCRLF, sizeof(arrCRLF));
 
+    // Push into buffer
     Buffer.write(sFields.data(), sFields.size());
 }
 
@@ -100,11 +127,11 @@ void CSipSerializer::SerializeRequest(const ISIPRequest& Request, IOutputBuffer&
     {
         // Build the start-line 
         std::string sHeader = SipGetMethodStr(Request.Method());
-        sHeader += c_szSpace;
-        sHeader += Request.URI().c_str();
-        sHeader += c_szSpace;
-        sHeader += Request.Version();
-        sHeader += c_szCRLF;
+        sHeader.append(1, c_cSpace);
+        sHeader.append(Request.URI().c_str());
+        sHeader.append(1, c_cSpace);
+        sHeader.append(Request.Version());
+        sHeader.append(arrCRLF, sizeof(arrCRLF));
 
         // Write the start-line
         Buffer.write(sHeader.data(), sHeader.size());
@@ -125,16 +152,16 @@ void CSipSerializer::SerializeResponse(const ISIPResponse& Response, IOutputBuff
         const char* sMsg = GetSipStatusCodeStr(eStatus);
 
         std::string sHeader = Response.Version();
-        sHeader += c_szSpace;
-        sHeader += std::to_string((unsigned int)eStatus);
+        sHeader.append(1, c_cSpace);
+        sHeader.append(std::to_string((unsigned int)eStatus));
 
         if (sMsg)
         {
-            sHeader += c_szSpace;
-            sHeader += sMsg;
+            sHeader.append(1, c_cSpace);
+            sHeader.append(sMsg);
         }
 
-        sHeader += c_szCRLF;
+        sHeader.append(arrCRLF, sizeof(arrCRLF));
 
         // Write the start-line
         Buffer.write(sHeader.data(), sHeader.size());

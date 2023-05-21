@@ -115,6 +115,20 @@ static EParserResult HandleField(const boost::string_view& svName, const boost::
         bStatus = Message.Via().emplace_back().Parse(svValue.data(), svValue.size());
         break;
 
+    case ESipField::ContentType:
+        Message.ContentType(svValue.to_string().c_str());
+        break;
+
+    case ESipField::ContentLength:
+        try {
+            Message.ContentLength(std::stoull(svValue.to_string().c_str()));
+        }
+        catch (...)
+        {
+            bStatus = false;
+        }
+        break;
+
     default:
         const auto sKey = svName.to_string();
         const auto sValue = svValue.to_string();

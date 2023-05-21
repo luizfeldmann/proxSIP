@@ -72,6 +72,14 @@ public:
 
     IKeyValueCollection& Fields() override;
 
+    const char* ContentType() const override;
+
+    void ContentType(const char*) override;
+
+    size_t ContentLength() const override;
+
+    void ContentLength(size_t) override;
+
     const IBuffer& Content() const override;
 
     IBuffer& Content() override;

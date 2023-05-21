@@ -75,6 +75,18 @@ public:
     //! Mutator to the headers
     virtual IKeyValueCollection& Fields() = 0;
 
+    //! Read the MIME type of the body
+    virtual const char* ContentType() const = 0;
+
+    //! Sets the MIME type of the body
+    virtual void ContentType(const char*) = 0;
+
+    //! Reads the size of the body
+    virtual size_t ContentLength() const = 0;
+
+    //! Sets the size of the body
+    virtual void ContentLength(size_t) = 0;
+
     //! Accessor to the payload content
     virtual const IBuffer& Content() const = 0;
 
