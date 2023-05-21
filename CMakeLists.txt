@@ -42,6 +42,7 @@ set(${CMAKE_PROJECT_NAME}_LIB_SOURCES
     "src/proxSIP/Internal/CSdpMediaImpl.cpp"
     "src/proxSIP/Internal/CSdpConnectionImpl.cpp"
     "src/proxSIP/Internal/CSdpAttributeImpl.cpp"
+    "src/proxSIP/Internal/CSdpRtpMapImpl.cpp"
     # Public
     "${RESOURCES_FILE}"
     "src/proxSIP/CAsioUdpServer.cpp"
@@ -53,6 +54,7 @@ set(${CMAKE_PROJECT_NAME}_LIB_SOURCES
     "src/proxSIP/ESdpType.cpp"
     "src/proxSIP/ESdpMediaType.cpp"
     "src/proxSIP/ESdpMediaProto.cpp"
+    "src/proxSIP/ESdpAttrib.cpp"
     "src/proxSIP/CSipSerializer.cpp"
     "src/proxSIP/CSipParser.cpp"
     "src/proxSIP/CSipMessageHandler.cpp"
@@ -95,6 +97,7 @@ set(${CMAKE_PROJECT_NAME}_LIB_HEADERS
     "include/proxSIP/Internal/CSdpMediaImpl.h"
     "include/proxSIP/Internal/CSdpAttributeImpl.h"
     "include/proxSIP/Internal/CSdpTimeImpl.h"
+    "include/proxSIP/Internal/CSdpRtpMapImpl.h"
     # Public
     "include/proxSIP/proxSIPExports.h"
     "include/proxSIP/IAuthValidator.h"
@@ -149,11 +152,13 @@ set(${CMAKE_PROJECT_NAME}_LIB_HEADERS
     "include/proxSIP/ESdpType.h"
     "include/proxSIP/ESdpMediaType.h"
     "include/proxSIP/ESdpMediaProto.h"
+    "include/proxSIP/ESdpAttrib.h"
     "include/proxSIP/ISdpMedia.h"
     "include/proxSIP/ISdpAttribute.h"
     "include/proxSIP/ISdpConnection.h"
     "include/proxSIP/ISdpOriginator.h"
-    "include/proxSIP/ISdpTime.h" )
+    "include/proxSIP/ISdpTime.h"
+    "include/proxSIP/ISdpRtpMap.h" )
 
 # Create and configure the library
 add_library(${CMAKE_PROJECT_NAME}_LIB SHARED
