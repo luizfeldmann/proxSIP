@@ -50,6 +50,10 @@ static void SerializeCommonFields(const ISIPMessage& Message, IOutputBuffer& Buf
     SerializeCommonField(ESipField::From, Message.From(), Buffer);
     SerializeCommonField(ESipField::To, Message.To(), Buffer);
 
+    // Call-ID
+    std::string sCallID = Message.CallID();
+    SerializeCommonField(ESipField::CallID, sCallID.data(), sCallID.size(), Buffer);
+
     // Contacts
     for (auto& it = Message.Contact().iterate(); it; ++it)
         SerializeCommonField(ESipField::Contact, *it, Buffer);

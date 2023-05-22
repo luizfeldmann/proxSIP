@@ -107,6 +107,10 @@ static EParserResult HandleField(const boost::string_view& svName, const boost::
         bStatus = Message.To().Parse(svValue.data(), svValue.size());
         break;
 
+    case ESipField::CallID:
+        Message.CallID(svValue.to_string().c_str());
+        break;
+
     case ESipField::Contact:
         bStatus = Message.Contact().emplace_back().Parse(svValue.data(), svValue.size());
         break;

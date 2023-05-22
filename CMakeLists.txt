@@ -43,6 +43,8 @@ set(${CMAKE_PROJECT_NAME}_LIB_SOURCES
     "src/proxSIP/Internal/CSdpConnectionImpl.cpp"
     "src/proxSIP/Internal/CSdpAttributeImpl.cpp"
     "src/proxSIP/Internal/CSdpRtpMapImpl.cpp"
+    "src/proxSIP/Internal/CRtpMessageImpl.cpp"
+    "src/proxSIP/Internal/CRtpPhoneEventImpl.cpp"
     # Public
     "${RESOURCES_FILE}"
     "src/proxSIP/CAsioUdpServer.cpp"
@@ -69,7 +71,9 @@ set(${CMAKE_PROJECT_NAME}_LIB_SOURCES
     "src/proxSIP/CSipVia.cpp"
     "src/proxSIP/CSipRegistry.cpp"
     "src/proxSIP/CSipServer.cpp"
-    "src/proxSIP/CSdpMessage.cpp" )
+    "src/proxSIP/CSdpMessage.cpp"
+    "src/proxSIP/CRtpMessage.cpp"
+    "src/proxSIP/CRtpPhoneEvent.cpp" )
 
 # List of headers
 set(${CMAKE_PROJECT_NAME}_LIB_HEADERS
@@ -98,6 +102,8 @@ set(${CMAKE_PROJECT_NAME}_LIB_HEADERS
     "include/proxSIP/Internal/CSdpAttributeImpl.h"
     "include/proxSIP/Internal/CSdpTimeImpl.h"
     "include/proxSIP/Internal/CSdpRtpMapImpl.h"
+    "include/proxSIP/Internal/CRtpMessageImpl.h"
+    "include/proxSIP/Internal/CRtpPhoneEventImpl.h"
     # Public
     "include/proxSIP/proxSIPExports.h"
     "include/proxSIP/IAuthValidator.h"
@@ -158,7 +164,12 @@ set(${CMAKE_PROJECT_NAME}_LIB_HEADERS
     "include/proxSIP/ISdpConnection.h"
     "include/proxSIP/ISdpOriginator.h"
     "include/proxSIP/ISdpTime.h"
-    "include/proxSIP/ISdpRtpMap.h" )
+    "include/proxSIP/ISdpRtpMap.h"
+    "include/proxSIP/IRtpMessage.h"
+    "include/proxSIP/CRtpMessage.h"
+    "include/proxSIP/IRtpPayload.h"
+    "include/proxSIP/IRtpPhoneEvent.h"
+    "include/proxSIP/CRtpPhoneEvent.h" )
 
 # Create and configure the library
 add_library(${CMAKE_PROJECT_NAME}_LIB SHARED

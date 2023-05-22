@@ -98,6 +98,16 @@ ISipContact& CSIPRequest::To()
     return m_pImpl->To();
 }
 
+const char* CSIPRequest::CallID() const
+{
+    return m_pImpl->CallID();
+}
+
+void CSIPRequest::CallID(const char* sID)
+{
+    m_pImpl->CallID(sID);
+}
+
 const IContainer<ISipContact>& CSIPRequest::Contact() const
 {
     return m_pImpl->Contact();

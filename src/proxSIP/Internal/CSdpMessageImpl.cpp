@@ -256,7 +256,7 @@ bool CSdpMessageImpl::Parse(const char* pData, size_t uSize)
 
         for (;;)
         {
-            if (pData + 2 >= pEnd)
+            if (pData + 1 >= pEnd)
                 return false; /* Unexpected end */
 
             if (pData[0] == '\r')
@@ -275,6 +275,9 @@ bool CSdpMessageImpl::Parse(const char* pData, size_t uSize)
             return false; /* Invalid data in one of the fields */
 
         pData += 2; // Skip the CRLF
+
+        if (pData == pEnd)
+            return true; /* End of Message */
     }
 
     /* Unrechable */

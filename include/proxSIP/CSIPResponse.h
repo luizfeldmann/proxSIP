@@ -64,6 +64,10 @@ public:
 
     ISipContact& To() override;
 
+    const char* CallID() const override;
+
+    void CallID(const char*) override;
+
     const IContainer<ISipContact>& Contact() const override;
 
     IContainer<ISipContact>& Contact() override;

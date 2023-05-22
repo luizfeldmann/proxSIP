@@ -115,6 +115,16 @@ ISipContact& CSIPResponse::To()
     return m_pImpl->To();
 }
 
+const char* CSIPResponse::CallID() const
+{
+    return m_pImpl->CallID();
+}
+
+void CSIPResponse::CallID(const char* sID)
+{
+    m_pImpl->CallID(sID);
+}
+
 const IContainer<ISipContact>& CSIPResponse::Contact() const
 {
     return m_pImpl->Contact();
