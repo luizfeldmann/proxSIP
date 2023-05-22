@@ -2,6 +2,8 @@
 #define _CCALLSESSION_H_
 
 #include "CUdpProxy.h"
+#include <proxSIP/CRtpMessage.h>
+#include <proxSIP/CRtpPhoneEvent.h>
 #include <boost/optional.hpp>
 
 //! Manages an ongoing call
@@ -10,6 +12,14 @@ class CCallSession : public IUdpProxyMsgHandler
 private:
     // Stores the proxies on both directions
     std::array<boost::optional<CUdpProxy>, 2> m_arrPrx;
+
+    //! Stores the parsed RTP message
+    CRtpMessage m_msgRtp;
+
+    //! Stores the phone-event payload
+    CRtpPhoneEvent m_evtDtmf;
+
+    void OnDTMF(EPhoneEventCode eCode);
 
     CCallSession(const CCallSession&) = delete;
     CCallSession& operator=(const CCallSession&) = delete;

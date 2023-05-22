@@ -99,7 +99,7 @@ void CCallSniffer::OnRequest(ISIPRequest& Request)
 {
     if (Request.Method() == ESipMethod::INVITE)
     {
-        const char* pCallID = Request.Fields().Find(SipGetFieldStr(ESipField::CallID));
+        const char* pCallID = Request.CallID();
 
         if (pCallID)
         {
@@ -112,7 +112,7 @@ void CCallSniffer::OnRequest(ISIPRequest& Request)
     }
     else if (Request.Method() == ESipMethod::BYE)
     {
-        const char* pCallID = Request.Fields().Find(SipGetFieldStr(ESipField::CallID));
+        const char* pCallID = Request.CallID();
 
         // Delete the call session
         if (pCallID)
@@ -130,7 +130,7 @@ void CCallSniffer::OnResponse(ISIPResponse& Response)
 {
     if (Response.Status() == ESipStatusCode::Ok)
     {
-        const char* pCallID = Response.Fields().Find(SipGetFieldStr(ESipField::CallID));
+        const char* pCallID = Response.CallID();
 
         if (pCallID)
         {
