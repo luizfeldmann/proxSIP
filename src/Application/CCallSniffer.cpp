@@ -7,6 +7,7 @@
 CCallSniffer::CCallSniffer()
     : m_pRequestHandler(nullptr)
     , m_pResponseHandler(nullptr)
+    , m_pDtmfHandler(nullptr)
 {
 
 }
@@ -19,6 +20,11 @@ void CCallSniffer::SetHandler(ISipRequestHandler* pHandler)
 void CCallSniffer::SetHandler(ISipResponseHandler* pHandler)
 {
     m_pResponseHandler = pHandler;
+}
+
+void CCallSniffer::SetHandler(IEvtHandlerDTMF* pHandler)
+{
+    m_pDtmfHandler = pHandler;
 }
 
 void CCallSniffer::Poll()
@@ -107,7 +113,9 @@ void CCallSniffer::OnRequest(ISIPRequest& Request)
 
             // Create a new call session
             auto itInsert = m_mSessions.insert({ pCallID, std::make_unique<CCallSession>() });
-            RewriteSDP(Request, *itInsert.first->second);
+            CCallSession& Call = *itInsert.first->second;
+            Call.SetHandler(m_pDtmfHandler);
+            RewriteSDP(Request, Call);
         }
     }
     else if (Request.Method() == ESipMethod::BYE)

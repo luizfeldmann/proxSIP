@@ -18,6 +18,9 @@ private:
 
     //! Downstream response handler
     ISipResponseHandler* m_pResponseHandler;
+
+    //! DTMF events handler
+    IEvtHandlerDTMF* m_pDtmfHandler;
     
     //! Maps Call-ID to session state
     std::map<std::string, std::unique_ptr<CCallSession>> m_mSessions;
@@ -37,6 +40,9 @@ public:
     //! Sets the associated downstream response handler
     void SetHandler(ISipResponseHandler*);
 
+    //! Sets the associated downstream DTMF event handler
+    void SetHandler(IEvtHandlerDTMF*);
+    
     //! Handles the event queue
     void Poll();
 

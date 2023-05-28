@@ -206,7 +206,8 @@ set(${CMAKE_PROJECT_NAME}_APP_SOURCES
     "src/Application/CCallSniffer.cpp"
     "src/Application/CAppConfig.cpp"
     "src/Application/CUdpProxy.cpp"
-    "src/Application/CCallSession.cpp" )
+    "src/Application/CCallSession.cpp"
+    "src/Application/CRemoteSwitch.cpp" )
 
 # List of headers
 set(${CMAKE_PROJECT_NAME}_APP_HEADERS
@@ -215,7 +216,9 @@ set(${CMAKE_PROJECT_NAME}_APP_HEADERS
     "include/Application/CAppConfig.h"
     "include/Application/CUdpProxy.h"
     "include/Application/IUdpProxyMsgHandler.h"
-    "include/Application/CCallSession.h" )
+    "include/Application/CCallSession.h"
+    "include/Application/CRemoteSwitch.h"
+    "include/Application/IEvtHandlerDTMF.h" )
 
 # Create and configure the application
 add_executable(${CMAKE_PROJECT_NAME}_APP

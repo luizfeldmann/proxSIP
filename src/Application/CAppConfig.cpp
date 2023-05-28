@@ -77,12 +77,40 @@ public:
         //! @}
     } m_stUsers; //!< @copydoc SUserData
 
+    //! Configuration of the remote switch
+    struct SSwitchData
+    {
+        std::string m_sHost;
+        unsigned short m_usPort;
+        std::string m_sTarget;
+        std::string m_sUser;
+        std::string m_sPass;
+        unsigned short m_uInterval;
+
+        SSwitchData()
+            : m_usPort(80)
+            , m_uInterval(5)
+        {
+
+        }
+
+        void Read(const boost::json::object& jObj)
+        {
+            m_sHost   = jObj.at("Host").as_string().c_str();
+            m_usPort  = jObj.at("Port").to_number<unsigned short>();
+            m_sTarget = jObj.at("Target").as_string().c_str();
+            m_sUser   = jObj.at("User").as_string().c_str();
+            m_sPass   = jObj.at("Pass").as_string().c_str();
+            m_uInterval = jObj.at("Interval").to_number<unsigned short>();
+        }
+    } m_stSwitch; //!< @copydoc SSwitchData
 
     //! Parses the root level of the application configuration file
     void Read(const boost::json::object& jAppConfig)
     {
         m_stServer.Read(jAppConfig.at("Server").as_object());
         m_stUsers.Read(jAppConfig.at("Users").as_object());
+        m_stSwitch.Read(jAppConfig.at("Switch").as_object());
     }
 
     //! Gets the accessor to the user accounts
@@ -176,4 +204,22 @@ const IEndpoint& CAppConfig::ServerLocalEndpoint() const
 const IUserAccountCollection* CAppConfig::GetUsers() const
 {
     return m_pImpl->GetUsers();
+}
+
+void CAppConfig::GetSwitchCredentials(std::string& sUser, std::string& sPass)
+{
+    sUser = m_pImpl->m_stSwitch.m_sUser;
+    sPass = m_pImpl->m_stSwitch.m_sPass;
+}
+
+void CAppConfig::GetSwitchEndpoint(std::string& sHost, unsigned short& uPort, std::string& sTarget)
+{
+    sHost   = m_pImpl->m_stSwitch.m_sHost;
+    uPort   = m_pImpl->m_stSwitch.m_usPort;
+    sTarget = m_pImpl->m_stSwitch.m_sTarget;
+}
+
+unsigned short CAppConfig::GetSwitchInterval()
+{
+    return m_pImpl->m_stSwitch.m_uInterval;
 }

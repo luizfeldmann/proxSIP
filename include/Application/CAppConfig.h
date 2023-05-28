@@ -3,6 +3,7 @@
 
 #include <proxSIP/IEndpoint.h>
 #include <proxSIP/IUserAccountCollection.h>
+#include <string>
 
 class CAppConfigImpl;
 
@@ -26,6 +27,15 @@ public:
 
     //! Retrieves the collection of user accounts
     const IUserAccountCollection* GetUsers() const;
+
+    //! Reads the credentials to command the remote switch
+    void GetSwitchCredentials(std::string& sUser, std::string& sPass);
+
+    //! Reads the remote endpoint of the remote switch
+    void GetSwitchEndpoint(std::string& sHost, unsigned short& uPort, std::string& sTarget);
+
+    //! Reads the time between activations of the switch
+    unsigned short GetSwitchInterval();
 };
 
 #endif

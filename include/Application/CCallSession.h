@@ -2,6 +2,7 @@
 #define _CCALLSESSION_H_
 
 #include "CUdpProxy.h"
+#include "IEvtHandlerDTMF.h"
 #include <proxSIP/CRtpMessage.h>
 #include <proxSIP/CRtpPhoneEvent.h>
 #include <boost/optional.hpp>
@@ -19,7 +20,8 @@ private:
     //! Stores the phone-event payload
     CRtpPhoneEvent m_evtDtmf;
 
-    void OnDTMF(EPhoneEventCode eCode);
+    //! Object to handle DTMF events
+    IEvtHandlerDTMF* m_pEvtHandler;
 
     CCallSession(const CCallSession&) = delete;
     CCallSession& operator=(const CCallSession&) = delete;
@@ -32,6 +34,9 @@ public:
 
     //! Adds a new proxy to the collection and returns the local bound port
     unsigned short AddProxy(const char* sLocalAddr, const char* sRemoteAddr, unsigned short uRemotePort);
+
+    //! Sets handler object to be notified when DTMF event is sniffed
+    void SetHandler(IEvtHandlerDTMF* pHandler);
 
     //! @name Overrides from #IUdpProxyMsgHandler
     //! @{

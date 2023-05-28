@@ -1,11 +1,19 @@
 {
     "Server": {
-        "IP": "192.168.0.12",
+        "IP": "192.168.0.11",
         "Port": 5060
     },
     "Users": {
         "000": "admin",
         "100": "123456",
         "200": "abcdef"
+    },
+    "Switch": {
+        "Host": "192.168.0.12",
+        "Port": 80,
+        "Target": "/switch?command=pulse",
+        "User": "admin",
+        "Pass": "admin",
+        "Interval": 5
     }
 }

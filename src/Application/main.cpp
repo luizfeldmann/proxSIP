@@ -4,6 +4,7 @@
 #include <proxSIP/CAuthValidator.h>
 #include <proxSIP/CSipRegistry.h>
 #include "CCallSniffer.h"
+#include "CRemoteSwitch.h"
 #include "CAppConfig.h"
 #include <iostream>
 #include <conio.h>
@@ -22,6 +23,54 @@ int main(int argc, char** argv)
 
     CAppConfig config(szConfigPath);
 
+    // Create controller for remote switch gate
+    CRemoteSwitch cSwitch;
+    {
+        std::string sUser, sPass;
+        config.GetSwitchCredentials(sUser, sPass);
+        cSwitch.SetAuth(sUser, sPass);
+
+        std::string sHost, sTarget;
+        unsigned short usPort = 80;
+
+        config.GetSwitchEndpoint(sHost, usPort, sTarget);
+        cSwitch.SetTarget(sTarget);
+        cSwitch.Connect(sHost, usPort);
+    }
+
+    // Create handler for DTMF events
+    class CGateOperator : IEvtHandlerDTMF
+    {
+    private:
+        CRemoteSwitch& m_rGate;
+        std::chrono::system_clock::time_point m_lastActivation = std::chrono::system_clock::time_point::min();
+        std::chrono::system_clock::duration m_timeout;
+
+    public:
+        CGateOperator(CRemoteSwitch& rGate, std::chrono::system_clock::duration Interval)
+            : m_rGate(rGate)
+            , m_timeout(Interval)
+        {
+
+        }
+
+        void OnEvent(const IRtpPhoneEvent& Evt) override
+        {
+            // Handle only the # key
+            if (Evt.EventCode() != EPhoneEventCode::Pound)
+                return;
+
+            // Insert some time in between activations
+            const auto now = std::chrono::system_clock::now();
+            if (now < m_lastActivation + m_timeout)
+                return;
+
+            // Open the gate
+            m_lastActivation = now;
+            m_rGate.Activate();
+        }
+    } dtmfHandler(cSwitch, std::chrono::seconds(config.GetSwitchInterval()));
+
     // Create the server logic
     CSipServer sipServer;
 
@@ -38,6 +87,7 @@ int main(int argc, char** argv)
     CCallSniffer cSniffer;
     cSniffer.SetHandler((ISipRequestHandler*)&sipServer);
     cSniffer.SetHandler((ISipResponseHandler*)&sipServer);
+    cSniffer.SetHandler((IEvtHandlerDTMF*)&dtmfHandler);
 
     // Create a handler for converting UDP messages to SIP
     CSipMessageHandler msgHandler;
@@ -55,6 +105,7 @@ int main(int argc, char** argv)
     // Main loop
     while (!_kbhit())
     {
+        cSwitch.Poll();
         cSniffer.Poll();
         udpServer.Poll();
     }
