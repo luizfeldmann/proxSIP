@@ -10,7 +10,7 @@ class PROXSIP_API ISipField : public IField
 public:
     virtual ~ISipField() = default;
 
-    // Copies from another object
+    //! Copies from another object
     virtual void Assign(const ISipField&) = 0;
 
     //! Accessor to the aditional parameters

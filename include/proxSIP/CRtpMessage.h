@@ -5,7 +5,7 @@
 
 class CRtpMessageImpl;
 
-//! @copydoc #IRtpMessage
+//! @copydoc IRtpMessage
 class PROXSIP_API CRtpMessage : public IRtpMessage
 {
 private:

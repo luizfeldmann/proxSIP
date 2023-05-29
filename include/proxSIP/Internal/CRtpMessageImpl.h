@@ -5,10 +5,11 @@
 #include "TContainer.h"
 #include "TBuffer.h"
 
-//! @copydoc #IRtpMessage
+//! @copydoc IRtpMessage
 class CRtpMessageImpl : public IRtpMessage
 {
 private:
+    //! Structured data in the RTP packet
     struct SRtpData
     {
         union {
@@ -30,7 +31,7 @@ private:
         unsigned short m_uSequence;
         unsigned int m_uTimestamp;
         unsigned int m_SynchSource;
-    } m_stData;
+    } m_stData; //!< @copydoc SRtpData
 
     static_assert(sizeof(m_stData) == 12, "RTP packing wrong");
 

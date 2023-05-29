@@ -12,7 +12,7 @@ public:
     //! Store a contact information and associated location
     virtual void Register(const char* sUser, const char* sLocation, unsigned int uExpires) = 0;
 
-    // Retrieves the location associated to the contact
+    //! Retrieves the location associated to the contact
     virtual const char* Locate(const char* sUser) const = 0;
 };
 

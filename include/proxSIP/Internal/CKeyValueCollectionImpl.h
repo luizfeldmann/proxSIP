@@ -8,6 +8,7 @@
 #include <boost/multi_index/hashed_index.hpp>
 #include <boost/multi_index/member.hpp>
 
+//! Internal implementation of #IKeyValueCollection
 class CKeyValueCollectionImpl : public IKeyValueCollection, private IContainerIterator<IKeyValuePair>, private IKeyValuePair
 {
 private:
@@ -74,7 +75,7 @@ public:
     //! Empty constructor
     CKeyValueCollectionImpl();
 
-    // Construct copy from abstract
+    //! Construct copy from abstract
     CKeyValueCollectionImpl(const IKeyValueCollection& copy);
 
     //! Copy-constructible

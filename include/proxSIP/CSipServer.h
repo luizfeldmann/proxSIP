@@ -23,11 +23,24 @@ public:
     CSipServer();
     ~CSipServer();
 
+    //! Sets the authentication validator object used by this server
     void SetAuth(IAuthValidator*);
+
+    //! Sets the message sender object for this server
     void SetSender(ISipMessageSender*);
+
+    //! Sets the registry used by this server
     void SetRegistry(ISipRegistry*);
+
+    //! @name Overrides from #ISipRequestHandler
+    //! @{
     void OnRequest(ISIPRequest&) override;
+    //! @}
+
+    //! @name Overrides from #ISipResponseHandler
+    //! @{
     void OnResponse(ISIPResponse&) override;
+    //! @}
 };
 
 #endif

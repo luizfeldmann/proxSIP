@@ -4,13 +4,18 @@
 #include "IContainer.h"
 #include <vector>
 
-//! @brief A base implementation of #IContainer
+//! @brief A base implementation of #IContainer wrapping a std::vector
 template<typename value_type, typename data_type>
 class TContainer : public IContainer<value_type>, private IContainerIterator<value_type>
 {
 private:
+    //! Type of underlying container
     using vector_t = std::vector<data_type>;
+
+    //! Type of iterator for the underlying container
     using iterator_t = typename vector_t::iterator;
+
+    //! Type of const_iterator for the underlying container
     using const_iterator_t = typename vector_t::const_iterator;
 
     //! Stores the actual data
@@ -167,27 +172,33 @@ public:
     //! @}
 };
 
+//! Functor used by CopyContainer to assign the contents of copied elements using a call to a member function of the contained object type
 template<typename value_type>
 class TMemberAssigner
 {
 public:
+    //! Type of pointer-to-member-function used as assignment
     using fnAssign_t = void (value_type::*)(const value_type&);
 
+    //! Constructor
     TMemberAssigner(fnAssign_t fn)
         : m_fnAssign(fn)
     {
 
     }
 
+    //! Invokes the assignment member function
     void operator ()(const value_type& From, value_type& To) const
     {
         std::invoke(m_fnAssign, To, From);
     }
 
 private:
+    //! Pointer-to-member-function called to perform the object assignment
     fnAssign_t m_fnAssign;
 };
 
+//! Utility to copy the elements from one container to another
 template<typename value_type, typename assigner_type = TMemberAssigner<value_type>>
 void CopyContainer(const IContainer<value_type>& From, IContainer<value_type>& To, assigner_type Assigner)
 {

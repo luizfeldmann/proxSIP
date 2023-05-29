@@ -29,11 +29,24 @@ private:
 public:
     CSipServerImpl();
 
+    //! @copydoc CSipServer::SetAuth
     void SetAuth(IAuthValidator* pAuth);
+
+    //! @copydoc CSipServer::SetSender
     void SetSender(ISipMessageSender* pSender);
+
+    //! @copydoc CSipServer::SetRegistry
     void SetRegistry(ISipRegistry*);
+
+    //! @name Overrides from #ISipRequestHandler
+    //! @{
     void OnRequest(ISIPRequest&) override;
+    //! @}
+    
+    //! @name Overrides from #ISipResponseHandler
+    //! @{
     void OnResponse(ISIPResponse&) override;
+    //! @}
 };
 
 #endif

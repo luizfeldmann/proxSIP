@@ -22,6 +22,8 @@ private:
 
 public:
     CSipMessageHandler();
+
+    //! Constructs with the given initial pointers to handlers
     CSipMessageHandler(ISipRequestHandler* pRequestHandler, ISipResponseHandler* pResponseHandler, IUdpMessageSender* pSender);
 
     //! Sets the associated request handler

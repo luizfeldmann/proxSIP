@@ -61,6 +61,8 @@ public:
 
     //! @name Overrides from #ISIPMessage
     //! @{
+    
+    //! Copies the message data from another object 
     void Assign(const ISIPMessage& Copy) override
     {
         // Copy endpoints
@@ -92,121 +94,145 @@ public:
         }
     }
 
+    //! @copydoc ISIPMessage::Version
     const char* Version() const
     {
         return m_sVersion.c_str();
     }
 
+    //! @copydoc ISIPMessage::Version
     void Version(const char* szVersion)
     {
         m_sVersion = szVersion;
     }
 
+    //! @copydoc ISIPMessage::Source
     const IEndpoint& Source() const override
     {
         return m_edpSrc;
     }
 
+    //! @copydoc ISIPMessage::Source
     IEndpoint& Source() override
     {
         return m_edpSrc;
     }
 
+    //! @copydoc ISIPMessage::Destination
     const IEndpoint& Destination() const override
     {
         return m_edpDst;
     }
 
+    //! @copydoc ISIPMessage::Destination
     IEndpoint& Destination() override
     {
         return m_edpDst;
     }
 
+    //! @copydoc ISIPMessage::Via
     const IContainer<ISipVia>& Via() const override
     {
         return m_vias;
     }
 
+    //! @copydoc ISIPMessage::Via
     IContainer<ISipVia>& Via()
     {
         return m_vias;
     }
 
+    //! @copydoc ISIPMessage::From
     const ISipContact& From() const override
     {
         return m_from;
     }
 
+    //! @copydoc ISIPMessage::From
     ISipContact& From() override
     {
         return m_from;
     }
 
+    //! @copydoc ISIPMessage::To
     const ISipContact& To() const override
     {
         return m_to;
     }
 
+    //! @copydoc ISIPMessage::To
     ISipContact& To() override
     {
         return m_to;
     }
 
+    //! @copydoc ISIPMessage::CallID
     const char* CallID() const
     {
         return m_sCallID.c_str();
     }
 
+    //! @copydoc ISIPMessage::CallID
     void CallID(const char* sCallID)
     {
         m_sCallID.assign(sCallID);
     }
 
+    //! @copydoc ISIPMessage::Contact
     const IContainer<ISipContact>& Contact() const
     {
         return m_contacts;
     }
 
+    //! @copydoc ISIPMessage::Contact
     IContainer<ISipContact>& Contact()
     {
         return m_contacts;
     }
 
+    //! @copydoc ISIPMessage::Fields
     const IKeyValueCollection& Fields() const override
     {
         return m_fields;
     }
 
+    //! @copydoc ISIPMessage::Fields
     IKeyValueCollection& Fields() override
     {
         return m_fields;
     }
 
+    //! @copydoc ISIPMessage::ContentType
     const char* ContentType() const override
     {
         return m_sContentType.c_str();
     }
 
+    //! @copydoc ISIPMessage::ContentType
     void ContentType(const char* sContentType) override
     {
         m_sContentType.assign(sContentType);
     }
 
+    //! @copydoc ISIPMessage::ContentLength
     size_t ContentLength() const override
     {
         return m_uContentLength;
     }
 
+    //! @copydoc ISIPMessage::ContentLength
     void ContentLength(size_t uLen) override
     {
         m_uContentLength = uLen;
     }
 
+    //! @copydoc ISIPMessage::Content
     const IBuffer& Content() const override
     {
         return m_buffer;
     }
 
+    //! @copydoc ISIPMessage::Content
     IBuffer& Content() override
     {
         return m_buffer;
