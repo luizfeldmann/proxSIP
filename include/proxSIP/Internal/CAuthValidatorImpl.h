@@ -7,6 +7,7 @@
 class CAuthValidatorImpl : public IAuthValidator
 {
 protected:
+    //! Pointer to the collection of accounts where the authentication will be verified
     const IUserAccountCollection* m_pAccounts;
 
 public:
@@ -16,7 +17,7 @@ public:
     //! @{
     void SetAccounts(const IUserAccountCollection*) override;
 
-    ESipStatusCode ValidateAuth(IAuthDigest&) override;
+    ESipStatusCode ValidateAuth(IAuthDigest& Digest) override;
     //! @}
 };
 

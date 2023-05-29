@@ -21,7 +21,7 @@ class PROXSIP_API ISIPMessage : public IMessage
 public:
     virtual ~ISIPMessage() = default;
 
-    // Assigns data (copies) from another abstract message
+    //! Assigns data (copies) from another abstract message
     virtual void Assign(const ISIPMessage&) = 0;
 
     //! Reads the type of this message

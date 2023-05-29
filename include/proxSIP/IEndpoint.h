@@ -3,6 +3,7 @@
 
 #include "proxSIPExports.h"
 
+//! Represents a network endpoint, i.e. an address and port pair
 class PROXSIP_API IEndpoint
 {
 public:

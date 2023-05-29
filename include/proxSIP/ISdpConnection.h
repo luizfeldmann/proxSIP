@@ -33,7 +33,7 @@ public:
     //! Sets the time-to-live
     virtual void TTL(unsigned int) = 0;
 
-    // Reads the number of addresses
+    //! Reads the number of addresses
     virtual unsigned int Count() const = 0;
 
     //! Sets the number of addresses

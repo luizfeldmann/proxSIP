@@ -15,10 +15,10 @@ public:
     virtual void SetAccounts(const IUserAccountCollection*) = 0;
 
     //! Verifies the authentication
-    //! @param[in] pAuth Pointer to the authentication data, if it exists
+    //! @param[in] Digest Reference to the authentication data submitted by client
     //! @return ESipStatusCode::Ok If the authentication is valid;
     //!         Otherwise, returns the appropriate status code and **modifies** the digest with the required data
-    virtual ESipStatusCode ValidateAuth(IAuthDigest&) = 0;
+    virtual ESipStatusCode ValidateAuth(IAuthDigest& Digest) = 0;
 };
 
 #endif

@@ -4,7 +4,7 @@
 #include "ESipURIComponents.h"
 #include "ISipField.h"
 
-//! Represents a URI scheme in format sip:user:password@host:port;uri-parameters?headers
+//! Represents a URI scheme in format sip:user:password @ host:port;uri-parameters?headers
 class PROXSIP_API ISipURI : public ISipField
 {
 public:

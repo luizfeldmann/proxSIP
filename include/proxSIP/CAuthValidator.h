@@ -22,7 +22,7 @@ public:
     //! @{
     void SetAccounts(const IUserAccountCollection*) override;
 
-    ESipStatusCode ValidateAuth(IAuthDigest&) override;
+    ESipStatusCode ValidateAuth(IAuthDigest& Digest) override;
     //! @}
 };
 

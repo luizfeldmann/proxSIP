@@ -30,7 +30,7 @@ public:
     //! Move-construct
     CKeyValuePairImpl(CKeyValuePairImpl&&) noexcept;
 
-    // Move-assign
+    //! Move-assign
     CKeyValuePairImpl& operator=(CKeyValuePairImpl&&) noexcept;
 
     //! @name Overrides from #IKeyValuePair

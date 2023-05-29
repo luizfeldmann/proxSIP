@@ -4,7 +4,7 @@
 #include "ISdpRtpMap.h"
 #include <string>
 
-//! @copydoc #ISdpRtpMap
+//! @copydoc ISdpRtpMap
 class CSdpRtpMapImpl : public ISdpRtpMap
 {
 private:
