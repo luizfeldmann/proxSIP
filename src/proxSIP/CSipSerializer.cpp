@@ -1,6 +1,7 @@
 #include "CSipSerializer.h"
 #include "ESipField.h"
 #include <string>
+#include <cstring>
 
 static const char c_cSpace = ' ';
 static const char arrCRLF[] = { '\r', '\n' };

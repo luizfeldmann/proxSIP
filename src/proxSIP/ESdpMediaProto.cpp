@@ -1,4 +1,5 @@
 #include "ESdpMediaProto.h"
+#include <cstring>
 #include <map>
 
 const char* c_szSdpUDP      = "udp";

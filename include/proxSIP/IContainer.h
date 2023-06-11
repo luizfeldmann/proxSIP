@@ -2,6 +2,7 @@
 #define _ICONTAINER_H_
 
 #include "proxSIPExports.h"
+#include <cstddef>
 
 //! Iterates the #IContainer
 template <typename value_type>

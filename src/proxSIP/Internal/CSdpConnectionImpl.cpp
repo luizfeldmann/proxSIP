@@ -1,4 +1,5 @@
 #include "Internal/CSdpConnectionImpl.h"
+#include "Internal/snscanf.h"
 #include <cassert>
 
 static const char c_cSep = ' ';

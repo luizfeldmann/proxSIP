@@ -1,4 +1,5 @@
 #include "Internal/CSdpOriginatorImpl.h"
+#include "Internal/snscanf.h"
 #include <cassert>
 
 CSdpOriginatorImpl::CSdpOriginatorImpl()

@@ -2,16 +2,17 @@
 #define _CSDPTIMEIMPL_H_
 
 #include "ISdpTime.h"
+#include <cstdint>
 
 //! @copybrief ISdpTime
 class CSdpTimeImpl : public ISdpTime
 {
 private:
     //! Time the session starts
-    unsigned long long m_uStartTime;
+    uint64_t m_uStartTime;
 
     // Time the session ends
-    unsigned long long m_uEndTime;
+    uint64_t m_uEndTime;
 
 public:
     CSdpTimeImpl();

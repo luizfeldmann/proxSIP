@@ -158,13 +158,13 @@ public:
         return m_vector.empty();
     }
 
-    virtual IContainerIterator& iterate() override
+    virtual IContainerIterator<value_type>& iterate() override
     {
         m_iter = m_vector.begin();
         return *this;
     }
 
-    virtual const IContainerIterator& iterate() const
+    virtual const IContainerIterator<value_type>& iterate() const override
     {
         m_iter = m_vector.begin();
         return *this;
@@ -190,7 +190,7 @@ public:
     //! Invokes the assignment member function
     void operator ()(const value_type& From, value_type& To) const
     {
-        std::invoke(m_fnAssign, To, From);
+        (To.*m_fnAssign)(From);
     }
 
 private:

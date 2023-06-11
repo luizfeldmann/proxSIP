@@ -176,7 +176,8 @@ const char* CSipURIImpl::c_str() const
     m_c_str.clear();
 
     // Write into it
-    Serialize(CStrBufAdapter(m_c_str));
+    CStrBufAdapter bufAdapt(m_c_str);
+    Serialize(bufAdapt);
 
     // return the c_str
     return m_c_str.c_str();
@@ -361,7 +362,7 @@ bool CSipURIImpl::ParseHeuristic(const char* pFirst, const char* pColon, const c
     if (pColon)
     {
         // if there is a collon, we check the right side is digit-only and means a port number
-        bIsHostAndPort = std::all_of(pColon+1, pEnd, std::isdigit);
+        bIsHostAndPort = std::all_of(pColon+1, pEnd, [](char c) {return std::isdigit(c);});
     }
     else
     {

@@ -172,7 +172,14 @@ set(${CMAKE_PROJECT_NAME}_LIB_HEADERS
     "include/proxSIP/CRtpPhoneEvent.h" )
 
 # Create and configure the library
-add_library(${CMAKE_PROJECT_NAME}_LIB SHARED
+
+if (WIN32)
+    set(LIB_TYPE SHARED)
+else()
+    set(LIB_TYPE STATIC)
+endif()
+
+add_library(${CMAKE_PROJECT_NAME}_LIB ${LIB_TYPE}
     ${${CMAKE_PROJECT_NAME}_LIB_SOURCES}
     ${${CMAKE_PROJECT_NAME}_LIB_HEADERS}
  )
@@ -226,6 +233,11 @@ target_include_directories(${CMAKE_PROJECT_NAME}_APP PUBLIC
 target_link_libraries(${CMAKE_PROJECT_NAME}_APP PRIVATE 
     ${CMAKE_PROJECT_NAME}_LIB
     Boost::boost Boost::log Boost::json)
+
+if (NOT WIN32)
+    # Explicitly link to standard library in Linux
+    target_link_libraries(${CMAKE_PROJECT_NAME}_APP PRIVATE stdc++)
+endif()
 
 # Copy configuration file to the output location
 set(APP_CFG_FILE "${CMAKE_CURRENT_LIST_DIR}/resources/${CMAKE_PROJECT_NAME}.json")

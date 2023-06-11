@@ -1,4 +1,5 @@
 #include "Internal/CSdpTimeImpl.h"
+#include "Internal/snscanf.h"
 #include <string>
 #include <cinttypes>
 

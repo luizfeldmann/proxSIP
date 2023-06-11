@@ -1,6 +1,7 @@
 #include "ESipMethods.h"
 #include <map>
 #include <string>
+#include <cstring>
 
 const char* c_szSipMethodREGISTER = "REGISTER";
 const char* c_szSipMethodINVITE   = "INVITE";
