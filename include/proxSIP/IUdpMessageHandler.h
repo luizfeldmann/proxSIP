@@ -2,6 +2,7 @@
 #define _IUDPMESSAGEHANDLER_H_
 
 #include "IEndpoint.h"
+#include <cstddef>
 
 //! Handles incoming UDP messages
 class PROXSIP_API IUdpMessageHandler

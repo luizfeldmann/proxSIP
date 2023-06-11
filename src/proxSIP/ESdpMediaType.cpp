@@ -1,4 +1,5 @@
 #include "ESdpMediaType.h"
+#include <cstring>
 #include <map>
 
 const char* c_szSdpAudio        = "audio";

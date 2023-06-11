@@ -2,6 +2,7 @@
 #define _IOUTPUTBUFFER_H_
 
 #include "proxSIPExports.h"
+#include <cstddef>
 
 //! Allows writing data into some buffer
 class PROXSIP_API IOutputBuffer

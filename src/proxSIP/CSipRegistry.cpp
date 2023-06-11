@@ -1,4 +1,4 @@
-#include "CSIPRegistry.h"
+#include "CSipRegistry.h"
 #include "Internal/CSipRegistryImpl.h"
 
 CSipRegistry::CSipRegistry()

@@ -1,6 +1,7 @@
 #include "ESipField.h"
 #include <map>
 #include <string>
+#include <cstring>
 
 /* Common */
 

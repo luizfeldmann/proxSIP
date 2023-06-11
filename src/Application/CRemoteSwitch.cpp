@@ -21,7 +21,7 @@ void CRemoteSwitch::Connect(const std::string& sHost, unsigned short uPort)
 
     if (error || results.empty())
     {
-        BOOST_LOG_TRIVIAL(error) << __FUNCTION__ ": cannot resolve host '" << sHost << "'";
+        BOOST_LOG_TRIVIAL(error) << __func__ << ": cannot resolve host '" << sHost << "'";
         if (error)
             BOOST_LOG_TRIVIAL(error) << error.message();
     }
@@ -44,11 +44,11 @@ void CRemoteSwitch::OnConnected(boost::system::error_code error, boost::function
 {
     if (error)
     {
-        BOOST_LOG_TRIVIAL(error) << __FUNCTION__ ": failed to connect: " << error.message();
+        BOOST_LOG_TRIVIAL(error) << __func__ << ": failed to connect: " << error.message();
         Reconnect(fnHandlerOnConnected); // Try again
     }
 
-    BOOST_LOG_TRIVIAL(info) << __FUNCTION__ ": connected";
+    BOOST_LOG_TRIVIAL(info) << __func__ << ": connected";
 
     // Success - invoke handler
     if (fnHandlerOnConnected)
@@ -89,7 +89,7 @@ void CRemoteSwitch::DoActivate()
     // Error check
     if (!m_socket.is_open())
     {
-        BOOST_LOG_TRIVIAL(error) << __FUNCTION__ ": socket is not connected";
+        BOOST_LOG_TRIVIAL(error) << __func__ << ": socket is not connected";
         return;
     }
 
@@ -102,7 +102,7 @@ void CRemoteSwitch::OnRequestSent(boost::system::error_code error)
     // Error check
     if (error)
     {
-        BOOST_LOG_TRIVIAL(error) << __FUNCTION__ ": failed to request: " << error.message();
+        BOOST_LOG_TRIVIAL(error) << __func__ << ": failed to request: " << error.message();
         Retry();
         return;
     }
@@ -120,7 +120,7 @@ void CRemoteSwitch::OnRecvResponse(boost::system::error_code error)
     // Error check
     if (error)
     {
-        BOOST_LOG_TRIVIAL(error) << __FUNCTION__ ": failed to get response: " << error.message();
+        BOOST_LOG_TRIVIAL(error) << __func__ << ": failed to get response: " << error.message();
         Retry();
         return;
     }
@@ -129,7 +129,7 @@ void CRemoteSwitch::OnRecvResponse(boost::system::error_code error)
     const auto result = m_response.result();
     if (result != boost::beast::http::status::ok && result != boost::beast::http::status::found)
     {
-        BOOST_LOG_TRIVIAL(error) << __FUNCTION__ ": request failed: " << result;
+        BOOST_LOG_TRIVIAL(error) << __func__ << ": request failed: " << result;
     }
 }
 

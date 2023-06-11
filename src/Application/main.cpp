@@ -7,11 +7,32 @@
 #include "CRemoteSwitch.h"
 #include "CAppConfig.h"
 #include <iostream>
-#include <conio.h>
 #include "version.h"
+
+#ifdef _WIN32
+// In windows we can use kbhit() to exit the loop
+#include <conio.h>
+#else
+// In Linux we'll use signals
+#include <signal.h>
+
+volatile bool g_bTerminate = false;
+
+static void OnSignal(sig_atomic_t)
+{
+    g_bTerminate = true;
+}
+
+#endif
 
 int main(int argc, char** argv)
 {
+#ifndef _WIN32
+    // Attach signals to use as stop condition
+    signal(SIGINT, OnSignal);
+    signal(SIGTERM, OnSignal);
+#endif
+
     // Print the header text
     std::cout << APPLICATION_NAME << " [v" << VERSION_MAJOR << "." << VERSION_MINOR << "." << VERSION_PATCH << "." << VERSION_TWEAK << "]" << std::endl;
 
@@ -103,7 +124,11 @@ int main(int argc, char** argv)
     udpServer.Start();
 
     // Main loop
+    #ifdef _WIN32
     while (!_kbhit())
+    #else
+    while (!g_bTerminate)
+    #endif
     {
         cSwitch.Poll();
         cSniffer.Poll();

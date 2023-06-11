@@ -1,6 +1,7 @@
 #include "ESipParameter.h"
 #include <map>
 #include <string>
+#include <cstring>
 
 /* Common */
 

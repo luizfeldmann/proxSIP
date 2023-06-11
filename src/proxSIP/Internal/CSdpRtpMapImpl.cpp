@@ -1,4 +1,5 @@
 #include "Internal/CSdpRtpMapImpl.h"
+#include "Internal/snscanf.h"
 #include <cinttypes>
 
 static const char c_cSP = ' ';

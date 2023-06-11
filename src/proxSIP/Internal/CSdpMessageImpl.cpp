@@ -1,4 +1,5 @@
 #include "Internal/CSdpMessageImpl.h"
+#include "Internal/snscanf.h"
 #include <cinttypes>
 
 CSdpMessageImpl::CSdpMessageImpl()
@@ -14,7 +15,7 @@ bool CSdpMessageImpl::ParseField(ESdpType eType, const char* pData, size_t uSize
     switch (eType)
     {
     case ESdpType::Version:
-        bStatus = (1 == _snscanf(pData, uSize, "%" SCNu8, &m_uVersion));
+        bStatus = (1 == _snscanf_s(pData, uSize, "%" SCNu8, &m_uVersion));
         break;
 
     case ESdpType::Originator:

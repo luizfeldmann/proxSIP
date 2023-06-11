@@ -56,7 +56,7 @@ public:
     //! Gets a null-terminate C-string from the buffer data
     const char* c_str() const
     {
-        return m_container.c_str();
+        return TBuffer<Container>::m_container.c_str();
     }
 };
 

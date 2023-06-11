@@ -1,4 +1,5 @@
 #include "ESdpAttrib.h"
+#include <cstring>
 #include <map>
 
 const char* c_szSDPcat          = "cat";

@@ -3,6 +3,7 @@
 
 #include <IEndpoint.h>
 #include <string>
+#include <boost/asio/ip/address_v4.hpp>
 
 //! Wraps one of boost's endpoints using the #IEndpoint interface
 template<typename T>
