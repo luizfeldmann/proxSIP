@@ -130,7 +130,6 @@ int main(int argc, char** argv)
     while (!g_bTerminate)
     #endif
     {
-        cSwitch.Poll();
         cSniffer.Poll();
         udpServer.Poll();
     }
